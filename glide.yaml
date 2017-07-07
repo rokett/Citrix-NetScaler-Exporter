@@ -1,0 +1,4 @@
+package: Citrix-NetScaler-Exporter
+import:
+- package: github.com/prometheus/client_golang
+  version: ~0.8.0
