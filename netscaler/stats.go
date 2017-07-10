@@ -9,7 +9,7 @@ import (
 
 // GetStats ...
 func (c *NitroClient) GetStats(statsType string) ([]byte, error) {
-	url := c.url + statsType
+	url := c.url + "stat/" + statsType
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -31,9 +31,11 @@ func (c *NitroClient) GetStats(statsType string) ([]byte, error) {
 	switch resp.StatusCode {
 	case 200:
 		body, _ := ioutil.ReadAll(resp.Body)
+
 		return body, nil
 	default:
 		body, _ := ioutil.ReadAll(resp.Body)
+
 		return body, errors.New("read failed: " + resp.Status + " (" + string(body) + ")")
 	}
 }
