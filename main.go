@@ -3,7 +3,6 @@ package main
 import (
 	"Citrix-NetScaler-Exporter/netscaler"
 	"flag"
-	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -74,21 +73,21 @@ var (
 		nil,
 	)
 
-	HTTPRequestsRate = prometheus.NewDesc(
+	httpRequestsRate = prometheus.NewDesc(
 		"http_requests_rate",
 		"HTTP requests received per second",
 		nil,
 		nil,
 	)
 
-	HTTPResponsesRate = prometheus.NewDesc(
+	httpResponsesRate = prometheus.NewDesc(
 		"http_responses_rate",
 		"HTTP requests sent per second",
 		nil,
 		nil,
 	)
 
-	interfaces_rxBytesPerSecond = prometheus.NewGaugeVec(
+	interfacesRxBytesPerSecond = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "interfaces_received_bytes_per_second",
 			Help: "Number of bytes received per second by specific interfaces",
@@ -99,7 +98,7 @@ var (
 		},
 	)
 
-	interfaces_txBytesPerSecond = prometheus.NewGaugeVec(
+	interfacesTxBytesPerSecond = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "interfaces_transmitted_bytes_per_second",
 			Help: "Number of bytes transmitted per second by specific interfaces",
@@ -110,7 +109,7 @@ var (
 		},
 	)
 
-	interfaces_rxPacketsPerSecond = prometheus.NewGaugeVec(
+	interfacesRxPacketsPerSecond = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "interfaces_received_packets_per_second",
 			Help: "Number of packets received per second by specific interfaces",
@@ -121,7 +120,7 @@ var (
 		},
 	)
 
-	interfaces_txPacketsPerSecond = prometheus.NewGaugeVec(
+	interfacesTxPacketsPerSecond = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "interfaces_transmitted_packets_per_second",
 			Help: "Number of packets transmitted per second by specific interfaces",
@@ -132,7 +131,7 @@ var (
 		},
 	)
 
-	interfaces_jumboPacketsRxPerSecond = prometheus.NewGaugeVec(
+	interfacesJumboPacketsRxPerSecond = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "interfaces_jumbo_packets_received_per_second",
 			Help: "Number of bytes received per second by specific interfaces",
@@ -143,7 +142,7 @@ var (
 		},
 	)
 
-	interfaces_jumboPacketsTxPerSecond = prometheus.NewGaugeVec(
+	interfacesJumboPacketsTxPerSecond = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "interfaces_jumbo_packets_transmitted_per_second",
 			Help: "Number of jumbo packets transmitted per second by specific interfaces",
@@ -154,7 +153,7 @@ var (
 		},
 	)
 
-	interfaces_errorPacketsRxPerSecond = prometheus.NewGaugeVec(
+	interfacesErrorPacketsRxPerSecond = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "interfaces_error_packets_received_per_second",
 			Help: "Number of error packets received per second by specific interfaces",
@@ -165,7 +164,7 @@ var (
 		},
 	)
 
-	virtualServers_waitingRequests = prometheus.NewGaugeVec(
+	virtualServersWaitingRequests = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_waiting_requests",
 			Help: "Number of requests waiting on a specific virtual server",
@@ -175,7 +174,7 @@ var (
 		},
 	)
 
-	virtualServers_health = prometheus.NewGaugeVec(
+	virtualServersHealth = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_health",
 			Help: "Percentage of UP services bound to a specific virtual server",
@@ -185,7 +184,7 @@ var (
 		},
 	)
 
-	virtualServers_inactiveServices = prometheus.NewGaugeVec(
+	virtualServersInactiveServices = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_inactive_services",
 			Help: "Number of inactive services bound to a specific virtual server",
@@ -195,7 +194,7 @@ var (
 		},
 	)
 
-	virtualServers_activeServices = prometheus.NewGaugeVec(
+	virtualServersActiveServices = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_active_services",
 			Help: "Number of active services bound to a specific virtual server",
@@ -205,7 +204,7 @@ var (
 		},
 	)
 
-	virtualServers_totalHits = prometheus.NewCounterVec(
+	virtualServersTotalHits = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "virtual_servers_total_hits",
 			Help: "Total virtual server hits",
@@ -215,7 +214,7 @@ var (
 		},
 	)
 
-	virtualServers_hitsRate = prometheus.NewGaugeVec(
+	virtualServersHitsRate = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_hits_rate",
 			Help: "Number of hits/second to a specific virtual server",
@@ -225,7 +224,7 @@ var (
 		},
 	)
 
-	virtualServers_totalRequests = prometheus.NewCounterVec(
+	virtualServersTotalRequests = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "virtual_servers_total_requests",
 			Help: "Total virtual server requests",
@@ -235,7 +234,7 @@ var (
 		},
 	)
 
-	virtualServers_requestsRate = prometheus.NewGaugeVec(
+	virtualServersRequestsRate = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_requests_rate",
 			Help: "Number of requests/second to a specific virtual server",
@@ -245,7 +244,7 @@ var (
 		},
 	)
 
-	virtualServers_totalResponses = prometheus.NewCounterVec(
+	virtualServersTotalResponses = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "virtual_servers_total_responses",
 			Help: "Total virtual server responses",
@@ -255,7 +254,7 @@ var (
 		},
 	)
 
-	virtualServers_reponsesRate = prometheus.NewGaugeVec(
+	virtualServersReponsesRate = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_responses_rate",
 			Help: "Number of responses/second from a specific virtual server",
@@ -265,7 +264,7 @@ var (
 		},
 	)
 
-	virtualServers_totalRequestBytes = prometheus.NewCounterVec(
+	virtualServersTotalRequestBytes = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "virtual_servers_total_request_bytes",
 			Help: "Total virtual server request bytes",
@@ -275,7 +274,7 @@ var (
 		},
 	)
 
-	virtualServers_requestBytesRate = prometheus.NewGaugeVec(
+	virtualServersRequestBytesRate = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_request_bytes_rate",
 			Help: "Number of request bytes/second to a specific virtual server",
@@ -285,7 +284,7 @@ var (
 		},
 	)
 
-	virtualServers_totalResponseBytes = prometheus.NewCounterVec(
+	virtualServersTotalResponseBytes = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "virtual_servers_total_response_bytes",
 			Help: "Total virtual server response bytes",
@@ -295,7 +294,7 @@ var (
 		},
 	)
 
-	virtualServers_reponseBytesRate = prometheus.NewGaugeVec(
+	virtualServersReponseBytesRate = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_reponse_bytes_rate",
 			Help: "Number of response bytes/second from a specific virtual server",
@@ -305,7 +304,7 @@ var (
 		},
 	)
 
-	virtualServers_currentClientConnections = prometheus.NewGaugeVec(
+	virtualServersCurrentClientConnections = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_current_client_connections",
 			Help: "Number of current client connections on a specific virtual server",
@@ -315,7 +314,7 @@ var (
 		},
 	)
 
-	virtualServers_currentServerConnections = prometheus.NewGaugeVec(
+	virtualServersCurrentServerConnections = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_current_server_connections",
 			Help: "Number of current connections to the actual servers behind the specific virtual server.",
@@ -328,75 +327,75 @@ var (
 
 // Exporter represents the metrics exported to Prometheus
 type Exporter struct {
-	mgmtCPUUsage                            *prometheus.Desc
-	memUsage                                *prometheus.Desc
-	pktCPUUsage                             *prometheus.Desc
-	flashPartitionUsage                     *prometheus.Desc
-	varPartitionUsage                       *prometheus.Desc
-	rxMbPerSec                              *prometheus.Desc
-	txMbPerSec                              *prometheus.Desc
-	HTTPRequestsRate                        *prometheus.Desc
-	HTTPResponsesRate                       *prometheus.Desc
-	interfaces_rxBytesPerSecond             *prometheus.GaugeVec
-	interfaces_txBytesPerSecond             *prometheus.GaugeVec
-	interfaces_rxPacketsPerSecond           *prometheus.GaugeVec
-	interfaces_txPacketsPerSecond           *prometheus.GaugeVec
-	interfaces_jumboPacketsRxPerSecond      *prometheus.GaugeVec
-	interfaces_jumboPacketsTxPerSecond      *prometheus.GaugeVec
-	interfaces_errorPacketsRxPerSecond      *prometheus.GaugeVec
-	virtualServers_waitingRequests          *prometheus.GaugeVec
-	virtualServers_health                   *prometheus.GaugeVec
-	virtualServers_inactiveServices         *prometheus.GaugeVec
-	virtualServers_activeServices           *prometheus.GaugeVec
-	virtualServers_totalHits                *prometheus.CounterVec
-	virtualServers_hitsRate                 *prometheus.GaugeVec
-	virtualServers_totalRequests            *prometheus.CounterVec
-	virtualServers_requestsRate             *prometheus.GaugeVec
-	virtualServers_totalResponses           *prometheus.CounterVec
-	virtualServers_reponsesRate             *prometheus.GaugeVec
-	virtualServers_totalRequestBytes        *prometheus.CounterVec
-	virtualServers_requestBytesRate         *prometheus.GaugeVec
-	virtualServers_totalResponseBytes       *prometheus.CounterVec
-	virtualServers_reponseBytesRate         *prometheus.GaugeVec
-	virtualServers_currentClientConnections *prometheus.GaugeVec
-	virtualServers_currentServerConnections *prometheus.GaugeVec
+	mgmtCPUUsage                           *prometheus.Desc
+	memUsage                               *prometheus.Desc
+	pktCPUUsage                            *prometheus.Desc
+	flashPartitionUsage                    *prometheus.Desc
+	varPartitionUsage                      *prometheus.Desc
+	rxMbPerSec                             *prometheus.Desc
+	txMbPerSec                             *prometheus.Desc
+	httpRequestsRate                       *prometheus.Desc
+	httpResponsesRate                      *prometheus.Desc
+	interfacesRxBytesPerSecond             *prometheus.GaugeVec
+	interfacesTxBytesPerSecond             *prometheus.GaugeVec
+	interfacesRxPacketsPerSecond           *prometheus.GaugeVec
+	interfacesTxPacketsPerSecond           *prometheus.GaugeVec
+	interfacesJumboPacketsRxPerSecond      *prometheus.GaugeVec
+	interfacesJumboPacketsTxPerSecond      *prometheus.GaugeVec
+	interfacesErrorPacketsRxPerSecond      *prometheus.GaugeVec
+	virtualServersWaitingRequests          *prometheus.GaugeVec
+	virtualServersHealth                   *prometheus.GaugeVec
+	virtualServersInactiveServices         *prometheus.GaugeVec
+	virtualServersActiveServices           *prometheus.GaugeVec
+	virtualServersTotalHits                *prometheus.CounterVec
+	virtualServersHitsRate                 *prometheus.GaugeVec
+	virtualServersTotalRequests            *prometheus.CounterVec
+	virtualServersRequestsRate             *prometheus.GaugeVec
+	virtualServersTotalResponses           *prometheus.CounterVec
+	virtualServersReponsesRate             *prometheus.GaugeVec
+	virtualServersTotalRequestBytes        *prometheus.CounterVec
+	virtualServersRequestBytesRate         *prometheus.GaugeVec
+	virtualServersTotalResponseBytes       *prometheus.CounterVec
+	virtualServersReponseBytesRate         *prometheus.GaugeVec
+	virtualServersCurrentClientConnections *prometheus.GaugeVec
+	virtualServersCurrentServerConnections *prometheus.GaugeVec
 }
 
 // NewExporter initialises the exporter
 func NewExporter() (*Exporter, error) {
 	return &Exporter{
-		mgmtCPUUsage:                            mgmtCPUUsage,
-		memUsage:                                memUsage,
-		pktCPUUsage:                             pktCPUUsage,
-		flashPartitionUsage:                     flashPartitionUsage,
-		varPartitionUsage:                       varPartitionUsage,
-		rxMbPerSec:                              rxMbPerSec,
-		txMbPerSec:                              txMbPerSec,
-		HTTPRequestsRate:                        HTTPRequestsRate,
-		HTTPResponsesRate:                       HTTPResponsesRate,
-		interfaces_rxBytesPerSecond:             interfaces_rxBytesPerSecond,
-		interfaces_txBytesPerSecond:             interfaces_txBytesPerSecond,
-		interfaces_rxPacketsPerSecond:           interfaces_rxPacketsPerSecond,
-		interfaces_txPacketsPerSecond:           interfaces_txPacketsPerSecond,
-		interfaces_jumboPacketsRxPerSecond:      interfaces_jumboPacketsRxPerSecond,
-		interfaces_jumboPacketsTxPerSecond:      interfaces_jumboPacketsTxPerSecond,
-		interfaces_errorPacketsRxPerSecond:      interfaces_errorPacketsRxPerSecond,
-		virtualServers_waitingRequests:          virtualServers_waitingRequests,
-		virtualServers_health:                   virtualServers_health,
-		virtualServers_inactiveServices:         virtualServers_inactiveServices,
-		virtualServers_activeServices:           virtualServers_activeServices,
-		virtualServers_totalHits:                virtualServers_totalHits,
-		virtualServers_hitsRate:                 virtualServers_hitsRate,
-		virtualServers_totalRequests:            virtualServers_totalRequests,
-		virtualServers_requestsRate:             virtualServers_requestsRate,
-		virtualServers_totalResponses:           virtualServers_totalResponses,
-		virtualServers_reponsesRate:             virtualServers_reponsesRate,
-		virtualServers_totalRequestBytes:        virtualServers_totalRequestBytes,
-		virtualServers_requestBytesRate:         virtualServers_requestBytesRate,
-		virtualServers_totalResponseBytes:       virtualServers_totalResponseBytes,
-		virtualServers_reponseBytesRate:         virtualServers_reponseBytesRate,
-		virtualServers_currentClientConnections: virtualServers_currentClientConnections,
-		virtualServers_currentServerConnections: virtualServers_currentServerConnections,
+		mgmtCPUUsage:                           mgmtCPUUsage,
+		memUsage:                               memUsage,
+		pktCPUUsage:                            pktCPUUsage,
+		flashPartitionUsage:                    flashPartitionUsage,
+		varPartitionUsage:                      varPartitionUsage,
+		rxMbPerSec:                             rxMbPerSec,
+		txMbPerSec:                             txMbPerSec,
+		httpRequestsRate:                       httpRequestsRate,
+		httpResponsesRate:                      httpResponsesRate,
+		interfacesRxBytesPerSecond:             interfacesRxBytesPerSecond,
+		interfacesTxBytesPerSecond:             interfacesTxBytesPerSecond,
+		interfacesRxPacketsPerSecond:           interfacesRxPacketsPerSecond,
+		interfacesTxPacketsPerSecond:           interfacesTxPacketsPerSecond,
+		interfacesJumboPacketsRxPerSecond:      interfacesJumboPacketsRxPerSecond,
+		interfacesJumboPacketsTxPerSecond:      interfacesJumboPacketsTxPerSecond,
+		interfacesErrorPacketsRxPerSecond:      interfacesErrorPacketsRxPerSecond,
+		virtualServersWaitingRequests:          virtualServersWaitingRequests,
+		virtualServersHealth:                   virtualServersHealth,
+		virtualServersInactiveServices:         virtualServersInactiveServices,
+		virtualServersActiveServices:           virtualServersActiveServices,
+		virtualServersTotalHits:                virtualServersTotalHits,
+		virtualServersHitsRate:                 virtualServersHitsRate,
+		virtualServersTotalRequests:            virtualServersTotalRequests,
+		virtualServersRequestsRate:             virtualServersRequestsRate,
+		virtualServersTotalResponses:           virtualServersTotalResponses,
+		virtualServersReponsesRate:             virtualServersReponsesRate,
+		virtualServersTotalRequestBytes:        virtualServersTotalRequestBytes,
+		virtualServersRequestBytesRate:         virtualServersRequestBytesRate,
+		virtualServersTotalResponseBytes:       virtualServersTotalResponseBytes,
+		virtualServersReponseBytesRate:         virtualServersReponseBytesRate,
+		virtualServersCurrentClientConnections: virtualServersCurrentClientConnections,
+		virtualServersCurrentServerConnections: virtualServersCurrentServerConnections,
 	}, nil
 }
 
@@ -409,214 +408,214 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- varPartitionUsage
 	ch <- rxMbPerSec
 	ch <- txMbPerSec
-	ch <- HTTPRequestsRate
-	ch <- HTTPResponsesRate
-	e.interfaces_rxBytesPerSecond.Describe(ch)
-	e.interfaces_txBytesPerSecond.Describe(ch)
-	e.interfaces_rxPacketsPerSecond.Describe(ch)
-	e.interfaces_txPacketsPerSecond.Describe(ch)
-	e.interfaces_jumboPacketsRxPerSecond.Describe(ch)
-	e.interfaces_jumboPacketsTxPerSecond.Describe(ch)
-	e.interfaces_errorPacketsRxPerSecond.Describe(ch)
-	e.virtualServers_waitingRequests.Describe(ch)
-	e.virtualServers_health.Describe(ch)
-	e.virtualServers_inactiveServices.Describe(ch)
-	e.virtualServers_activeServices.Describe(ch)
-	e.virtualServers_totalHits.Describe(ch)
-	e.virtualServers_hitsRate.Describe(ch)
-	e.virtualServers_totalRequests.Describe(ch)
-	e.virtualServers_requestsRate.Describe(ch)
-	e.virtualServers_totalResponses.Describe(ch)
-	e.virtualServers_reponsesRate.Describe(ch)
-	e.virtualServers_totalRequestBytes.Describe(ch)
-	e.virtualServers_requestBytesRate.Describe(ch)
-	e.virtualServers_totalResponseBytes.Describe(ch)
-	e.virtualServers_reponseBytesRate.Describe(ch)
-	e.virtualServers_currentClientConnections.Describe(ch)
-	e.virtualServers_currentServerConnections.Describe(ch)
+	ch <- httpRequestsRate
+	ch <- httpResponsesRate
+	e.interfacesRxBytesPerSecond.Describe(ch)
+	e.interfacesTxBytesPerSecond.Describe(ch)
+	e.interfacesRxPacketsPerSecond.Describe(ch)
+	e.interfacesTxPacketsPerSecond.Describe(ch)
+	e.interfacesJumboPacketsRxPerSecond.Describe(ch)
+	e.interfacesJumboPacketsTxPerSecond.Describe(ch)
+	e.interfacesErrorPacketsRxPerSecond.Describe(ch)
+	e.virtualServersWaitingRequests.Describe(ch)
+	e.virtualServersHealth.Describe(ch)
+	e.virtualServersInactiveServices.Describe(ch)
+	e.virtualServersActiveServices.Describe(ch)
+	e.virtualServersTotalHits.Describe(ch)
+	e.virtualServersHitsRate.Describe(ch)
+	e.virtualServersTotalRequests.Describe(ch)
+	e.virtualServersRequestsRate.Describe(ch)
+	e.virtualServersTotalResponses.Describe(ch)
+	e.virtualServersReponsesRate.Describe(ch)
+	e.virtualServersTotalRequestBytes.Describe(ch)
+	e.virtualServersRequestBytesRate.Describe(ch)
+	e.virtualServersTotalResponseBytes.Describe(ch)
+	e.virtualServersReponseBytesRate.Describe(ch)
+	e.virtualServersCurrentClientConnections.Describe(ch)
+	e.virtualServersCurrentServerConnections.Describe(ch)
 }
 
 func (e *Exporter) collectInterfacesRxBytesPerSecond(ns netscaler.NSAPIResponse) {
-	e.interfaces_rxBytesPerSecond.Reset()
+	e.interfacesRxBytesPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfaces_rxBytesPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.ReceivedBytesPerSecond)
+		e.interfacesRxBytesPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.ReceivedBytesPerSecond)
 	}
 }
 
 func (e *Exporter) collectInterfacesTxBytesPerSecond(ns netscaler.NSAPIResponse) {
-	e.interfaces_rxBytesPerSecond.Reset()
+	e.interfacesTxBytesPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfaces_txBytesPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.TransmitBytesPerSecond)
+		e.interfacesTxBytesPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.TransmitBytesPerSecond)
 	}
 }
 
 func (e *Exporter) collectInterfacesRxPacketsPerSecond(ns netscaler.NSAPIResponse) {
-	e.interfaces_rxPacketsPerSecond.Reset()
+	e.interfacesRxPacketsPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfaces_rxPacketsPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.ReceivedPacketsPerSecond)
+		e.interfacesRxPacketsPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.ReceivedPacketsPerSecond)
 	}
 }
 
 func (e *Exporter) collectInterfacesTxPacketsPerSecond(ns netscaler.NSAPIResponse) {
-	e.interfaces_txPacketsPerSecond.Reset()
+	e.interfacesTxPacketsPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfaces_txPacketsPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.TransmitPacketsPerSecond)
+		e.interfacesTxPacketsPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.TransmitPacketsPerSecond)
 	}
 }
 
 func (e *Exporter) collectInterfacesJumboPacketsRxPerSecond(ns netscaler.NSAPIResponse) {
-	e.interfaces_jumboPacketsRxPerSecond.Reset()
+	e.interfacesJumboPacketsRxPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfaces_jumboPacketsRxPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.JumboPacketsReceivedPerSecond)
+		e.interfacesJumboPacketsRxPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.JumboPacketsReceivedPerSecond)
 	}
 }
 
 func (e *Exporter) collectInterfacesJumboPacketsTxPerSecond(ns netscaler.NSAPIResponse) {
-	e.interfaces_jumboPacketsTxPerSecond.Reset()
+	e.interfacesJumboPacketsTxPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfaces_jumboPacketsTxPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.JumboPacketsTransmittedPerSecond)
+		e.interfacesJumboPacketsTxPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.JumboPacketsTransmittedPerSecond)
 	}
 }
 
 func (e *Exporter) collectInterfacesErrorPacketsRxPerSecond(ns netscaler.NSAPIResponse) {
-	e.interfaces_errorPacketsRxPerSecond.Reset()
+	e.interfacesErrorPacketsRxPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfaces_errorPacketsRxPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.ErrorPacketsReceivedPerSecond)
+		e.interfacesErrorPacketsRxPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.ErrorPacketsReceivedPerSecond)
 	}
 }
 
 func (e *Exporter) collectVirtualServerWaitingRequests(ns netscaler.NSAPIResponse) {
-	e.virtualServers_waitingRequests.Reset()
+	e.virtualServersWaitingRequests.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_waitingRequests.WithLabelValues(vs.Name).Set(vs.WaitingRequests)
+		e.virtualServersWaitingRequests.WithLabelValues(vs.Name).Set(vs.WaitingRequests)
 	}
 }
 
 func (e *Exporter) collectVirtualServerHealth(ns netscaler.NSAPIResponse) {
-	e.virtualServers_health.Reset()
+	e.virtualServersHealth.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_health.WithLabelValues(vs.Name).Set(vs.Health)
+		e.virtualServersHealth.WithLabelValues(vs.Name).Set(vs.Health)
 	}
 }
 
 func (e *Exporter) collectVirtualServerInactiveServices(ns netscaler.NSAPIResponse) {
-	e.virtualServers_inactiveServices.Reset()
+	e.virtualServersInactiveServices.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_inactiveServices.WithLabelValues(vs.Name).Set(vs.InactiveServices)
+		e.virtualServersInactiveServices.WithLabelValues(vs.Name).Set(vs.InactiveServices)
 	}
 }
 
 func (e *Exporter) collectVirtualServerActiveServices(ns netscaler.NSAPIResponse) {
-	e.virtualServers_activeServices.Reset()
+	e.virtualServersActiveServices.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_activeServices.WithLabelValues(vs.Name).Set(vs.ActiveServices)
+		e.virtualServersActiveServices.WithLabelValues(vs.Name).Set(vs.ActiveServices)
 	}
 }
 
 func (e *Exporter) collectVirtualServerTotalHits(ns netscaler.NSAPIResponse) {
-	e.virtualServers_totalHits.Reset()
+	e.virtualServersTotalHits.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_totalHits.WithLabelValues(vs.Name).Set(vs.TotalHits)
+		e.virtualServersTotalHits.WithLabelValues(vs.Name).Set(vs.TotalHits)
 	}
 }
 
 func (e *Exporter) collectVirtualServerHitsRate(ns netscaler.NSAPIResponse) {
-	e.virtualServers_hitsRate.Reset()
+	e.virtualServersHitsRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_hitsRate.WithLabelValues(vs.Name).Set(vs.HitsRate)
+		e.virtualServersHitsRate.WithLabelValues(vs.Name).Set(vs.HitsRate)
 	}
 }
 
 func (e *Exporter) collectVirtualServerTotalRequests(ns netscaler.NSAPIResponse) {
-	e.virtualServers_totalRequests.Reset()
+	e.virtualServersTotalRequests.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_totalRequests.WithLabelValues(vs.Name).Set(vs.TotalRequests)
+		e.virtualServersTotalRequests.WithLabelValues(vs.Name).Set(vs.TotalRequests)
 	}
 }
 
 func (e *Exporter) collectVirtualServerRequestsRate(ns netscaler.NSAPIResponse) {
-	e.virtualServers_requestsRate.Reset()
+	e.virtualServersRequestsRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_requestsRate.WithLabelValues(vs.Name).Set(vs.RequestsRate)
+		e.virtualServersRequestsRate.WithLabelValues(vs.Name).Set(vs.RequestsRate)
 	}
 }
 
 func (e *Exporter) collectVirtualServerTotalResponses(ns netscaler.NSAPIResponse) {
-	e.virtualServers_totalResponses.Reset()
+	e.virtualServersTotalResponses.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_totalResponses.WithLabelValues(vs.Name).Set(vs.TotalResponses)
+		e.virtualServersTotalResponses.WithLabelValues(vs.Name).Set(vs.TotalResponses)
 	}
 }
 
 func (e *Exporter) collectVirtualServerResponsesRate(ns netscaler.NSAPIResponse) {
-	e.virtualServers_reponsesRate.Reset()
+	e.virtualServersReponsesRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_reponsesRate.WithLabelValues(vs.Name).Set(vs.ResponsesRate)
+		e.virtualServersReponsesRate.WithLabelValues(vs.Name).Set(vs.ResponsesRate)
 	}
 }
 
 func (e *Exporter) collectVirtualServerTotalRequestBytes(ns netscaler.NSAPIResponse) {
-	e.virtualServers_totalRequestBytes.Reset()
+	e.virtualServersTotalRequestBytes.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_totalRequestBytes.WithLabelValues(vs.Name).Set(vs.TotalRequestBytes)
+		e.virtualServersTotalRequestBytes.WithLabelValues(vs.Name).Set(vs.TotalRequestBytes)
 	}
 }
 
 func (e *Exporter) collectVirtualServerRequestBytesRate(ns netscaler.NSAPIResponse) {
-	e.virtualServers_requestBytesRate.Reset()
+	e.virtualServersRequestBytesRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_requestBytesRate.WithLabelValues(vs.Name).Set(vs.RequestBytesRate)
+		e.virtualServersRequestBytesRate.WithLabelValues(vs.Name).Set(vs.RequestBytesRate)
 	}
 }
 
 func (e *Exporter) collectVirtualServerTotalResponseBytes(ns netscaler.NSAPIResponse) {
-	e.virtualServers_totalResponseBytes.Reset()
+	e.virtualServersTotalResponseBytes.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_totalResponseBytes.WithLabelValues(vs.Name).Set(vs.TotalResponseBytes)
+		e.virtualServersTotalResponseBytes.WithLabelValues(vs.Name).Set(vs.TotalResponseBytes)
 	}
 }
 
 func (e *Exporter) collectVirtualServerResponseBytesRate(ns netscaler.NSAPIResponse) {
-	e.virtualServers_reponseBytesRate.Reset()
+	e.virtualServersReponseBytesRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_reponseBytesRate.WithLabelValues(vs.Name).Set(vs.ResponseBytesRate)
+		e.virtualServersReponseBytesRate.WithLabelValues(vs.Name).Set(vs.ResponseBytesRate)
 	}
 }
 
 func (e *Exporter) collectVirtualServerCurrentClientConnections(ns netscaler.NSAPIResponse) {
-	e.virtualServers_currentClientConnections.Reset()
+	e.virtualServersCurrentClientConnections.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_currentClientConnections.WithLabelValues(vs.Name).Set(vs.CurrentClientConnections)
+		e.virtualServersCurrentClientConnections.WithLabelValues(vs.Name).Set(vs.CurrentClientConnections)
 	}
 }
 
 func (e *Exporter) collectVirtualServerCurrentServerConnections(ns netscaler.NSAPIResponse) {
-	e.virtualServers_currentServerConnections.Reset()
+	e.virtualServersCurrentServerConnections.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServers_currentServerConnections.WithLabelValues(vs.Name).Set(vs.CurrentServerConnections)
+		e.virtualServersCurrentServerConnections.WithLabelValues(vs.Name).Set(vs.CurrentServerConnections)
 	}
 }
 
@@ -668,81 +667,81 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		HTTPRequestsRate, prometheus.GaugeValue, ns.NS.HTTPRequestsRate,
+		httpRequestsRate, prometheus.GaugeValue, ns.NS.HTTPRequestsRate,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		HTTPResponsesRate, prometheus.GaugeValue, ns.NS.HTTPResponsesRate,
+		httpResponsesRate, prometheus.GaugeValue, ns.NS.HTTPResponsesRate,
 	)
 
 	e.collectInterfacesRxBytesPerSecond(interfaces)
-	e.interfaces_rxBytesPerSecond.Collect(ch)
+	e.interfacesRxBytesPerSecond.Collect(ch)
 
 	e.collectInterfacesTxBytesPerSecond(interfaces)
-	e.interfaces_txBytesPerSecond.Collect(ch)
+	e.interfacesTxBytesPerSecond.Collect(ch)
 
 	e.collectInterfacesRxPacketsPerSecond(interfaces)
-	e.interfaces_rxPacketsPerSecond.Collect(ch)
+	e.interfacesRxPacketsPerSecond.Collect(ch)
 
 	e.collectInterfacesTxPacketsPerSecond(interfaces)
-	e.interfaces_txPacketsPerSecond.Collect(ch)
+	e.interfacesTxPacketsPerSecond.Collect(ch)
 
 	e.collectInterfacesJumboPacketsRxPerSecond(interfaces)
-	e.interfaces_jumboPacketsRxPerSecond.Collect(ch)
+	e.interfacesJumboPacketsRxPerSecond.Collect(ch)
 
 	e.collectInterfacesJumboPacketsTxPerSecond(interfaces)
-	e.interfaces_jumboPacketsTxPerSecond.Collect(ch)
+	e.interfacesJumboPacketsTxPerSecond.Collect(ch)
 
 	e.collectInterfacesErrorPacketsRxPerSecond(interfaces)
-	e.interfaces_errorPacketsRxPerSecond.Collect(ch)
+	e.interfacesErrorPacketsRxPerSecond.Collect(ch)
 
 	e.collectVirtualServerWaitingRequests(virtualServers)
-	e.virtualServers_waitingRequests.Collect(ch)
+	e.virtualServersWaitingRequests.Collect(ch)
 
 	e.collectVirtualServerHealth(virtualServers)
-	e.virtualServers_health.Collect(ch)
+	e.virtualServersHealth.Collect(ch)
 
 	e.collectVirtualServerInactiveServices(virtualServers)
-	e.virtualServers_inactiveServices.Collect(ch)
+	e.virtualServersInactiveServices.Collect(ch)
 
 	e.collectVirtualServerActiveServices(virtualServers)
-	e.virtualServers_activeServices.Collect(ch)
+	e.virtualServersActiveServices.Collect(ch)
 
 	e.collectVirtualServerTotalHits(virtualServers)
-	e.virtualServers_totalHits.Collect(ch)
+	e.virtualServersTotalHits.Collect(ch)
 
 	e.collectVirtualServerHitsRate(virtualServers)
-	e.virtualServers_hitsRate.Collect(ch)
+	e.virtualServersHitsRate.Collect(ch)
 
 	e.collectVirtualServerTotalRequests(virtualServers)
-	e.virtualServers_totalRequests.Collect(ch)
+	e.virtualServersTotalRequests.Collect(ch)
 
 	e.collectVirtualServerRequestsRate(virtualServers)
-	e.virtualServers_requestsRate.Collect(ch)
+	e.virtualServersRequestsRate.Collect(ch)
 
 	e.collectVirtualServerTotalResponses(virtualServers)
-	e.virtualServers_totalResponses.Collect(ch)
+	e.virtualServersTotalResponses.Collect(ch)
 
 	e.collectVirtualServerResponsesRate(virtualServers)
-	e.virtualServers_reponsesRate.Collect(ch)
+	e.virtualServersReponsesRate.Collect(ch)
 
 	e.collectVirtualServerTotalRequestBytes(virtualServers)
-	e.virtualServers_totalRequestBytes.Collect(ch)
+	e.virtualServersTotalRequestBytes.Collect(ch)
 
 	e.collectVirtualServerRequestBytesRate(virtualServers)
-	e.virtualServers_requestBytesRate.Collect(ch)
+	e.virtualServersRequestBytesRate.Collect(ch)
 
 	e.collectVirtualServerTotalResponseBytes(virtualServers)
-	e.virtualServers_totalResponseBytes.Collect(ch)
+	e.virtualServersTotalResponseBytes.Collect(ch)
 
 	e.collectVirtualServerResponseBytesRate(virtualServers)
-	e.virtualServers_reponseBytesRate.Collect(ch)
+	e.virtualServersReponseBytesRate.Collect(ch)
 
 	e.collectVirtualServerCurrentClientConnections(virtualServers)
-	e.virtualServers_currentClientConnections.Collect(ch)
+	e.virtualServersCurrentClientConnections.Collect(ch)
 
 	e.collectVirtualServerCurrentServerConnections(virtualServers)
-	e.virtualServers_currentServerConnections.Collect(ch)
+	e.virtualServersCurrentServerConnections.Collect(ch)
 }
 
 func main() {
