@@ -326,6 +326,7 @@ var (
 	)
 )
 
+// Exporter represents the metrics exported to Prometheus
 type Exporter struct {
 	mgmtCPUUsage                            *prometheus.Desc
 	memUsage                                *prometheus.Desc
@@ -361,6 +362,7 @@ type Exporter struct {
 	virtualServers_currentServerConnections *prometheus.GaugeVec
 }
 
+// NewExporter initialises the exporter
 func NewExporter() (*Exporter, error) {
 	return &Exporter{
 		mgmtCPUUsage:                            mgmtCPUUsage,
@@ -398,6 +400,7 @@ func NewExporter() (*Exporter, error) {
 	}, nil
 }
 
+// Describe implements Collector
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- mgmtCPUUsage
 	ch <- memUsage
@@ -617,9 +620,9 @@ func (e *Exporter) collectVirtualServerCurrentServerConnections(ns netscaler.NSA
 	}
 }
 
+// Collect is initiated by the Prometheus handler and gathers the metrics
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	nsClient := netscaler.NewNitroClient(*url, *username, *password)
-	fmt.Println(nsClient)
 
 	ns, err := netscaler.GetNSStats(nsClient)
 	if err != nil {
