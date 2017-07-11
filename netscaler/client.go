@@ -6,9 +6,7 @@ import (
 	"time"
 )
 
-//TODO: Proper comments
-
-// NitroClient ...
+// NitroClient represents the client used to connect to the API
 type NitroClient struct {
 	url      string
 	username string
@@ -16,11 +14,11 @@ type NitroClient struct {
 	client   *http.Client
 }
 
-// NewNitroClient ...
+// NewNitroClient creates a new client used to interact with the Nirto API.
+// URL, username and password are passed to this function to allow connections to any NetScaler endpoint.
 func NewNitroClient(url string, username string, password string) *NitroClient {
 	c := new(NitroClient)
 
-	//TODO: What is the trim for?
 	c.url = strings.Trim(url, " /") + "/nitro/v1/"
 
 	c.username = username

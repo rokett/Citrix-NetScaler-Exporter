@@ -1,16 +1,12 @@
-package collectors
+package netscaler
 
 import (
-	"Citrix-NetScaler-Exporter/netscaler"
 	"encoding/json"
-	"fmt"
-	"log"
+
+	"github.com/pkg/errors"
 )
 
-//TODO: Proper commenting
-//TODO: Proper logging
-
-// VirtualServerStats ...
+// VirtualServerStats represents the data returned from the /stat/lbvserver Nitro API endpoint
 type VirtualServerStats struct {
 	Name                     string  `json:"name"`
 	WaitingRequests          float64 `json:"vsvrsurgecount"`
@@ -31,20 +27,19 @@ type VirtualServerStats struct {
 	CurrentServerConnections float64 `json:"cursrvrconnections"`
 }
 
-// GetVirtualServerStats ...
-func GetVirtualServerStats(c *netscaler.NitroClient) NSAPIResponse {
+// GetVirtualServerStats queries the Nitro API for virtual server stats
+func GetVirtualServerStats(c *NitroClient) (NSAPIResponse, error) {
 	stats, err := c.GetStats("lbvserver")
 	if err != nil {
-		log.Println(err)
+		return NSAPIResponse{}, err
 	}
 
-	//TODO: s?  Bad name
-	var s = new(NSAPIResponse)
+	var response = new(NSAPIResponse)
 
-	err = json.Unmarshal(stats, &s)
+	err = json.Unmarshal(stats, &response)
 	if err != nil {
-		fmt.Println("whoops:", err)
+		return NSAPIResponse{}, errors.Wrap(err, "error unmarshalling response body")
 	}
 
-	return *s
+	return *response, nil
 }

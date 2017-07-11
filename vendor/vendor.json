@@ -33,6 +33,16 @@
 			"revisionTime": "2017-06-01T13:56:11Z"
 		},
 		{
+			"checksumSHA1": "LtUkBaUADvX/JMTgYMcPO8QA9Qo=",
+			"path": "github.com/pkg/errors",
+			"revision": "c605e284fe17294bda444b34710735b29d1a9d90",
+			"revisionTime": "2017-05-05T04:36:39Z"
+		},
+		{
+			"path": "github.com/pkg/errors/\n",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "lDGmGnGs81wjrl2nio3TeoujbvM=",
 			"path": "github.com/pmezard/go-difflib/difflib",
 			"revision": "792786c7400a136282c1664665ae0a8db921c6c2",
@@ -67,6 +77,12 @@
 			"revision": ""
 		},
 		{
+			"checksumSHA1": "01Z30RycCu8IF13G9H9MQ2OaNPQ=",
+			"path": "github.com/sirupsen/logrus",
+			"revision": "7f976d3a76720c4c27af2ba716b85d2e0a7e38b1",
+			"revisionTime": "2017-07-10T14:32:56Z"
+		},
+		{
 			"checksumSHA1": "WhO3OCaiLt8KBN6uhiyVAi69huQ=",
 			"path": "github.com/stretchr/testify/assert",
 			"revision": "f6abca593680b2315d2075e0f5e2a9751e3f431a",
@@ -83,6 +99,18 @@
 			"path": "golang.org/x/sys/windows",
 			"revision": "739734461d1c916b6c72a63d7efda2b27edb369f",
 			"revisionTime": "2017-07-07T11:51:12Z"
+		},
+		{
+			"checksumSHA1": "BIg1KeERyWVw035dQlhtH8jpXEw=",
+			"path": "golang.org/x/sys/windows/svc",
+			"revision": "abf9c25f54453410d0c6668e519582a9e1115027",
+			"revisionTime": "2017-07-10T15:57:01Z"
+		},
+		{
+			"checksumSHA1": "ulUbF/Wsx+g3cOeVLqufJhr+wLo=",
+			"path": "golang.org/x/sys/windows/svc/mgr",
+			"revision": "abf9c25f54453410d0c6668e519582a9e1115027",
+			"revisionTime": "2017-07-10T15:57:01Z"
 		}
 	],
 	"rootPath": "Citrix-NetScaler-Exporter"

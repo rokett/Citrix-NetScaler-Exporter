@@ -1,21 +1,30 @@
 package main
 
 import (
-	"Citrix-NetScaler-Exporter/collectors"
 	"Citrix-NetScaler-Exporter/netscaler"
-	"log"
+	"flag"
+	"fmt"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	log "github.com/sirupsen/logrus"
+	"golang.org/x/sys/windows/svc"
 )
 
 //TODO: Proper commenting
-//TODO: Proper logging
 //TODO: Refactor into separate files
-//TODO: Pass in NS URL and username/password via flags?  Or maybe querystring to /metrics?
+//TODO: Label for Netscdaler name
 
 var (
+	url      = flag.String("url", "", "Base URL of the NetScaler management interface.  Normally something like https://my-netscaler.something.x")
+	username = flag.String("username", "", "Username with which to connect to the NetScaler API")
+	password = flag.String("password", "", "Password with which to connect to the NetScaler API")
+	bindPort = flag.Int("bind_port", 9279, "Port to bind the exporter endpoint to")
+
 	mgmtCPUUsage = prometheus.NewDesc(
 		"mgmt_cpu_usage",
 		"Current CPU utilisation for management",
@@ -424,7 +433,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.virtualServers_currentServerConnections.Describe(ch)
 }
 
-func (e *Exporter) collectInterfacesRxBytesPerSecond(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectInterfacesRxBytesPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfaces_rxBytesPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
@@ -432,7 +441,7 @@ func (e *Exporter) collectInterfacesRxBytesPerSecond(ns collectors.NSAPIResponse
 	}
 }
 
-func (e *Exporter) collectInterfacesTxBytesPerSecond(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectInterfacesTxBytesPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfaces_rxBytesPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
@@ -440,7 +449,7 @@ func (e *Exporter) collectInterfacesTxBytesPerSecond(ns collectors.NSAPIResponse
 	}
 }
 
-func (e *Exporter) collectInterfacesRxPacketsPerSecond(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectInterfacesRxPacketsPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfaces_rxPacketsPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
@@ -448,7 +457,7 @@ func (e *Exporter) collectInterfacesRxPacketsPerSecond(ns collectors.NSAPIRespon
 	}
 }
 
-func (e *Exporter) collectInterfacesTxPacketsPerSecond(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectInterfacesTxPacketsPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfaces_txPacketsPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
@@ -456,7 +465,7 @@ func (e *Exporter) collectInterfacesTxPacketsPerSecond(ns collectors.NSAPIRespon
 	}
 }
 
-func (e *Exporter) collectInterfacesJumboPacketsRxPerSecond(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectInterfacesJumboPacketsRxPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfaces_jumboPacketsRxPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
@@ -464,7 +473,7 @@ func (e *Exporter) collectInterfacesJumboPacketsRxPerSecond(ns collectors.NSAPIR
 	}
 }
 
-func (e *Exporter) collectInterfacesJumboPacketsTxPerSecond(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectInterfacesJumboPacketsTxPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfaces_jumboPacketsTxPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
@@ -472,7 +481,7 @@ func (e *Exporter) collectInterfacesJumboPacketsTxPerSecond(ns collectors.NSAPIR
 	}
 }
 
-func (e *Exporter) collectInterfacesErrorPacketsRxPerSecond(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectInterfacesErrorPacketsRxPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfaces_errorPacketsRxPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
@@ -480,7 +489,7 @@ func (e *Exporter) collectInterfacesErrorPacketsRxPerSecond(ns collectors.NSAPIR
 	}
 }
 
-func (e *Exporter) collectVirtualServerWaitingRequests(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerWaitingRequests(ns netscaler.NSAPIResponse) {
 	e.virtualServers_waitingRequests.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -488,7 +497,7 @@ func (e *Exporter) collectVirtualServerWaitingRequests(ns collectors.NSAPIRespon
 	}
 }
 
-func (e *Exporter) collectVirtualServerHealth(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerHealth(ns netscaler.NSAPIResponse) {
 	e.virtualServers_health.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -496,7 +505,7 @@ func (e *Exporter) collectVirtualServerHealth(ns collectors.NSAPIResponse) {
 	}
 }
 
-func (e *Exporter) collectVirtualServerInactiveServices(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerInactiveServices(ns netscaler.NSAPIResponse) {
 	e.virtualServers_inactiveServices.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -504,7 +513,7 @@ func (e *Exporter) collectVirtualServerInactiveServices(ns collectors.NSAPIRespo
 	}
 }
 
-func (e *Exporter) collectVirtualServerActiveServices(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerActiveServices(ns netscaler.NSAPIResponse) {
 	e.virtualServers_activeServices.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -512,7 +521,7 @@ func (e *Exporter) collectVirtualServerActiveServices(ns collectors.NSAPIRespons
 	}
 }
 
-func (e *Exporter) collectVirtualServerTotalHits(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerTotalHits(ns netscaler.NSAPIResponse) {
 	e.virtualServers_totalHits.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -520,7 +529,7 @@ func (e *Exporter) collectVirtualServerTotalHits(ns collectors.NSAPIResponse) {
 	}
 }
 
-func (e *Exporter) collectVirtualServerHitsRate(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerHitsRate(ns netscaler.NSAPIResponse) {
 	e.virtualServers_hitsRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -528,7 +537,7 @@ func (e *Exporter) collectVirtualServerHitsRate(ns collectors.NSAPIResponse) {
 	}
 }
 
-func (e *Exporter) collectVirtualServerTotalRequests(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerTotalRequests(ns netscaler.NSAPIResponse) {
 	e.virtualServers_totalRequests.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -536,7 +545,7 @@ func (e *Exporter) collectVirtualServerTotalRequests(ns collectors.NSAPIResponse
 	}
 }
 
-func (e *Exporter) collectVirtualServerRequestsRate(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerRequestsRate(ns netscaler.NSAPIResponse) {
 	e.virtualServers_requestsRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -544,7 +553,7 @@ func (e *Exporter) collectVirtualServerRequestsRate(ns collectors.NSAPIResponse)
 	}
 }
 
-func (e *Exporter) collectVirtualServerTotalResponses(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerTotalResponses(ns netscaler.NSAPIResponse) {
 	e.virtualServers_totalResponses.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -552,7 +561,7 @@ func (e *Exporter) collectVirtualServerTotalResponses(ns collectors.NSAPIRespons
 	}
 }
 
-func (e *Exporter) collectVirtualServerResponsesRate(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerResponsesRate(ns netscaler.NSAPIResponse) {
 	e.virtualServers_reponsesRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -560,7 +569,7 @@ func (e *Exporter) collectVirtualServerResponsesRate(ns collectors.NSAPIResponse
 	}
 }
 
-func (e *Exporter) collectVirtualServerTotalRequestBytes(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerTotalRequestBytes(ns netscaler.NSAPIResponse) {
 	e.virtualServers_totalRequestBytes.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -568,7 +577,7 @@ func (e *Exporter) collectVirtualServerTotalRequestBytes(ns collectors.NSAPIResp
 	}
 }
 
-func (e *Exporter) collectVirtualServerRequestBytesRate(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerRequestBytesRate(ns netscaler.NSAPIResponse) {
 	e.virtualServers_requestBytesRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -576,7 +585,7 @@ func (e *Exporter) collectVirtualServerRequestBytesRate(ns collectors.NSAPIRespo
 	}
 }
 
-func (e *Exporter) collectVirtualServerTotalResponseBytes(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerTotalResponseBytes(ns netscaler.NSAPIResponse) {
 	e.virtualServers_totalResponseBytes.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -584,7 +593,7 @@ func (e *Exporter) collectVirtualServerTotalResponseBytes(ns collectors.NSAPIRes
 	}
 }
 
-func (e *Exporter) collectVirtualServerResponseBytesRate(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerResponseBytesRate(ns netscaler.NSAPIResponse) {
 	e.virtualServers_reponseBytesRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -592,7 +601,7 @@ func (e *Exporter) collectVirtualServerResponseBytesRate(ns collectors.NSAPIResp
 	}
 }
 
-func (e *Exporter) collectVirtualServerCurrentClientConnections(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerCurrentClientConnections(ns netscaler.NSAPIResponse) {
 	e.virtualServers_currentClientConnections.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -600,7 +609,7 @@ func (e *Exporter) collectVirtualServerCurrentClientConnections(ns collectors.NS
 	}
 }
 
-func (e *Exporter) collectVirtualServerCurrentServerConnections(ns collectors.NSAPIResponse) {
+func (e *Exporter) collectVirtualServerCurrentServerConnections(ns netscaler.NSAPIResponse) {
 	e.virtualServers_currentServerConnections.Reset()
 
 	for _, vs := range ns.VirtualServers {
@@ -609,11 +618,23 @@ func (e *Exporter) collectVirtualServerCurrentServerConnections(ns collectors.NS
 }
 
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
-	nsClient := netscaler.NewNitroClient("url", "nsroot", "password")
+	nsClient := netscaler.NewNitroClient(*url, *username, *password)
+	fmt.Println(nsClient)
 
-	ns := collectors.GetNSStats(nsClient)
-	interfaces := collectors.GetInterfaceStats(nsClient)
-	virtualServers := collectors.GetVirtualServerStats(nsClient)
+	ns, err := netscaler.GetNSStats(nsClient)
+	if err != nil {
+		log.Error(err)
+	}
+
+	interfaces, err := netscaler.GetInterfaceStats(nsClient)
+	if err != nil {
+		log.Error(err)
+	}
+
+	virtualServers, err := netscaler.GetVirtualServerStats(nsClient)
+	if err != nil {
+		log.Error(err)
+	}
 
 	ch <- prometheus.MustNewConstMetric(
 		mgmtCPUUsage, prometheus.GaugeValue, ns.NS.MgmtCPUUsagePcnt,
@@ -722,6 +743,29 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 }
 
 func main() {
+	flag.Parse()
+
+	if *url == "" || *username == "" || *password == "" {
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
+	interactive, _ := svc.IsAnInteractiveSession()
+
+	if interactive != true {
+		log.SetFormatter(&log.JSONFormatter{})
+
+		//TODO: Set log file
+		file, err := os.OpenFile("cmdb.log", os.O_CREATE|os.O_WRONLY, 0666)
+		if err == nil {
+			log.SetOutput(file)
+		} else {
+			log.Info("Failed to log to file, using default stderr")
+		}
+	}
+
+	listeningPort := ":" + strconv.Itoa(*bindPort)
+
 	exporter, _ := NewExporter()
 	prometheus.MustRegister(exporter)
 
@@ -737,5 +781,6 @@ func main() {
 
 	http.Handle("/metrics", promhttp.Handler())
 
-	log.Fatal(http.ListenAndServe(":9279", nil))
+	log.Infof("Listening on port %s", listeningPort)
+	log.Fatal(http.ListenAndServe(listeningPort, nil))
 }

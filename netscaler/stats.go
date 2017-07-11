@@ -1,22 +1,19 @@
 package netscaler
 
 import (
-	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
-//TODO: Proper comments
-//TODO: Proper logging and error returning
-
-// GetStats ...
+// GetStats sends a request to the Nitro API and retrieves stats for the given type.
 func (c *NitroClient) GetStats(statsType string) ([]byte, error) {
 	url := c.url + "stat/" + statsType
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return nil, errors.Wrap(err, "error creating HTTP request")
 	}
 
 	req.Header.Set("Accept", "application/json")
@@ -28,7 +25,7 @@ func (c *NitroClient) GetStats(statsType string) ([]byte, error) {
 		defer resp.Body.Close()
 	}
 	if err != nil {
-		log.Fatal(err)
+		return nil, errors.Wrap(err, "error sending request")
 	}
 
 	switch resp.StatusCode {

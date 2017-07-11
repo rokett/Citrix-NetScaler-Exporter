@@ -1,16 +1,12 @@
-package collectors
+package netscaler
 
 import (
-	"Citrix-NetScaler-Exporter/netscaler"
 	"encoding/json"
-	"fmt"
-	"log"
+
+	"github.com/pkg/errors"
 )
 
-//TODO: Proper commenting
-//TODO: Proper logging
-
-// NSStats ...
+// NSStats represents the data returned from the /stat/ns Nitro API endpoint
 type NSStats struct {
 	CPUUsagePcnt        float64 `json:"cpuusagepcnt"`
 	MemUsagePcnt        float64 `json:"memusagepcnt"`
@@ -24,20 +20,19 @@ type NSStats struct {
 	HTTPResponsesRate   float64 `json:"httpresponsesrate"`
 }
 
-// GetNSStats ...
-func GetNSStats(c *netscaler.NitroClient) NSAPIResponse {
+// GetNSStats queries the Nitro API for ns stats
+func GetNSStats(c *NitroClient) (NSAPIResponse, error) {
 	stats, err := c.GetStats("ns")
 	if err != nil {
-		log.Println(err)
+		return NSAPIResponse{}, err
 	}
 
-	//TODO: s?  Bad name
-	var s = new(NSAPIResponse)
+	var response = new(NSAPIResponse)
 
-	err = json.Unmarshal(stats, &s)
+	err = json.Unmarshal(stats, &response)
 	if err != nil {
-		fmt.Println("whoops:", err)
+		return NSAPIResponse{}, errors.Wrap(err, "error unmarshalling response body")
 	}
 
-	return *s
+	return *response, nil
 }

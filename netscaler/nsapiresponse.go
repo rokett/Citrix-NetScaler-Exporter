@@ -1,8 +1,6 @@
-package collectors
+package netscaler
 
-//TODO: Proper commenting
-
-// NSAPIResponse ...
+// NSAPIResponse represents the main portion of the Nitro API response
 type NSAPIResponse struct {
 	Errorcode      int64                `json:"errorcode"`
 	Message        string               `json:"message"`
