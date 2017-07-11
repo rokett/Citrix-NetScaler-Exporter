@@ -10,6 +10,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+//TODO: Proper commenting
+//TODO: Proper logging
+//TODO: Refactor into separate files
+//TODO: Pass in NS URL and username/password via flags?  Or maybe querystring to /metrics?
+
 var (
 	mgmtCPUUsage = prometheus.NewDesc(
 		"mgmt_cpu_usage",
@@ -150,45 +155,237 @@ var (
 			"alias",
 		},
 	)
+
+	virtualServers_waitingRequests = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_waiting_requests",
+			Help: "Number of requests waiting on a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_health = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_health",
+			Help: "Percentage of UP services bound to a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_inactiveServices = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_inactive_services",
+			Help: "Number of inactive services bound to a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_activeServices = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_active_services",
+			Help: "Number of active services bound to a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_totalHits = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "virtual_servers_total_hits",
+			Help: "Total virtual server hits",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_hitsRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_hits_rate",
+			Help: "Number of hits/second to a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_totalRequests = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "virtual_servers_total_requests",
+			Help: "Total virtual server requests",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_requestsRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_requests_rate",
+			Help: "Number of requests/second to a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_totalResponses = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "virtual_servers_total_responses",
+			Help: "Total virtual server responses",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_reponsesRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_responses_rate",
+			Help: "Number of responses/second from a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_totalRequestBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "virtual_servers_total_request_bytes",
+			Help: "Total virtual server request bytes",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_requestBytesRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_request_bytes_rate",
+			Help: "Number of request bytes/second to a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_totalResponseBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "virtual_servers_total_response_bytes",
+			Help: "Total virtual server response bytes",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_reponseBytesRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_reponse_bytes_rate",
+			Help: "Number of response bytes/second from a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_currentClientConnections = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_current_client_connections",
+			Help: "Number of current client connections on a specific virtual server",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
+
+	virtualServers_currentServerConnections = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_current_server_connections",
+			Help: "Number of current connections to the actual servers behind the specific virtual server.",
+		},
+		[]string{
+			"virtual_server",
+		},
+	)
 )
 
 type Exporter struct {
-	mgmtCPUUsage                       *prometheus.Desc
-	memUsage                           *prometheus.Desc
-	pktCPUUsage                        *prometheus.Desc
-	flashPartitionUsage                *prometheus.Desc
-	varPartitionUsage                  *prometheus.Desc
-	rxMbPerSec                         *prometheus.Desc
-	txMbPerSec                         *prometheus.Desc
-	HTTPRequestsRate                   *prometheus.Desc
-	HTTPResponsesRate                  *prometheus.Desc
-	interfaces_rxBytesPerSecond        *prometheus.GaugeVec
-	interfaces_txBytesPerSecond        *prometheus.GaugeVec
-	interfaces_rxPacketsPerSecond      *prometheus.GaugeVec
-	interfaces_txPacketsPerSecond      *prometheus.GaugeVec
-	interfaces_jumboPacketsRxPerSecond *prometheus.GaugeVec
-	interfaces_jumboPacketsTxPerSecond *prometheus.GaugeVec
-	interfaces_errorPacketsRxPerSecond *prometheus.GaugeVec
+	mgmtCPUUsage                            *prometheus.Desc
+	memUsage                                *prometheus.Desc
+	pktCPUUsage                             *prometheus.Desc
+	flashPartitionUsage                     *prometheus.Desc
+	varPartitionUsage                       *prometheus.Desc
+	rxMbPerSec                              *prometheus.Desc
+	txMbPerSec                              *prometheus.Desc
+	HTTPRequestsRate                        *prometheus.Desc
+	HTTPResponsesRate                       *prometheus.Desc
+	interfaces_rxBytesPerSecond             *prometheus.GaugeVec
+	interfaces_txBytesPerSecond             *prometheus.GaugeVec
+	interfaces_rxPacketsPerSecond           *prometheus.GaugeVec
+	interfaces_txPacketsPerSecond           *prometheus.GaugeVec
+	interfaces_jumboPacketsRxPerSecond      *prometheus.GaugeVec
+	interfaces_jumboPacketsTxPerSecond      *prometheus.GaugeVec
+	interfaces_errorPacketsRxPerSecond      *prometheus.GaugeVec
+	virtualServers_waitingRequests          *prometheus.GaugeVec
+	virtualServers_health                   *prometheus.GaugeVec
+	virtualServers_inactiveServices         *prometheus.GaugeVec
+	virtualServers_activeServices           *prometheus.GaugeVec
+	virtualServers_totalHits                *prometheus.CounterVec
+	virtualServers_hitsRate                 *prometheus.GaugeVec
+	virtualServers_totalRequests            *prometheus.CounterVec
+	virtualServers_requestsRate             *prometheus.GaugeVec
+	virtualServers_totalResponses           *prometheus.CounterVec
+	virtualServers_reponsesRate             *prometheus.GaugeVec
+	virtualServers_totalRequestBytes        *prometheus.CounterVec
+	virtualServers_requestBytesRate         *prometheus.GaugeVec
+	virtualServers_totalResponseBytes       *prometheus.CounterVec
+	virtualServers_reponseBytesRate         *prometheus.GaugeVec
+	virtualServers_currentClientConnections *prometheus.GaugeVec
+	virtualServers_currentServerConnections *prometheus.GaugeVec
 }
 
 func NewExporter() (*Exporter, error) {
 	return &Exporter{
-		mgmtCPUUsage:                       mgmtCPUUsage,
-		memUsage:                           memUsage,
-		pktCPUUsage:                        pktCPUUsage,
-		flashPartitionUsage:                flashPartitionUsage,
-		varPartitionUsage:                  varPartitionUsage,
-		rxMbPerSec:                         rxMbPerSec,
-		txMbPerSec:                         txMbPerSec,
-		HTTPRequestsRate:                   HTTPRequestsRate,
-		HTTPResponsesRate:                  HTTPResponsesRate,
-		interfaces_rxBytesPerSecond:        interfaces_rxBytesPerSecond,
-		interfaces_txBytesPerSecond:        interfaces_txBytesPerSecond,
-		interfaces_rxPacketsPerSecond:      interfaces_rxPacketsPerSecond,
-		interfaces_txPacketsPerSecond:      interfaces_txPacketsPerSecond,
-		interfaces_jumboPacketsRxPerSecond: interfaces_jumboPacketsRxPerSecond,
-		interfaces_jumboPacketsTxPerSecond: interfaces_jumboPacketsTxPerSecond,
-		interfaces_errorPacketsRxPerSecond: interfaces_errorPacketsRxPerSecond,
+		mgmtCPUUsage:                            mgmtCPUUsage,
+		memUsage:                                memUsage,
+		pktCPUUsage:                             pktCPUUsage,
+		flashPartitionUsage:                     flashPartitionUsage,
+		varPartitionUsage:                       varPartitionUsage,
+		rxMbPerSec:                              rxMbPerSec,
+		txMbPerSec:                              txMbPerSec,
+		HTTPRequestsRate:                        HTTPRequestsRate,
+		HTTPResponsesRate:                       HTTPResponsesRate,
+		interfaces_rxBytesPerSecond:             interfaces_rxBytesPerSecond,
+		interfaces_txBytesPerSecond:             interfaces_txBytesPerSecond,
+		interfaces_rxPacketsPerSecond:           interfaces_rxPacketsPerSecond,
+		interfaces_txPacketsPerSecond:           interfaces_txPacketsPerSecond,
+		interfaces_jumboPacketsRxPerSecond:      interfaces_jumboPacketsRxPerSecond,
+		interfaces_jumboPacketsTxPerSecond:      interfaces_jumboPacketsTxPerSecond,
+		interfaces_errorPacketsRxPerSecond:      interfaces_errorPacketsRxPerSecond,
+		virtualServers_waitingRequests:          virtualServers_waitingRequests,
+		virtualServers_health:                   virtualServers_health,
+		virtualServers_inactiveServices:         virtualServers_inactiveServices,
+		virtualServers_activeServices:           virtualServers_activeServices,
+		virtualServers_totalHits:                virtualServers_totalHits,
+		virtualServers_hitsRate:                 virtualServers_hitsRate,
+		virtualServers_totalRequests:            virtualServers_totalRequests,
+		virtualServers_requestsRate:             virtualServers_requestsRate,
+		virtualServers_totalResponses:           virtualServers_totalResponses,
+		virtualServers_reponsesRate:             virtualServers_reponsesRate,
+		virtualServers_totalRequestBytes:        virtualServers_totalRequestBytes,
+		virtualServers_requestBytesRate:         virtualServers_requestBytesRate,
+		virtualServers_totalResponseBytes:       virtualServers_totalResponseBytes,
+		virtualServers_reponseBytesRate:         virtualServers_reponseBytesRate,
+		virtualServers_currentClientConnections: virtualServers_currentClientConnections,
+		virtualServers_currentServerConnections: virtualServers_currentServerConnections,
 	}, nil
 }
 
@@ -209,6 +406,22 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.interfaces_jumboPacketsRxPerSecond.Describe(ch)
 	e.interfaces_jumboPacketsTxPerSecond.Describe(ch)
 	e.interfaces_errorPacketsRxPerSecond.Describe(ch)
+	e.virtualServers_waitingRequests.Describe(ch)
+	e.virtualServers_health.Describe(ch)
+	e.virtualServers_inactiveServices.Describe(ch)
+	e.virtualServers_activeServices.Describe(ch)
+	e.virtualServers_totalHits.Describe(ch)
+	e.virtualServers_hitsRate.Describe(ch)
+	e.virtualServers_totalRequests.Describe(ch)
+	e.virtualServers_requestsRate.Describe(ch)
+	e.virtualServers_totalResponses.Describe(ch)
+	e.virtualServers_reponsesRate.Describe(ch)
+	e.virtualServers_totalRequestBytes.Describe(ch)
+	e.virtualServers_requestBytesRate.Describe(ch)
+	e.virtualServers_totalResponseBytes.Describe(ch)
+	e.virtualServers_reponseBytesRate.Describe(ch)
+	e.virtualServers_currentClientConnections.Describe(ch)
+	e.virtualServers_currentServerConnections.Describe(ch)
 }
 
 func (e *Exporter) collectInterfacesRxBytesPerSecond(ns collectors.NSAPIResponse) {
@@ -267,11 +480,140 @@ func (e *Exporter) collectInterfacesErrorPacketsRxPerSecond(ns collectors.NSAPIR
 	}
 }
 
+func (e *Exporter) collectVirtualServerWaitingRequests(ns collectors.NSAPIResponse) {
+	e.virtualServers_waitingRequests.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_waitingRequests.WithLabelValues(vs.Name).Set(vs.WaitingRequests)
+	}
+}
+
+func (e *Exporter) collectVirtualServerHealth(ns collectors.NSAPIResponse) {
+	e.virtualServers_health.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_health.WithLabelValues(vs.Name).Set(vs.Health)
+	}
+}
+
+func (e *Exporter) collectVirtualServerInactiveServices(ns collectors.NSAPIResponse) {
+	e.virtualServers_inactiveServices.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_inactiveServices.WithLabelValues(vs.Name).Set(vs.InactiveServices)
+	}
+}
+
+func (e *Exporter) collectVirtualServerActiveServices(ns collectors.NSAPIResponse) {
+	e.virtualServers_activeServices.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_activeServices.WithLabelValues(vs.Name).Set(vs.ActiveServices)
+	}
+}
+
+func (e *Exporter) collectVirtualServerTotalHits(ns collectors.NSAPIResponse) {
+	e.virtualServers_totalHits.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_totalHits.WithLabelValues(vs.Name).Set(vs.TotalHits)
+	}
+}
+
+func (e *Exporter) collectVirtualServerHitsRate(ns collectors.NSAPIResponse) {
+	e.virtualServers_hitsRate.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_hitsRate.WithLabelValues(vs.Name).Set(vs.HitsRate)
+	}
+}
+
+func (e *Exporter) collectVirtualServerTotalRequests(ns collectors.NSAPIResponse) {
+	e.virtualServers_totalRequests.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_totalRequests.WithLabelValues(vs.Name).Set(vs.TotalRequests)
+	}
+}
+
+func (e *Exporter) collectVirtualServerRequestsRate(ns collectors.NSAPIResponse) {
+	e.virtualServers_requestsRate.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_requestsRate.WithLabelValues(vs.Name).Set(vs.RequestsRate)
+	}
+}
+
+func (e *Exporter) collectVirtualServerTotalResponses(ns collectors.NSAPIResponse) {
+	e.virtualServers_totalResponses.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_totalResponses.WithLabelValues(vs.Name).Set(vs.TotalResponses)
+	}
+}
+
+func (e *Exporter) collectVirtualServerResponsesRate(ns collectors.NSAPIResponse) {
+	e.virtualServers_reponsesRate.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_reponsesRate.WithLabelValues(vs.Name).Set(vs.ResponsesRate)
+	}
+}
+
+func (e *Exporter) collectVirtualServerTotalRequestBytes(ns collectors.NSAPIResponse) {
+	e.virtualServers_totalRequestBytes.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_totalRequestBytes.WithLabelValues(vs.Name).Set(vs.TotalRequestBytes)
+	}
+}
+
+func (e *Exporter) collectVirtualServerRequestBytesRate(ns collectors.NSAPIResponse) {
+	e.virtualServers_requestBytesRate.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_requestBytesRate.WithLabelValues(vs.Name).Set(vs.RequestBytesRate)
+	}
+}
+
+func (e *Exporter) collectVirtualServerTotalResponseBytes(ns collectors.NSAPIResponse) {
+	e.virtualServers_totalResponseBytes.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_totalResponseBytes.WithLabelValues(vs.Name).Set(vs.TotalResponseBytes)
+	}
+}
+
+func (e *Exporter) collectVirtualServerResponseBytesRate(ns collectors.NSAPIResponse) {
+	e.virtualServers_reponseBytesRate.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_reponseBytesRate.WithLabelValues(vs.Name).Set(vs.ResponseBytesRate)
+	}
+}
+
+func (e *Exporter) collectVirtualServerCurrentClientConnections(ns collectors.NSAPIResponse) {
+	e.virtualServers_currentClientConnections.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_currentClientConnections.WithLabelValues(vs.Name).Set(vs.CurrentClientConnections)
+	}
+}
+
+func (e *Exporter) collectVirtualServerCurrentServerConnections(ns collectors.NSAPIResponse) {
+	e.virtualServers_currentServerConnections.Reset()
+
+	for _, vs := range ns.VirtualServers {
+		e.virtualServers_currentServerConnections.WithLabelValues(vs.Name).Set(vs.CurrentServerConnections)
+	}
+}
+
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
-	nsClient := netscaler.NewNitroClient("https://netscaler-internal-new.exe.nhs.uk", "nsroot", "rGM!WiLl!cMG=$tZZ~|Lw4q*!GNlGm")
+	nsClient := netscaler.NewNitroClient("url", "nsroot", "password")
 
 	ns := collectors.GetNSStats(nsClient)
 	interfaces := collectors.GetInterfaceStats(nsClient)
+	virtualServers := collectors.GetVirtualServerStats(nsClient)
 
 	ch <- prometheus.MustNewConstMetric(
 		mgmtCPUUsage, prometheus.GaugeValue, ns.NS.MgmtCPUUsagePcnt,
@@ -329,6 +671,54 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectInterfacesErrorPacketsRxPerSecond(interfaces)
 	e.interfaces_errorPacketsRxPerSecond.Collect(ch)
+
+	e.collectVirtualServerWaitingRequests(virtualServers)
+	e.virtualServers_waitingRequests.Collect(ch)
+
+	e.collectVirtualServerHealth(virtualServers)
+	e.virtualServers_health.Collect(ch)
+
+	e.collectVirtualServerInactiveServices(virtualServers)
+	e.virtualServers_inactiveServices.Collect(ch)
+
+	e.collectVirtualServerActiveServices(virtualServers)
+	e.virtualServers_activeServices.Collect(ch)
+
+	e.collectVirtualServerTotalHits(virtualServers)
+	e.virtualServers_totalHits.Collect(ch)
+
+	e.collectVirtualServerHitsRate(virtualServers)
+	e.virtualServers_hitsRate.Collect(ch)
+
+	e.collectVirtualServerTotalRequests(virtualServers)
+	e.virtualServers_totalRequests.Collect(ch)
+
+	e.collectVirtualServerRequestsRate(virtualServers)
+	e.virtualServers_requestsRate.Collect(ch)
+
+	e.collectVirtualServerTotalResponses(virtualServers)
+	e.virtualServers_totalResponses.Collect(ch)
+
+	e.collectVirtualServerResponsesRate(virtualServers)
+	e.virtualServers_reponsesRate.Collect(ch)
+
+	e.collectVirtualServerTotalRequestBytes(virtualServers)
+	e.virtualServers_totalRequestBytes.Collect(ch)
+
+	e.collectVirtualServerRequestBytesRate(virtualServers)
+	e.virtualServers_requestBytesRate.Collect(ch)
+
+	e.collectVirtualServerTotalResponseBytes(virtualServers)
+	e.virtualServers_totalResponseBytes.Collect(ch)
+
+	e.collectVirtualServerResponseBytesRate(virtualServers)
+	e.virtualServers_reponseBytesRate.Collect(ch)
+
+	e.collectVirtualServerCurrentClientConnections(virtualServers)
+	e.virtualServers_currentClientConnections.Collect(ch)
+
+	e.collectVirtualServerCurrentServerConnections(virtualServers)
+	e.virtualServers_currentServerConnections.Collect(ch)
 }
 
 func main() {

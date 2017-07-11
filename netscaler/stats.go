@@ -7,6 +7,9 @@ import (
 	"net/http"
 )
 
+//TODO: Proper comments
+//TODO: Proper logging and error returning
+
 // GetStats ...
 func (c *NitroClient) GetStats(statsType string) ([]byte, error) {
 	url := c.url + "stat/" + statsType

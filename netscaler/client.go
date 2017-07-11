@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+//TODO: Proper comments
+
 // NitroClient ...
 type NitroClient struct {
 	url      string
@@ -18,6 +20,7 @@ type NitroClient struct {
 func NewNitroClient(url string, username string, password string) *NitroClient {
 	c := new(NitroClient)
 
+	//TODO: What is the trim for?
 	c.url = strings.Trim(url, " /") + "/nitro/v1/"
 
 	c.username = username

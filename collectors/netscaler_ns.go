@@ -7,6 +7,9 @@ import (
 	"log"
 )
 
+//TODO: Proper commenting
+//TODO: Proper logging
+
 // NSStats ...
 type NSStats struct {
 	CPUUsagePcnt        float64 `json:"cpuusagepcnt"`
@@ -28,6 +31,7 @@ func GetNSStats(c *netscaler.NitroClient) NSAPIResponse {
 		log.Println(err)
 	}
 
+	//TODO: s?  Bad name
 	var s = new(NSAPIResponse)
 
 	err = json.Unmarshal(stats, &s)

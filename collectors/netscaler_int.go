@@ -7,6 +7,10 @@ import (
 	"log"
 )
 
+//TODO: Proper commenting
+//TODO: Proper logging
+
+// InterfaceStats ...
 type InterfaceStats struct {
 	ID                               string  `json:"id"`
 	ReceivedBytesPerSecond           float64 `json:"rxbytesrate"`
@@ -26,6 +30,7 @@ func GetInterfaceStats(c *netscaler.NitroClient) NSAPIResponse {
 		log.Println(err)
 	}
 
+	//TODO: s?  Bad name
 	var s = new(NSAPIResponse)
 
 	err = json.Unmarshal(stats, &s)
