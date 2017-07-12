@@ -9,22 +9,22 @@ import (
 // VirtualServerStats represents the data returned from the /stat/lbvserver Nitro API endpoint
 type VirtualServerStats struct {
 	Name                     string  `json:"name"`
-	WaitingRequests          float64 `json:"vsvrsurgecount"`
-	Health                   float64 `json:"vslbhealth"`
-	InactiveServices         float64 `json:"inactsvcs"`
-	ActiveServices           float64 `json:"actsvcs"`
-	TotalHits                float64 `json:"tothits"`
+	WaitingRequests          string  `json:"vsvrsurgecount"`
+	Health                   string  `json:"vslbhealth"`
+	InactiveServices         string  `json:"inactsvcs"`
+	ActiveServices           string  `json:"actsvcs"`
+	TotalHits                string  `json:"tothits"`
 	HitsRate                 float64 `json:"hitsrate"`
-	TotalRequests            float64 `json:"totalrequests"`
+	TotalRequests            string  `json:"totalrequests"`
 	RequestsRate             float64 `json:"requestsrate"`
-	TotalResponses           float64 `json:"totalresponses"`
+	TotalResponses           string  `json:"totalresponses"`
 	ResponsesRate            float64 `json:"responsesrate"`
-	TotalRequestBytes        float64 `json:"totalrequestsbytes"`
+	TotalRequestBytes        string  `json:"totalrequestsbytes"`
 	RequestBytesRate         float64 `json:"requestbytesrate"`
-	TotalResponseBytes       float64 `json:"totalresponsebytes"`
+	TotalResponseBytes       string  `json:"totalresponsebytes"`
 	ResponseBytesRate        float64 `json:"responsebytesrate"`
-	CurrentClientConnections float64 `json:"curclntconnections"`
-	CurrentServerConnections float64 `json:"cursrvrconnections"`
+	CurrentClientConnections string  `json:"curclntconnections"`
+	CurrentServerConnections string  `json:"cursrvrconnections"`
 }
 
 // GetVirtualServerStats queries the Nitro API for virtual server stats
