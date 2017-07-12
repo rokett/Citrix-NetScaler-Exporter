@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -14,76 +15,92 @@ import (
 	"golang.org/x/sys/windows/svc"
 )
 
-//TODO: Proper commenting
-//TODO: Refactor into separate files
-//TODO: Label for Netscdaler name
-
 var (
 	url      = flag.String("url", "", "Base URL of the NetScaler management interface.  Normally something like https://my-netscaler.something.x")
 	username = flag.String("username", "", "Username with which to connect to the NetScaler API")
 	password = flag.String("password", "", "Password with which to connect to the NetScaler API")
 	bindPort = flag.Int("bind_port", 9279, "Port to bind the exporter endpoint to")
 
+	nsInstance string
+
 	mgmtCPUUsage = prometheus.NewDesc(
 		"mgmt_cpu_usage",
 		"Current CPU utilisation for management",
-		nil,
+		[]string{
+			"ns_instance",
+		},
 		nil,
 	)
 
 	pktCPUUsage = prometheus.NewDesc(
 		"pkt_cpu_usage",
 		"Current CPU utilisation for packet engines, excluding management",
-		nil,
+		[]string{
+			"ns_instance",
+		},
 		nil,
 	)
 
 	memUsage = prometheus.NewDesc(
 		"mem_usage",
 		"Current memory utilisation",
-		nil,
+		[]string{
+			"ns_instance",
+		},
 		nil,
 	)
 
 	flashPartitionUsage = prometheus.NewDesc(
 		"flash_partition_usage",
 		"Used space in /flash partition of the disk, as a percentage.",
-		nil,
+		[]string{
+			"ns_instance",
+		},
 		nil,
 	)
 
 	varPartitionUsage = prometheus.NewDesc(
 		"var_partition_usage",
 		"Used space in /var partition of the disk, as a percentage. ",
-		nil,
+		[]string{
+			"ns_instance",
+		},
 		nil,
 	)
 
 	rxMbPerSec = prometheus.NewDesc(
 		"received_mb_per_second",
 		"Number of Megabits received by the NetScaler appliance per second",
-		nil,
+		[]string{
+			"ns_instance",
+		},
 		nil,
 	)
 
 	txMbPerSec = prometheus.NewDesc(
 		"transmit_mb_per_second",
 		"Number of Megabits transmitted by the NetScaler appliance per second",
-		nil,
+		[]string{
+			"ns_instance",
+		},
 		nil,
 	)
 
 	httpRequestsRate = prometheus.NewDesc(
 		"http_requests_rate",
 		"HTTP requests received per second",
-		nil,
+		[]string{
+			"ns_instance",
+		},
 		nil,
 	)
 
 	httpResponsesRate = prometheus.NewDesc(
 		"http_responses_rate",
 		"HTTP requests sent per second",
-		nil,
+		[]string{
+			"ns_instance",
+		},
 		nil,
 	)
 
@@ -93,6 +110,7 @@ var (
 			Help: "Number of bytes received per second by specific interfaces",
 		},
 		[]string{
+			"ns_instance",
 			"interface",
 			"alias",
 		},
@@ -104,6 +122,7 @@ var (
 			Help: "Number of bytes transmitted per second by specific interfaces",
 		},
 		[]string{
+			"ns_instance",
 			"interface",
 			"alias",
 		},
@@ -115,6 +134,7 @@ var (
 			Help: "Number of packets received per second by specific interfaces",
 		},
 		[]string{
+			"ns_instance",
 			"interface",
 			"alias",
 		},
@@ -126,6 +146,7 @@ var (
 			Help: "Number of packets transmitted per second by specific interfaces",
 		},
 		[]string{
+			"ns_instance",
 			"interface",
 			"alias",
 		},
@@ -137,6 +158,7 @@ var (
 			Help: "Number of bytes received per second by specific interfaces",
 		},
 		[]string{
+			"ns_instance",
 			"interface",
 			"alias",
 		},
@@ -148,6 +170,7 @@ var (
 			Help: "Number of jumbo packets transmitted per second by specific interfaces",
 		},
 		[]string{
+			"ns_instance",
 			"interface",
 			"alias",
 		},
@@ -159,6 +182,7 @@ var (
 			Help: "Number of error packets received per second by specific interfaces",
 		},
 		[]string{
+			"ns_instance",
 			"interface",
 			"alias",
 		},
@@ -170,6 +194,7 @@ var (
 			Help: "Number of requests waiting on a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -180,6 +205,7 @@ var (
 			Help: "Percentage of UP services bound to a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -190,6 +216,7 @@ var (
 			Help: "Number of inactive services bound to a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -200,6 +227,7 @@ var (
 			Help: "Number of active services bound to a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -210,6 +238,7 @@ var (
 			Help: "Total virtual server hits",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -220,6 +249,7 @@ var (
 			Help: "Number of hits/second to a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -230,6 +260,7 @@ var (
 			Help: "Total virtual server requests",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -240,6 +271,7 @@ var (
 			Help: "Number of requests/second to a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -250,6 +282,7 @@ var (
 			Help: "Total virtual server responses",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -260,6 +293,7 @@ var (
 			Help: "Number of responses/second from a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -270,6 +304,7 @@ var (
 			Help: "Total virtual server request bytes",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -280,6 +315,7 @@ var (
 			Help: "Number of request bytes/second to a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -290,6 +326,7 @@ var (
 			Help: "Total virtual server response bytes",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -300,6 +337,7 @@ var (
 			Help: "Number of response bytes/second from a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -310,6 +348,7 @@ var (
 			Help: "Number of current client connections on a specific virtual server",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -320,6 +359,7 @@ var (
 			Help: "Number of current connections to the actual servers behind the specific virtual server.",
 		},
 		[]string{
+			"ns_instance",
 			"virtual_server",
 		},
 	)
@@ -439,7 +479,7 @@ func (e *Exporter) collectInterfacesRxBytesPerSecond(ns netscaler.NSAPIResponse)
 	e.interfacesRxBytesPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfacesRxBytesPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.ReceivedBytesPerSecond)
+		e.interfacesRxBytesPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.ReceivedBytesPerSecond)
 	}
 }
 
@@ -447,7 +487,7 @@ func (e *Exporter) collectInterfacesTxBytesPerSecond(ns netscaler.NSAPIResponse)
 	e.interfacesTxBytesPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfacesTxBytesPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.TransmitBytesPerSecond)
+		e.interfacesTxBytesPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.TransmitBytesPerSecond)
 	}
 }
 
@@ -455,7 +495,7 @@ func (e *Exporter) collectInterfacesRxPacketsPerSecond(ns netscaler.NSAPIRespons
 	e.interfacesRxPacketsPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfacesRxPacketsPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.ReceivedPacketsPerSecond)
+		e.interfacesRxPacketsPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.ReceivedPacketsPerSecond)
 	}
 }
 
@@ -463,7 +503,7 @@ func (e *Exporter) collectInterfacesTxPacketsPerSecond(ns netscaler.NSAPIRespons
 	e.interfacesTxPacketsPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfacesTxPacketsPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.TransmitPacketsPerSecond)
+		e.interfacesTxPacketsPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.TransmitPacketsPerSecond)
 	}
 }
 
@@ -471,7 +511,7 @@ func (e *Exporter) collectInterfacesJumboPacketsRxPerSecond(ns netscaler.NSAPIRe
 	e.interfacesJumboPacketsRxPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfacesJumboPacketsRxPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.JumboPacketsReceivedPerSecond)
+		e.interfacesJumboPacketsRxPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.JumboPacketsReceivedPerSecond)
 	}
 }
 
@@ -479,7 +519,7 @@ func (e *Exporter) collectInterfacesJumboPacketsTxPerSecond(ns netscaler.NSAPIRe
 	e.interfacesJumboPacketsTxPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfacesJumboPacketsTxPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.JumboPacketsTransmittedPerSecond)
+		e.interfacesJumboPacketsTxPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.JumboPacketsTransmittedPerSecond)
 	}
 }
 
@@ -487,7 +527,7 @@ func (e *Exporter) collectInterfacesErrorPacketsRxPerSecond(ns netscaler.NSAPIRe
 	e.interfacesErrorPacketsRxPerSecond.Reset()
 
 	for _, iface := range ns.Interfaces {
-		e.interfacesErrorPacketsRxPerSecond.WithLabelValues(iface.ID, iface.Alias).Set(iface.ErrorPacketsReceivedPerSecond)
+		e.interfacesErrorPacketsRxPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.ErrorPacketsReceivedPerSecond)
 	}
 }
 
@@ -495,7 +535,8 @@ func (e *Exporter) collectVirtualServerWaitingRequests(ns netscaler.NSAPIRespons
 	e.virtualServersWaitingRequests.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersWaitingRequests.WithLabelValues(vs.Name).Set(vs.WaitingRequests)
+		waitingRequests, _ := strconv.ParseFloat(vs.WaitingRequests, 64)
+		e.virtualServersWaitingRequests.WithLabelValues(nsInstance, vs.Name).Set(waitingRequests)
 	}
 }
 
@@ -503,7 +544,8 @@ func (e *Exporter) collectVirtualServerHealth(ns netscaler.NSAPIResponse) {
 	e.virtualServersHealth.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersHealth.WithLabelValues(vs.Name).Set(vs.Health)
+		health, _ := strconv.ParseFloat(vs.Health, 64)
+		e.virtualServersHealth.WithLabelValues(nsInstance, vs.Name).Set(health)
 	}
 }
 
@@ -511,7 +553,8 @@ func (e *Exporter) collectVirtualServerInactiveServices(ns netscaler.NSAPIRespon
 	e.virtualServersInactiveServices.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersInactiveServices.WithLabelValues(vs.Name).Set(vs.InactiveServices)
+		inactiveServices, _ := strconv.ParseFloat(vs.InactiveServices, 64)
+		e.virtualServersInactiveServices.WithLabelValues(nsInstance, vs.Name).Set(inactiveServices)
 	}
 }
 
@@ -519,7 +562,8 @@ func (e *Exporter) collectVirtualServerActiveServices(ns netscaler.NSAPIResponse
 	e.virtualServersActiveServices.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersActiveServices.WithLabelValues(vs.Name).Set(vs.ActiveServices)
+		activeServices, _ := strconv.ParseFloat(vs.ActiveServices, 64)
+		e.virtualServersActiveServices.WithLabelValues(nsInstance, vs.Name).Set(activeServices)
 	}
 }
 
@@ -527,7 +571,8 @@ func (e *Exporter) collectVirtualServerTotalHits(ns netscaler.NSAPIResponse) {
 	e.virtualServersTotalHits.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersTotalHits.WithLabelValues(vs.Name).Set(vs.TotalHits)
+		totalHits, _ := strconv.ParseFloat(vs.TotalHits, 64)
+		e.virtualServersTotalHits.WithLabelValues(nsInstance, vs.Name).Set(totalHits)
 	}
 }
 
@@ -535,7 +580,7 @@ func (e *Exporter) collectVirtualServerHitsRate(ns netscaler.NSAPIResponse) {
 	e.virtualServersHitsRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersHitsRate.WithLabelValues(vs.Name).Set(vs.HitsRate)
+		e.virtualServersHitsRate.WithLabelValues(nsInstance, vs.Name).Set(vs.HitsRate)
 	}
 }
 
@@ -543,7 +588,8 @@ func (e *Exporter) collectVirtualServerTotalRequests(ns netscaler.NSAPIResponse)
 	e.virtualServersTotalRequests.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersTotalRequests.WithLabelValues(vs.Name).Set(vs.TotalRequests)
+		totalRequests, _ := strconv.ParseFloat(vs.TotalRequests, 64)
+		e.virtualServersTotalRequests.WithLabelValues(nsInstance, vs.Name).Set(totalRequests)
 	}
 }
 
@@ -551,7 +597,7 @@ func (e *Exporter) collectVirtualServerRequestsRate(ns netscaler.NSAPIResponse) 
 	e.virtualServersRequestsRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersRequestsRate.WithLabelValues(vs.Name).Set(vs.RequestsRate)
+		e.virtualServersRequestsRate.WithLabelValues(nsInstance, vs.Name).Set(vs.RequestsRate)
 	}
 }
 
@@ -559,7 +605,8 @@ func (e *Exporter) collectVirtualServerTotalResponses(ns netscaler.NSAPIResponse
 	e.virtualServersTotalResponses.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersTotalResponses.WithLabelValues(vs.Name).Set(vs.TotalResponses)
+		totalResponses, _ := strconv.ParseFloat(vs.TotalResponses, 64)
+		e.virtualServersTotalResponses.WithLabelValues(nsInstance, vs.Name).Set(totalResponses)
 	}
 }
 
@@ -567,7 +614,7 @@ func (e *Exporter) collectVirtualServerResponsesRate(ns netscaler.NSAPIResponse)
 	e.virtualServersReponsesRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersReponsesRate.WithLabelValues(vs.Name).Set(vs.ResponsesRate)
+		e.virtualServersReponsesRate.WithLabelValues(nsInstance, vs.Name).Set(vs.ResponsesRate)
 	}
 }
 
@@ -575,7 +622,8 @@ func (e *Exporter) collectVirtualServerTotalRequestBytes(ns netscaler.NSAPIRespo
 	e.virtualServersTotalRequestBytes.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersTotalRequestBytes.WithLabelValues(vs.Name).Set(vs.TotalRequestBytes)
+		totalRequestBytes, _ := strconv.ParseFloat(vs.TotalRequestBytes, 64)
+		e.virtualServersTotalRequestBytes.WithLabelValues(nsInstance, vs.Name).Set(totalRequestBytes)
 	}
 }
 
@@ -583,7 +631,7 @@ func (e *Exporter) collectVirtualServerRequestBytesRate(ns netscaler.NSAPIRespon
 	e.virtualServersRequestBytesRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersRequestBytesRate.WithLabelValues(vs.Name).Set(vs.RequestBytesRate)
+		e.virtualServersRequestBytesRate.WithLabelValues(nsInstance, vs.Name).Set(vs.RequestBytesRate)
 	}
 }
 
@@ -591,7 +639,8 @@ func (e *Exporter) collectVirtualServerTotalResponseBytes(ns netscaler.NSAPIResp
 	e.virtualServersTotalResponseBytes.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersTotalResponseBytes.WithLabelValues(vs.Name).Set(vs.TotalResponseBytes)
+		totalResponseBytes, _ := strconv.ParseFloat(vs.TotalResponseBytes, 64)
+		e.virtualServersTotalResponseBytes.WithLabelValues(nsInstance, vs.Name).Set(totalResponseBytes)
 	}
 }
 
@@ -599,7 +648,7 @@ func (e *Exporter) collectVirtualServerResponseBytesRate(ns netscaler.NSAPIRespo
 	e.virtualServersReponseBytesRate.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersReponseBytesRate.WithLabelValues(vs.Name).Set(vs.ResponseBytesRate)
+		e.virtualServersReponseBytesRate.WithLabelValues(nsInstance, vs.Name).Set(vs.ResponseBytesRate)
 	}
 }
 
@@ -607,7 +656,8 @@ func (e *Exporter) collectVirtualServerCurrentClientConnections(ns netscaler.NSA
 	e.virtualServersCurrentClientConnections.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersCurrentClientConnections.WithLabelValues(vs.Name).Set(vs.CurrentClientConnections)
+		currentClientConnections, _ := strconv.ParseFloat(vs.CurrentClientConnections, 64)
+		e.virtualServersCurrentClientConnections.WithLabelValues(nsInstance, vs.Name).Set(currentClientConnections)
 	}
 }
 
@@ -615,7 +665,8 @@ func (e *Exporter) collectVirtualServerCurrentServerConnections(ns netscaler.NSA
 	e.virtualServersCurrentServerConnections.Reset()
 
 	for _, vs := range ns.VirtualServers {
-		e.virtualServersCurrentServerConnections.WithLabelValues(vs.Name).Set(vs.CurrentServerConnections)
+		currentServerConnections, _ := strconv.ParseFloat(vs.CurrentServerConnections, 64)
+		e.virtualServersCurrentServerConnections.WithLabelValues(nsInstance, vs.Name).Set(currentServerConnections)
 	}
 }
 
@@ -639,39 +690,39 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	ch <- prometheus.MustNewConstMetric(
-		mgmtCPUUsage, prometheus.GaugeValue, ns.NS.MgmtCPUUsagePcnt,
+		mgmtCPUUsage, prometheus.GaugeValue, ns.NS.MgmtCPUUsagePcnt, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		memUsage, prometheus.GaugeValue, ns.NS.MemUsagePcnt,
+		memUsage, prometheus.GaugeValue, ns.NS.MemUsagePcnt, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		pktCPUUsage, prometheus.GaugeValue, ns.NS.PktCPUUsagePcnt,
+		pktCPUUsage, prometheus.GaugeValue, ns.NS.PktCPUUsagePcnt, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		flashPartitionUsage, prometheus.GaugeValue, ns.NS.FlashPartitionUsage,
+		flashPartitionUsage, prometheus.GaugeValue, ns.NS.FlashPartitionUsage, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		varPartitionUsage, prometheus.GaugeValue, ns.NS.VarPartitionUsage,
+		varPartitionUsage, prometheus.GaugeValue, ns.NS.VarPartitionUsage, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		rxMbPerSec, prometheus.GaugeValue, ns.NS.ReceivedMbPerSecond,
+		rxMbPerSec, prometheus.GaugeValue, ns.NS.ReceivedMbPerSecond, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		txMbPerSec, prometheus.GaugeValue, ns.NS.TransmitMbPerSecond,
+		txMbPerSec, prometheus.GaugeValue, ns.NS.TransmitMbPerSecond, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		httpRequestsRate, prometheus.GaugeValue, ns.NS.HTTPRequestsRate,
+		httpRequestsRate, prometheus.GaugeValue, ns.NS.HTTPRequestsRate, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		httpResponsesRate, prometheus.GaugeValue, ns.NS.HTTPResponsesRate,
+		httpResponsesRate, prometheus.GaugeValue, ns.NS.HTTPResponsesRate, nsInstance,
 	)
 
 	e.collectInterfacesRxBytesPerSecond(interfaces)
@@ -752,21 +803,22 @@ func main() {
 		os.Exit(1)
 	}
 
+	nsInstance = strings.TrimLeft(*url, "https://")
+	nsInstance = strings.Trim(nsInstance, " /")
+
 	interactive, _ := svc.IsAnInteractiveSession()
 
 	if interactive != true {
 		log.SetFormatter(&log.JSONFormatter{})
 
-		//TODO: Set log file
-		file, err := os.OpenFile("cmdb.log", os.O_CREATE|os.O_WRONLY, 0666)
+		logfile := nsInstance + ".log"
+		file, err := os.OpenFile(logfile, os.O_CREATE|os.O_WRONLY, 0666)
 		if err == nil {
 			log.SetOutput(file)
 		} else {
 			log.Info("Failed to log to file, using default stderr")
 		}
 	}
-
-	listeningPort := ":" + strconv.Itoa(*bindPort)
 
 	exporter, _ := NewExporter()
 	prometheus.MustRegister(exporter)
@@ -783,6 +835,7 @@ func main() {
 
 	http.Handle("/metrics", promhttp.Handler())
 
+	listeningPort := ":" + strconv.Itoa(*bindPort)
 	log.Infof("Listening on port %s", listeningPort)
 	log.Fatal(http.ListenAndServe(listeningPort, nil))
 }
