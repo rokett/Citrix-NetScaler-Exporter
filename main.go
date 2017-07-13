@@ -104,6 +104,42 @@ var (
 		nil,
 	)
 
+	tcpCurrentClientConnections = prometheus.NewDesc(
+		"tcp_current_client_connections",
+		"Client connections, including connections in the Opening, Established, and Closing state.",
+		[]string{
+			"ns_instance",
+		},
+		nil,
+	)
+
+	tcpCurrentClientConnectionsEstablished = prometheus.NewDesc(
+		"tcp_current_client_connections_established",
+		"Current client connections in the Established state, which indicates that data transfer can occur between the NetScaler and the client.",
+		[]string{
+			"ns_instance",
+		},
+		nil,
+	)
+
+	tcpCurrentServerConnections = prometheus.NewDesc(
+		"tcp_current_server_connections",
+		"Server connections, including connections in the Opening, Established, and Closing state.",
+		[]string{
+			"ns_instance",
+		},
+		nil,
+	)
+
+	tcpCurrentServerConnectionsEstablished = prometheus.NewDesc(
+		"tcp_current_server_connections_established",
+		"Current server connections in the Established state, which indicates that data transfer can occur between the NetScaler and the server.",
+		[]string{
+			"ns_instance",
+		},
+		nil,
+	)
+
 	interfacesRxBytesPerSecond = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "interfaces_received_bytes_per_second",
@@ -376,6 +412,10 @@ type Exporter struct {
 	txMbPerSec                             *prometheus.Desc
 	httpRequestsRate                       *prometheus.Desc
 	httpResponsesRate                      *prometheus.Desc
+	tcpCurrentClientConnections            *prometheus.Desc
+	tcpCurrentClientConnectionsEstablished *prometheus.Desc
+	tcpCurrentServerConnections            *prometheus.Desc
+	tcpCurrentServerConnectionsEstablished *prometheus.Desc
 	interfacesRxBytesPerSecond             *prometheus.GaugeVec
 	interfacesTxBytesPerSecond             *prometheus.GaugeVec
 	interfacesRxPacketsPerSecond           *prometheus.GaugeVec
@@ -413,6 +453,10 @@ func NewExporter() (*Exporter, error) {
 		txMbPerSec:                             txMbPerSec,
 		httpRequestsRate:                       httpRequestsRate,
 		httpResponsesRate:                      httpResponsesRate,
+		tcpCurrentClientConnections:            tcpCurrentClientConnections,
+		tcpCurrentClientConnectionsEstablished: tcpCurrentClientConnectionsEstablished,
+		tcpCurrentServerConnections:            tcpCurrentServerConnections,
+		tcpCurrentServerConnectionsEstablished: tcpCurrentServerConnectionsEstablished,
 		interfacesRxBytesPerSecond:             interfacesRxBytesPerSecond,
 		interfacesTxBytesPerSecond:             interfacesTxBytesPerSecond,
 		interfacesRxPacketsPerSecond:           interfacesRxPacketsPerSecond,
@@ -450,6 +494,10 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- txMbPerSec
 	ch <- httpRequestsRate
 	ch <- httpResponsesRate
+	ch <- tcpCurrentClientConnections
+	ch <- tcpCurrentClientConnectionsEstablished
+	ch <- tcpCurrentServerConnections
+	ch <- tcpCurrentServerConnectionsEstablished
 	e.interfacesRxBytesPerSecond.Describe(ch)
 	e.interfacesTxBytesPerSecond.Describe(ch)
 	e.interfacesRxPacketsPerSecond.Describe(ch)
@@ -689,6 +737,11 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		log.Error(err)
 	}
 
+	fltTCPCurrentClientConnections, _ := strconv.ParseFloat(ns.NS.TCPCurrentClientConnections, 64)
+	fltTCPCurrentClientConnectionsEstablished, _ := strconv.ParseFloat(ns.NS.TCPCurrentClientConnectionsEstablished, 64)
+	fltTCPCurrentServerConnections, _ := strconv.ParseFloat(ns.NS.TCPCurrentServerConnections, 64)
+	fltTCPCurrentServerConnectionsEstablished, _ := strconv.ParseFloat(ns.NS.TCPCurrentServerConnectionsEstablished, 64)
+
 	ch <- prometheus.MustNewConstMetric(
 		mgmtCPUUsage, prometheus.GaugeValue, ns.NS.MgmtCPUUsagePcnt, nsInstance,
 	)
@@ -723,6 +776,22 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	ch <- prometheus.MustNewConstMetric(
 		httpResponsesRate, prometheus.GaugeValue, ns.NS.HTTPResponsesRate, nsInstance,
+	)
+
+	ch <- prometheus.MustNewConstMetric(
+		tcpCurrentClientConnections, prometheus.GaugeValue, fltTCPCurrentClientConnections, nsInstance,
+	)
+
+	ch <- prometheus.MustNewConstMetric(
+		tcpCurrentClientConnectionsEstablished, prometheus.GaugeValue, fltTCPCurrentClientConnectionsEstablished, nsInstance,
+	)
+
+	ch <- prometheus.MustNewConstMetric(
+		tcpCurrentServerConnections, prometheus.GaugeValue, fltTCPCurrentServerConnections, nsInstance,
+	)
+
+	ch <- prometheus.MustNewConstMetric(
+		tcpCurrentServerConnectionsEstablished, prometheus.GaugeValue, fltTCPCurrentServerConnectionsEstablished, nsInstance,
 	)
 
 	e.collectInterfacesRxBytesPerSecond(interfaces)

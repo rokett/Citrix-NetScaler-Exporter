@@ -8,16 +8,20 @@ import (
 
 // NSStats represents the data returned from the /stat/ns Nitro API endpoint
 type NSStats struct {
-	CPUUsagePcnt        float64 `json:"cpuusagepcnt"`
-	MemUsagePcnt        float64 `json:"memusagepcnt"`
-	MgmtCPUUsagePcnt    float64 `json:"mgmtcpuusagepcnt"`
-	PktCPUUsagePcnt     float64 `json:"pktcpuusagepcnt"`
-	FlashPartitionUsage float64 `json:"disk0perusage"`
-	VarPartitionUsage   float64 `json:"disk1perusage"`
-	ReceivedMbPerSecond float64 `json:"rxmbitsrate"`
-	TransmitMbPerSecond float64 `json:"txmbitsrate"`
-	HTTPRequestsRate    float64 `json:"httprequestsrate"`
-	HTTPResponsesRate   float64 `json:"httpresponsesrate"`
+	CPUUsagePcnt                           float64 `json:"cpuusagepcnt"`
+	MemUsagePcnt                           float64 `json:"memusagepcnt"`
+	MgmtCPUUsagePcnt                       float64 `json:"mgmtcpuusagepcnt"`
+	PktCPUUsagePcnt                        float64 `json:"pktcpuusagepcnt"`
+	FlashPartitionUsage                    float64 `json:"disk0perusage"`
+	VarPartitionUsage                      float64 `json:"disk1perusage"`
+	ReceivedMbPerSecond                    float64 `json:"rxmbitsrate"`
+	TransmitMbPerSecond                    float64 `json:"txmbitsrate"`
+	HTTPRequestsRate                       float64 `json:"httprequestsrate"`
+	HTTPResponsesRate                      float64 `json:"httpresponsesrate"`
+	TCPCurrentClientConnections            string  `json:"tcpcurclientconn"`
+	TCPCurrentClientConnectionsEstablished string  `json:"tcpcurclientconnestablished"`
+	TCPCurrentServerConnections            string  `json:"tcpcurserverconn"`
+	TCPCurrentServerConnectionsEstablished string  `json:"tcpcurserverconnestablished"`
 }
 
 // GetNSStats queries the Nitro API for ns stats
