@@ -11,8 +11,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
+	"github.com/kardianos/service"
 	log "github.com/sirupsen/logrus"
-	"golang.org/x/sys/windows/svc"
 )
 
 var (
@@ -1420,9 +1420,7 @@ func main() {
 	nsInstance = strings.TrimLeft(*url, "https://")
 	nsInstance = strings.Trim(nsInstance, " /")
 
-	interactive, _ := svc.IsAnInteractiveSession()
-
-	if interactive != true {
+	if service.Interactive() != true {
 		log.SetFormatter(&log.JSONFormatter{})
 
 		logfile := nsInstance + ".log"
