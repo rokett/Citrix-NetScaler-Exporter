@@ -8,7 +8,7 @@ image: golang:latest
 # Thus, making a symbolic link corrects this.
 before_script:
     - ln -s /builds /go/src/rokett
-    - cd /go/src/rokett
+    - cd /go/src/rokett/rokett
     - ls
     
 stages:
