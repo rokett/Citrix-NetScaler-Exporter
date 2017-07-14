@@ -7,6 +7,8 @@ image: golang:latest
 # repository in /go/src/mydomainperso.com/repos/projectname 
 # Thus, making a symbolic link corrects this.
 before_script:
+    - cd /builds
+    - ls
     - ln -s /builds /go/src/Citrix-NetScaler-Exporter/rokett/Citrix-NetScaler-Exporter
     - cd /go/src/Citrix-NetScaler-Exporter/rokett/Citrix-NetScaler-Exporter
     - ls
