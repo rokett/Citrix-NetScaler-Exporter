@@ -26,7 +26,8 @@ compile:
     script:
         - go get github.com/alecthomas/kingpin
         # Better put this in a Makefile
-        - go build -race -ldflags "-extldflags '-static'" -o mybinary
+        #- go build -race -ldflags "-extldflags '-static'" -o mybinary
+        - go build -o mybinary
     artifacts:
         paths:
             - mybinary
