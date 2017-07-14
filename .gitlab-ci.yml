@@ -11,14 +11,15 @@ before_script:
     - cd /go/src/Citrix-NetScaler-Exporter
     
 stages:
+    - test
     - build
 
-#format:
-#    stage: test
-#    script:
-#        - go get github.com/alecthomas/kingpin
-#        - go tool vet -composites=false -shadow=true *.go
-#        - go test -race $(go list ./... | grep -v /vendor/)
+format:
+    stage: test
+    script:
+        - go get github.com/alecthomas/kingpin
+        - go tool vet -composites=false -shadow=true *.go
+        - go test -race $(go list ./... | grep -v /vendor/)
 
 compile:
     stage: build
