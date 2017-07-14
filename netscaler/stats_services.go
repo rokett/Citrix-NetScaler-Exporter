@@ -34,8 +34,8 @@ type ServiceStats struct {
 }
 
 // GetServiceStats queries the Nitro API for service stats
-func GetServiceStats(c *NitroClient) (NSAPIResponse, error) {
-	stats, err := c.GetStats("service")
+func GetServiceStats(c *NitroClient, querystring string) (NSAPIResponse, error) {
+	stats, err := c.GetStats("service", querystring)
 	if err != nil {
 		return NSAPIResponse{}, err
 	}

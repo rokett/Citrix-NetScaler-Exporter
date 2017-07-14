@@ -1199,22 +1199,22 @@ func (e *Exporter) collectServicesActiveTransactions(ns netscaler.NSAPIResponse)
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	nsClient := netscaler.NewNitroClient(*url, *username, *password)
 
-	ns, err := netscaler.GetNSStats(nsClient)
+	ns, err := netscaler.GetNSStats(nsClient, "")
 	if err != nil {
 		log.Error(err)
 	}
 
-	interfaces, err := netscaler.GetInterfaceStats(nsClient)
+	interfaces, err := netscaler.GetInterfaceStats(nsClient, "")
 	if err != nil {
 		log.Error(err)
 	}
 
-	virtualServers, err := netscaler.GetVirtualServerStats(nsClient)
+	virtualServers, err := netscaler.GetVirtualServerStats(nsClient, "")
 	if err != nil {
 		log.Error(err)
 	}
 
-	services, err := netscaler.GetServiceStats(nsClient)
+	services, err := netscaler.GetServiceStats(nsClient, "")
 	if err != nil {
 		log.Error(err)
 	}

@@ -28,8 +28,8 @@ type VirtualServerStats struct {
 }
 
 // GetVirtualServerStats queries the Nitro API for virtual server stats
-func GetVirtualServerStats(c *NitroClient) (NSAPIResponse, error) {
-	stats, err := c.GetStats("lbvserver")
+func GetVirtualServerStats(c *NitroClient, querystring string) (NSAPIResponse, error) {
+	stats, err := c.GetStats("lbvserver", querystring)
 	if err != nil {
 		return NSAPIResponse{}, err
 	}

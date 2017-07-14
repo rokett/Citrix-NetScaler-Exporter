@@ -25,8 +25,8 @@ type NSStats struct {
 }
 
 // GetNSStats queries the Nitro API for ns stats
-func GetNSStats(c *NitroClient) (NSAPIResponse, error) {
-	stats, err := c.GetStats("ns")
+func GetNSStats(c *NitroClient, querystring string) (NSAPIResponse, error) {
+	stats, err := c.GetStats("ns", querystring)
 	if err != nil {
 		return NSAPIResponse{}, err
 	}

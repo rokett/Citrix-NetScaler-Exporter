@@ -20,8 +20,8 @@ type InterfaceStats struct {
 }
 
 // GetInterfaceStats queries the Nitro API for interface stats
-func GetInterfaceStats(c *NitroClient) (NSAPIResponse, error) {
-	stats, err := c.GetStats("interface")
+func GetInterfaceStats(c *NitroClient, querystring string) (NSAPIResponse, error) {
+	stats, err := c.GetStats("interface", querystring)
 	if err != nil {
 		return NSAPIResponse{}, err
 	}

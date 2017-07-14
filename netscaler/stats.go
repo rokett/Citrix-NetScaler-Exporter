@@ -8,8 +8,12 @@ import (
 )
 
 // GetStats sends a request to the Nitro API and retrieves stats for the given type.
-func (c *NitroClient) GetStats(statsType string) ([]byte, error) {
+func (c *NitroClient) GetStats(statsType string, querystring string) ([]byte, error) {
 	url := c.url + "stat/" + statsType
+
+	if querystring != "" {
+		url = url + "?" + querystring
+	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
