@@ -11,7 +11,6 @@ before_script:
     - cd /go/src/Citrix-NetScaler-Exporter
 
 stages:
-    - test
     - build
 
 format:
