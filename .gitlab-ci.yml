@@ -11,6 +11,7 @@ before_script:
     #- cd /go/src/rokett/rokett/Citrix-NetScaler-Exporter
     - cd /go/src/Citrix-NetScaler-Exporter
     - ls
+    - go version
 #/go/src/Citrix-NetScaler-Exporter/netscaler
 stages:
     - build
