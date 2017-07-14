@@ -820,7 +820,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 func (e *Exporter) collectInterfacesRxBytesPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfacesRxBytesPerSecond.Reset()
 
-	for _, iface := range ns.Interfaces {
+	for _, iface := range ns.InterfaceStats {
 		e.interfacesRxBytesPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.ReceivedBytesPerSecond)
 	}
 }
@@ -828,7 +828,7 @@ func (e *Exporter) collectInterfacesRxBytesPerSecond(ns netscaler.NSAPIResponse)
 func (e *Exporter) collectInterfacesTxBytesPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfacesTxBytesPerSecond.Reset()
 
-	for _, iface := range ns.Interfaces {
+	for _, iface := range ns.InterfaceStats {
 		e.interfacesTxBytesPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.TransmitBytesPerSecond)
 	}
 }
@@ -836,7 +836,7 @@ func (e *Exporter) collectInterfacesTxBytesPerSecond(ns netscaler.NSAPIResponse)
 func (e *Exporter) collectInterfacesRxPacketsPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfacesRxPacketsPerSecond.Reset()
 
-	for _, iface := range ns.Interfaces {
+	for _, iface := range ns.InterfaceStats {
 		e.interfacesRxPacketsPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.ReceivedPacketsPerSecond)
 	}
 }
@@ -844,7 +844,7 @@ func (e *Exporter) collectInterfacesRxPacketsPerSecond(ns netscaler.NSAPIRespons
 func (e *Exporter) collectInterfacesTxPacketsPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfacesTxPacketsPerSecond.Reset()
 
-	for _, iface := range ns.Interfaces {
+	for _, iface := range ns.InterfaceStats {
 		e.interfacesTxPacketsPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.TransmitPacketsPerSecond)
 	}
 }
@@ -852,7 +852,7 @@ func (e *Exporter) collectInterfacesTxPacketsPerSecond(ns netscaler.NSAPIRespons
 func (e *Exporter) collectInterfacesJumboPacketsRxPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfacesJumboPacketsRxPerSecond.Reset()
 
-	for _, iface := range ns.Interfaces {
+	for _, iface := range ns.InterfaceStats {
 		e.interfacesJumboPacketsRxPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.JumboPacketsReceivedPerSecond)
 	}
 }
@@ -860,7 +860,7 @@ func (e *Exporter) collectInterfacesJumboPacketsRxPerSecond(ns netscaler.NSAPIRe
 func (e *Exporter) collectInterfacesJumboPacketsTxPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfacesJumboPacketsTxPerSecond.Reset()
 
-	for _, iface := range ns.Interfaces {
+	for _, iface := range ns.InterfaceStats {
 		e.interfacesJumboPacketsTxPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.JumboPacketsTransmittedPerSecond)
 	}
 }
@@ -868,7 +868,7 @@ func (e *Exporter) collectInterfacesJumboPacketsTxPerSecond(ns netscaler.NSAPIRe
 func (e *Exporter) collectInterfacesErrorPacketsRxPerSecond(ns netscaler.NSAPIResponse) {
 	e.interfacesErrorPacketsRxPerSecond.Reset()
 
-	for _, iface := range ns.Interfaces {
+	for _, iface := range ns.InterfaceStats {
 		e.interfacesErrorPacketsRxPerSecond.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(iface.ErrorPacketsReceivedPerSecond)
 	}
 }
@@ -876,7 +876,7 @@ func (e *Exporter) collectInterfacesErrorPacketsRxPerSecond(ns netscaler.NSAPIRe
 func (e *Exporter) collectVirtualServerWaitingRequests(ns netscaler.NSAPIResponse) {
 	e.virtualServersWaitingRequests.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		waitingRequests, _ := strconv.ParseFloat(vs.WaitingRequests, 64)
 		e.virtualServersWaitingRequests.WithLabelValues(nsInstance, vs.Name).Set(waitingRequests)
 	}
@@ -885,7 +885,7 @@ func (e *Exporter) collectVirtualServerWaitingRequests(ns netscaler.NSAPIRespons
 func (e *Exporter) collectVirtualServerHealth(ns netscaler.NSAPIResponse) {
 	e.virtualServersHealth.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		health, _ := strconv.ParseFloat(vs.Health, 64)
 		e.virtualServersHealth.WithLabelValues(nsInstance, vs.Name).Set(health)
 	}
@@ -894,7 +894,7 @@ func (e *Exporter) collectVirtualServerHealth(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectVirtualServerInactiveServices(ns netscaler.NSAPIResponse) {
 	e.virtualServersInactiveServices.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		inactiveServices, _ := strconv.ParseFloat(vs.InactiveServices, 64)
 		e.virtualServersInactiveServices.WithLabelValues(nsInstance, vs.Name).Set(inactiveServices)
 	}
@@ -903,7 +903,7 @@ func (e *Exporter) collectVirtualServerInactiveServices(ns netscaler.NSAPIRespon
 func (e *Exporter) collectVirtualServerActiveServices(ns netscaler.NSAPIResponse) {
 	e.virtualServersActiveServices.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		activeServices, _ := strconv.ParseFloat(vs.ActiveServices, 64)
 		e.virtualServersActiveServices.WithLabelValues(nsInstance, vs.Name).Set(activeServices)
 	}
@@ -912,7 +912,7 @@ func (e *Exporter) collectVirtualServerActiveServices(ns netscaler.NSAPIResponse
 func (e *Exporter) collectVirtualServerTotalHits(ns netscaler.NSAPIResponse) {
 	e.virtualServersTotalHits.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		totalHits, _ := strconv.ParseFloat(vs.TotalHits, 64)
 		e.virtualServersTotalHits.WithLabelValues(nsInstance, vs.Name).Set(totalHits)
 	}
@@ -921,7 +921,7 @@ func (e *Exporter) collectVirtualServerTotalHits(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectVirtualServerHitsRate(ns netscaler.NSAPIResponse) {
 	e.virtualServersHitsRate.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		e.virtualServersHitsRate.WithLabelValues(nsInstance, vs.Name).Set(vs.HitsRate)
 	}
 }
@@ -929,7 +929,7 @@ func (e *Exporter) collectVirtualServerHitsRate(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectVirtualServerTotalRequests(ns netscaler.NSAPIResponse) {
 	e.virtualServersTotalRequests.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		totalRequests, _ := strconv.ParseFloat(vs.TotalRequests, 64)
 		e.virtualServersTotalRequests.WithLabelValues(nsInstance, vs.Name).Set(totalRequests)
 	}
@@ -938,7 +938,7 @@ func (e *Exporter) collectVirtualServerTotalRequests(ns netscaler.NSAPIResponse)
 func (e *Exporter) collectVirtualServerRequestsRate(ns netscaler.NSAPIResponse) {
 	e.virtualServersRequestsRate.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		e.virtualServersRequestsRate.WithLabelValues(nsInstance, vs.Name).Set(vs.RequestsRate)
 	}
 }
@@ -946,7 +946,7 @@ func (e *Exporter) collectVirtualServerRequestsRate(ns netscaler.NSAPIResponse) 
 func (e *Exporter) collectVirtualServerTotalResponses(ns netscaler.NSAPIResponse) {
 	e.virtualServersTotalResponses.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		totalResponses, _ := strconv.ParseFloat(vs.TotalResponses, 64)
 		e.virtualServersTotalResponses.WithLabelValues(nsInstance, vs.Name).Set(totalResponses)
 	}
@@ -955,7 +955,7 @@ func (e *Exporter) collectVirtualServerTotalResponses(ns netscaler.NSAPIResponse
 func (e *Exporter) collectVirtualServerResponsesRate(ns netscaler.NSAPIResponse) {
 	e.virtualServersReponsesRate.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		e.virtualServersReponsesRate.WithLabelValues(nsInstance, vs.Name).Set(vs.ResponsesRate)
 	}
 }
@@ -963,7 +963,7 @@ func (e *Exporter) collectVirtualServerResponsesRate(ns netscaler.NSAPIResponse)
 func (e *Exporter) collectVirtualServerTotalRequestBytes(ns netscaler.NSAPIResponse) {
 	e.virtualServersTotalRequestBytes.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		totalRequestBytes, _ := strconv.ParseFloat(vs.TotalRequestBytes, 64)
 		e.virtualServersTotalRequestBytes.WithLabelValues(nsInstance, vs.Name).Set(totalRequestBytes)
 	}
@@ -972,7 +972,7 @@ func (e *Exporter) collectVirtualServerTotalRequestBytes(ns netscaler.NSAPIRespo
 func (e *Exporter) collectVirtualServerRequestBytesRate(ns netscaler.NSAPIResponse) {
 	e.virtualServersRequestBytesRate.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		e.virtualServersRequestBytesRate.WithLabelValues(nsInstance, vs.Name).Set(vs.RequestBytesRate)
 	}
 }
@@ -980,7 +980,7 @@ func (e *Exporter) collectVirtualServerRequestBytesRate(ns netscaler.NSAPIRespon
 func (e *Exporter) collectVirtualServerTotalResponseBytes(ns netscaler.NSAPIResponse) {
 	e.virtualServersTotalResponseBytes.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		totalResponseBytes, _ := strconv.ParseFloat(vs.TotalResponseBytes, 64)
 		e.virtualServersTotalResponseBytes.WithLabelValues(nsInstance, vs.Name).Set(totalResponseBytes)
 	}
@@ -989,7 +989,7 @@ func (e *Exporter) collectVirtualServerTotalResponseBytes(ns netscaler.NSAPIResp
 func (e *Exporter) collectVirtualServerResponseBytesRate(ns netscaler.NSAPIResponse) {
 	e.virtualServersReponseBytesRate.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		e.virtualServersReponseBytesRate.WithLabelValues(nsInstance, vs.Name).Set(vs.ResponseBytesRate)
 	}
 }
@@ -997,7 +997,7 @@ func (e *Exporter) collectVirtualServerResponseBytesRate(ns netscaler.NSAPIRespo
 func (e *Exporter) collectVirtualServerCurrentClientConnections(ns netscaler.NSAPIResponse) {
 	e.virtualServersCurrentClientConnections.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		currentClientConnections, _ := strconv.ParseFloat(vs.CurrentClientConnections, 64)
 		e.virtualServersCurrentClientConnections.WithLabelValues(nsInstance, vs.Name).Set(currentClientConnections)
 	}
@@ -1006,7 +1006,7 @@ func (e *Exporter) collectVirtualServerCurrentClientConnections(ns netscaler.NSA
 func (e *Exporter) collectVirtualServerCurrentServerConnections(ns netscaler.NSAPIResponse) {
 	e.virtualServersCurrentServerConnections.Reset()
 
-	for _, vs := range ns.VirtualServers {
+	for _, vs := range ns.VirtualServerStats {
 		currentServerConnections, _ := strconv.ParseFloat(vs.CurrentServerConnections, 64)
 		e.virtualServersCurrentServerConnections.WithLabelValues(nsInstance, vs.Name).Set(currentServerConnections)
 	}
@@ -1015,7 +1015,7 @@ func (e *Exporter) collectVirtualServerCurrentServerConnections(ns netscaler.NSA
 func (e *Exporter) collectServicesThroughput(ns netscaler.NSAPIResponse) {
 	e.servicesThroughput.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.Throughput, 64)
 		e.servicesThroughput.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1024,7 +1024,7 @@ func (e *Exporter) collectServicesThroughput(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesThroughputRate(ns netscaler.NSAPIResponse) {
 	e.servicesThroughputRate.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		e.servicesThroughputRate.WithLabelValues(nsInstance, service.Name).Set(service.ThroughputRate)
 	}
 }
@@ -1032,7 +1032,7 @@ func (e *Exporter) collectServicesThroughputRate(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesAvgTTFB(ns netscaler.NSAPIResponse) {
 	e.servicesAvgTTFB.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.AvgTimeToFirstByte, 64)
 		e.servicesAvgTTFB.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1041,7 +1041,7 @@ func (e *Exporter) collectServicesAvgTTFB(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesTotalRequests(ns netscaler.NSAPIResponse) {
 	e.servicesTotalRequests.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.TotalRequests, 64)
 		e.servicesTotalRequests.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1050,7 +1050,7 @@ func (e *Exporter) collectServicesTotalRequests(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesRequestsRate(ns netscaler.NSAPIResponse) {
 	e.servicesRequestsRate.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		e.servicesRequestsRate.WithLabelValues(nsInstance, service.Name).Set(service.RequestsRate)
 	}
 }
@@ -1058,7 +1058,7 @@ func (e *Exporter) collectServicesRequestsRate(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesTotalResponses(ns netscaler.NSAPIResponse) {
 	e.servicesTotalResponses.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.TotalResponses, 64)
 		e.servicesTotalResponses.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1067,7 +1067,7 @@ func (e *Exporter) collectServicesTotalResponses(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesResponsesRate(ns netscaler.NSAPIResponse) {
 	e.servicesResponsesRate.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		e.servicesResponsesRate.WithLabelValues(nsInstance, service.Name).Set(service.ResponsesRate)
 	}
 }
@@ -1075,7 +1075,7 @@ func (e *Exporter) collectServicesResponsesRate(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesTotalRequestBytes(ns netscaler.NSAPIResponse) {
 	e.servicesTotalRequestBytes.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.TotalRequestBytes, 64)
 		e.servicesTotalRequestBytes.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1084,7 +1084,7 @@ func (e *Exporter) collectServicesTotalRequestBytes(ns netscaler.NSAPIResponse) 
 func (e *Exporter) collectServicesRequestBytesRate(ns netscaler.NSAPIResponse) {
 	e.servicesRequestBytesRate.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		e.servicesRequestBytesRate.WithLabelValues(nsInstance, service.Name).Set(service.RequestBytesRate)
 	}
 }
@@ -1092,7 +1092,7 @@ func (e *Exporter) collectServicesRequestBytesRate(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesTotalResponseBytes(ns netscaler.NSAPIResponse) {
 	e.servicesTotalResponseBytes.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.TotalResponseBytes, 64)
 		e.servicesTotalResponseBytes.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1101,7 +1101,7 @@ func (e *Exporter) collectServicesTotalResponseBytes(ns netscaler.NSAPIResponse)
 func (e *Exporter) collectServicesResponseBytesRate(ns netscaler.NSAPIResponse) {
 	e.servicesResponseBytesRate.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		e.servicesResponseBytesRate.WithLabelValues(nsInstance, service.Name).Set(service.ResponseBytesRate)
 	}
 }
@@ -1109,7 +1109,7 @@ func (e *Exporter) collectServicesResponseBytesRate(ns netscaler.NSAPIResponse) 
 func (e *Exporter) collectServicesCurrentClientConns(ns netscaler.NSAPIResponse) {
 	e.servicesCurrentClientConns.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.CurrentClientConnections, 64)
 		e.servicesCurrentClientConns.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1118,7 +1118,7 @@ func (e *Exporter) collectServicesCurrentClientConns(ns netscaler.NSAPIResponse)
 func (e *Exporter) collectServicesSurgeCount(ns netscaler.NSAPIResponse) {
 	e.servicesSurgeCount.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.SurgeCount, 64)
 		e.servicesSurgeCount.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1127,7 +1127,7 @@ func (e *Exporter) collectServicesSurgeCount(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesCurrentServerConns(ns netscaler.NSAPIResponse) {
 	e.servicesCurrentServerConns.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.CurrentServerConnections, 64)
 		e.servicesCurrentServerConns.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1136,7 +1136,7 @@ func (e *Exporter) collectServicesCurrentServerConns(ns netscaler.NSAPIResponse)
 func (e *Exporter) collectServicesServerEstablishedConnections(ns netscaler.NSAPIResponse) {
 	e.servicesServerEstablishedConnections.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.ServerEstablishedConnections, 64)
 		e.servicesServerEstablishedConnections.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1145,7 +1145,7 @@ func (e *Exporter) collectServicesServerEstablishedConnections(ns netscaler.NSAP
 func (e *Exporter) collectServicesCurrentReusePool(ns netscaler.NSAPIResponse) {
 	e.servicesCurrentReusePool.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.CurrentReusePool, 64)
 		e.servicesCurrentReusePool.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1154,7 +1154,7 @@ func (e *Exporter) collectServicesCurrentReusePool(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesMaxClients(ns netscaler.NSAPIResponse) {
 	e.servicesMaxClients.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.MaxClients, 64)
 		e.servicesMaxClients.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1163,7 +1163,7 @@ func (e *Exporter) collectServicesMaxClients(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesCurrentLoad(ns netscaler.NSAPIResponse) {
 	e.servicesCurrentLoad.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.CurrentLoad, 64)
 		e.servicesCurrentLoad.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1172,7 +1172,7 @@ func (e *Exporter) collectServicesCurrentLoad(ns netscaler.NSAPIResponse) {
 func (e *Exporter) collectServicesVirtualServerServiceHits(ns netscaler.NSAPIResponse) {
 	e.servicesVirtualServerServiceHits.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.ServiceHits, 64)
 		e.servicesVirtualServerServiceHits.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1181,7 +1181,7 @@ func (e *Exporter) collectServicesVirtualServerServiceHits(ns netscaler.NSAPIRes
 func (e *Exporter) collectServicesVirtualServerServiceHitsRate(ns netscaler.NSAPIResponse) {
 	e.servicesVirtualServerServiceHitsRate.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		e.servicesVirtualServerServiceHitsRate.WithLabelValues(nsInstance, service.Name).Set(service.ServiceHitsRate)
 	}
 }
@@ -1189,7 +1189,7 @@ func (e *Exporter) collectServicesVirtualServerServiceHitsRate(ns netscaler.NSAP
 func (e *Exporter) collectServicesActiveTransactions(ns netscaler.NSAPIResponse) {
 	e.servicesActiveTransactions.Reset()
 
-	for _, service := range ns.Services {
+	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.ActiveTransactions, 64)
 		e.servicesActiveTransactions.WithLabelValues(nsInstance, service.Name).Set(val)
 	}
@@ -1219,45 +1219,45 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		log.Error(err)
 	}
 
-	fltTCPCurrentClientConnections, _ := strconv.ParseFloat(ns.NS.TCPCurrentClientConnections, 64)
-	fltTCPCurrentClientConnectionsEstablished, _ := strconv.ParseFloat(ns.NS.TCPCurrentClientConnectionsEstablished, 64)
-	fltTCPCurrentServerConnections, _ := strconv.ParseFloat(ns.NS.TCPCurrentServerConnections, 64)
-	fltTCPCurrentServerConnectionsEstablished, _ := strconv.ParseFloat(ns.NS.TCPCurrentServerConnectionsEstablished, 64)
+	fltTCPCurrentClientConnections, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentClientConnections, 64)
+	fltTCPCurrentClientConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentClientConnectionsEstablished, 64)
+	fltTCPCurrentServerConnections, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnections, 64)
+	fltTCPCurrentServerConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnectionsEstablished, 64)
 
 	ch <- prometheus.MustNewConstMetric(
-		mgmtCPUUsage, prometheus.GaugeValue, ns.NS.MgmtCPUUsagePcnt, nsInstance,
+		mgmtCPUUsage, prometheus.GaugeValue, ns.NSStats.MgmtCPUUsagePcnt, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		memUsage, prometheus.GaugeValue, ns.NS.MemUsagePcnt, nsInstance,
+		memUsage, prometheus.GaugeValue, ns.NSStats.MemUsagePcnt, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		pktCPUUsage, prometheus.GaugeValue, ns.NS.PktCPUUsagePcnt, nsInstance,
+		pktCPUUsage, prometheus.GaugeValue, ns.NSStats.PktCPUUsagePcnt, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		flashPartitionUsage, prometheus.GaugeValue, ns.NS.FlashPartitionUsage, nsInstance,
+		flashPartitionUsage, prometheus.GaugeValue, ns.NSStats.FlashPartitionUsage, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		varPartitionUsage, prometheus.GaugeValue, ns.NS.VarPartitionUsage, nsInstance,
+		varPartitionUsage, prometheus.GaugeValue, ns.NSStats.VarPartitionUsage, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		rxMbPerSec, prometheus.GaugeValue, ns.NS.ReceivedMbPerSecond, nsInstance,
+		rxMbPerSec, prometheus.GaugeValue, ns.NSStats.ReceivedMbPerSecond, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		txMbPerSec, prometheus.GaugeValue, ns.NS.TransmitMbPerSecond, nsInstance,
+		txMbPerSec, prometheus.GaugeValue, ns.NSStats.TransmitMbPerSecond, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		httpRequestsRate, prometheus.GaugeValue, ns.NS.HTTPRequestsRate, nsInstance,
+		httpRequestsRate, prometheus.GaugeValue, ns.NSStats.HTTPRequestsRate, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
-		httpResponsesRate, prometheus.GaugeValue, ns.NS.HTTPResponsesRate, nsInstance,
+		httpResponsesRate, prometheus.GaugeValue, ns.NSStats.HTTPResponsesRate, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
