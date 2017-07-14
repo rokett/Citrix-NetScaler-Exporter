@@ -399,6 +399,237 @@ var (
 			"virtual_server",
 		},
 	)
+
+	servicesThroughput = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "service_throughput",
+			Help: "Number of bytes received or sent by this service (Mbps)",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesThroughputRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_throughput_rate",
+			Help: "Rate (/s) counter for throughput",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesAvgTTFB = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_average_time_to_first_byte",
+			Help: "Average TTFB between the NetScaler appliance and the server.TTFB is the time interval between sending the request packet to a service and receiving the first response from the service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesTotalRequests = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "service_total_requests",
+			Help: "Total number of requests received on this service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesRequestsRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_request_rate",
+			Help: "Rate (/s) counter for totalrequests",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesTotalResponses = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "service_total_responses",
+			Help: "Total number of responses received on this service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesResponsesRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_responses_rate",
+			Help: "Rate (/s) counter for totalresponses",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesTotalRequestBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "service_total_request_bytes",
+			Help: "Total number of request bytes received on this service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesRequestBytesRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_request_bytes_rate",
+			Help: "Rate (/s) counter for totalrequestbytes",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesTotalResponseBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "service_total_response_bytes",
+			Help: "Total number of response bytes received on this service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesResponseBytesRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_response_bytes_rate",
+			Help: "Rate (/s) counter for totalresponsebytes",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesCurrentClientConns = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_current_client_connections",
+			Help: "Number of current client connections",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesSurgeCount = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_surge_count",
+			Help: "Number of requests in the surge queue",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesCurrentServerConns = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_current_server_connections",
+			Help: "Number of current connections to the actual servers",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesServerEstablishedConnections = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_server_established_connections",
+			Help: "Number of server connections in ESTABLISHED state",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesCurrentReusePool = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_current_reuse_pool",
+			Help: "Number of requests in the idle queue/reuse pool.",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesMaxClients = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_max_clients",
+			Help: "Maximum open connections allowed on this service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesCurrentLoad = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_current_load",
+			Help: "Load on the service that is calculated from the bound load based monitor",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesVirtualServerServiceHits = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "service_virtual_server_service_hits",
+			Help: "Number of times that the service has been provided",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesVirtualServerServiceHitsRate = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_virtual_server_service_hits_rate",
+			Help: "Rate (/s) counter for vsvrservicehits",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	servicesActiveTransactions = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_active_transactions",
+			Help: "Number of active transactions handled by this service. (Including those in the surge queue.) Active Transaction means number of transactions currently served by the server including those waiting in the SurgeQ",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
 )
 
 // Exporter represents the metrics exported to Prometheus
@@ -439,6 +670,27 @@ type Exporter struct {
 	virtualServersReponseBytesRate         *prometheus.GaugeVec
 	virtualServersCurrentClientConnections *prometheus.GaugeVec
 	virtualServersCurrentServerConnections *prometheus.GaugeVec
+	servicesThroughput                     *prometheus.CounterVec
+	servicesThroughputRate                 *prometheus.GaugeVec
+	servicesAvgTTFB                        *prometheus.GaugeVec
+	servicesTotalRequests                  *prometheus.CounterVec
+	servicesRequestsRate                   *prometheus.GaugeVec
+	servicesTotalResponses                 *prometheus.CounterVec
+	servicesResponsesRate                  *prometheus.GaugeVec
+	servicesTotalRequestBytes              *prometheus.CounterVec
+	servicesRequestBytesRate               *prometheus.GaugeVec
+	servicesTotalResponseBytes             *prometheus.CounterVec
+	servicesResponseBytesRate              *prometheus.GaugeVec
+	servicesCurrentClientConns             *prometheus.GaugeVec
+	servicesSurgeCount                     *prometheus.GaugeVec
+	servicesCurrentServerConns             *prometheus.GaugeVec
+	servicesServerEstablishedConnections   *prometheus.GaugeVec
+	servicesCurrentReusePool               *prometheus.GaugeVec
+	servicesMaxClients                     *prometheus.GaugeVec
+	servicesCurrentLoad                    *prometheus.GaugeVec
+	servicesVirtualServerServiceHits       *prometheus.CounterVec
+	servicesVirtualServerServiceHitsRate   *prometheus.GaugeVec
+	servicesActiveTransactions             *prometheus.GaugeVec
 }
 
 // NewExporter initialises the exporter
@@ -480,6 +732,27 @@ func NewExporter() (*Exporter, error) {
 		virtualServersReponseBytesRate:         virtualServersReponseBytesRate,
 		virtualServersCurrentClientConnections: virtualServersCurrentClientConnections,
 		virtualServersCurrentServerConnections: virtualServersCurrentServerConnections,
+		servicesThroughput:                     servicesThroughput,
+		servicesThroughputRate:                 servicesThroughputRate,
+		servicesAvgTTFB:                        servicesAvgTTFB,
+		servicesTotalRequests:                  servicesTotalRequests,
+		servicesRequestsRate:                   servicesRequestsRate,
+		servicesTotalResponses:                 servicesTotalResponses,
+		servicesResponsesRate:                  servicesResponsesRate,
+		servicesTotalRequestBytes:              servicesTotalRequestBytes,
+		servicesRequestBytesRate:               servicesRequestBytesRate,
+		servicesTotalResponseBytes:             servicesTotalResponseBytes,
+		servicesResponseBytesRate:              servicesResponseBytesRate,
+		servicesCurrentClientConns:             servicesCurrentClientConns,
+		servicesSurgeCount:                     servicesSurgeCount,
+		servicesCurrentServerConns:             servicesCurrentServerConns,
+		servicesServerEstablishedConnections:   servicesServerEstablishedConnections,
+		servicesCurrentReusePool:               servicesCurrentReusePool,
+		servicesMaxClients:                     servicesMaxClients,
+		servicesCurrentLoad:                    servicesCurrentLoad,
+		servicesVirtualServerServiceHits:       servicesVirtualServerServiceHits,
+		servicesVirtualServerServiceHitsRate:   servicesVirtualServerServiceHitsRate,
+		servicesActiveTransactions:             servicesActiveTransactions,
 	}, nil
 }
 
@@ -521,6 +794,27 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.virtualServersReponseBytesRate.Describe(ch)
 	e.virtualServersCurrentClientConnections.Describe(ch)
 	e.virtualServersCurrentServerConnections.Describe(ch)
+	e.servicesThroughput.Describe(ch)
+	e.servicesThroughputRate.Describe(ch)
+	e.servicesAvgTTFB.Describe(ch)
+	e.servicesTotalRequests.Describe(ch)
+	e.servicesRequestsRate.Describe(ch)
+	e.servicesTotalResponses.Describe(ch)
+	e.servicesResponsesRate.Describe(ch)
+	e.servicesTotalRequestBytes.Describe(ch)
+	e.servicesRequestBytesRate.Describe(ch)
+	e.servicesTotalResponseBytes.Describe(ch)
+	e.servicesResponseBytesRate.Describe(ch)
+	e.servicesCurrentClientConns.Describe(ch)
+	e.servicesSurgeCount.Describe(ch)
+	e.servicesCurrentServerConns.Describe(ch)
+	e.servicesServerEstablishedConnections.Describe(ch)
+	e.servicesCurrentReusePool.Describe(ch)
+	e.servicesMaxClients.Describe(ch)
+	e.servicesCurrentLoad.Describe(ch)
+	e.servicesVirtualServerServiceHits.Describe(ch)
+	e.servicesVirtualServerServiceHitsRate.Describe(ch)
+	e.servicesActiveTransactions.Describe(ch)
 }
 
 func (e *Exporter) collectInterfacesRxBytesPerSecond(ns netscaler.NSAPIResponse) {
@@ -718,6 +1012,189 @@ func (e *Exporter) collectVirtualServerCurrentServerConnections(ns netscaler.NSA
 	}
 }
 
+func (e *Exporter) collectServicesThroughput(ns netscaler.NSAPIResponse) {
+	e.servicesThroughput.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.Throughput, 64)
+		e.servicesThroughput.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesThroughputRate(ns netscaler.NSAPIResponse) {
+	e.servicesThroughputRate.Reset()
+
+	for _, service := range ns.Services {
+		e.servicesThroughputRate.WithLabelValues(nsInstance, service.Name).Set(service.ThroughputRate)
+	}
+}
+
+func (e *Exporter) collectServicesAvgTTFB(ns netscaler.NSAPIResponse) {
+	e.servicesAvgTTFB.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.AvgTimeToFirstByte, 64)
+		e.servicesAvgTTFB.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesTotalRequests(ns netscaler.NSAPIResponse) {
+	e.servicesTotalRequests.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.TotalRequests, 64)
+		e.servicesTotalRequests.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesRequestsRate(ns netscaler.NSAPIResponse) {
+	e.servicesRequestsRate.Reset()
+
+	for _, service := range ns.Services {
+		e.servicesRequestsRate.WithLabelValues(nsInstance, service.Name).Set(service.RequestsRate)
+	}
+}
+
+func (e *Exporter) collectServicesTotalResponses(ns netscaler.NSAPIResponse) {
+	e.servicesTotalResponses.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.TotalResponses, 64)
+		e.servicesTotalResponses.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesResponsesRate(ns netscaler.NSAPIResponse) {
+	e.servicesResponsesRate.Reset()
+
+	for _, service := range ns.Services {
+		e.servicesResponsesRate.WithLabelValues(nsInstance, service.Name).Set(service.ResponsesRate)
+	}
+}
+
+func (e *Exporter) collectServicesTotalRequestBytes(ns netscaler.NSAPIResponse) {
+	e.servicesTotalRequestBytes.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.TotalRequestBytes, 64)
+		e.servicesTotalRequestBytes.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesRequestBytesRate(ns netscaler.NSAPIResponse) {
+	e.servicesRequestBytesRate.Reset()
+
+	for _, service := range ns.Services {
+		e.servicesRequestBytesRate.WithLabelValues(nsInstance, service.Name).Set(service.RequestBytesRate)
+	}
+}
+
+func (e *Exporter) collectServicesTotalResponseBytes(ns netscaler.NSAPIResponse) {
+	e.servicesTotalResponseBytes.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.TotalResponseBytes, 64)
+		e.servicesTotalResponseBytes.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesResponseBytesRate(ns netscaler.NSAPIResponse) {
+	e.servicesResponseBytesRate.Reset()
+
+	for _, service := range ns.Services {
+		e.servicesResponseBytesRate.WithLabelValues(nsInstance, service.Name).Set(service.ResponseBytesRate)
+	}
+}
+
+func (e *Exporter) collectServicesCurrentClientConns(ns netscaler.NSAPIResponse) {
+	e.servicesCurrentClientConns.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.CurrentClientConnections, 64)
+		e.servicesCurrentClientConns.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesSurgeCount(ns netscaler.NSAPIResponse) {
+	e.servicesSurgeCount.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.SurgeCount, 64)
+		e.servicesSurgeCount.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesCurrentServerConns(ns netscaler.NSAPIResponse) {
+	e.servicesCurrentServerConns.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.CurrentServerConnections, 64)
+		e.servicesCurrentServerConns.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesServerEstablishedConnections(ns netscaler.NSAPIResponse) {
+	e.servicesServerEstablishedConnections.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.ServerEstablishedConnections, 64)
+		e.servicesServerEstablishedConnections.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesCurrentReusePool(ns netscaler.NSAPIResponse) {
+	e.servicesCurrentReusePool.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.CurrentReusePool, 64)
+		e.servicesCurrentReusePool.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesMaxClients(ns netscaler.NSAPIResponse) {
+	e.servicesMaxClients.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.MaxClients, 64)
+		e.servicesMaxClients.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesCurrentLoad(ns netscaler.NSAPIResponse) {
+	e.servicesCurrentLoad.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.CurrentLoad, 64)
+		e.servicesCurrentLoad.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesVirtualServerServiceHits(ns netscaler.NSAPIResponse) {
+	e.servicesVirtualServerServiceHits.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.ServiceHits, 64)
+		e.servicesVirtualServerServiceHits.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesVirtualServerServiceHitsRate(ns netscaler.NSAPIResponse) {
+	e.servicesVirtualServerServiceHitsRate.Reset()
+
+	for _, service := range ns.Services {
+		e.servicesVirtualServerServiceHitsRate.WithLabelValues(nsInstance, service.Name).Set(service.ServiceHitsRate)
+	}
+}
+
+func (e *Exporter) collectServicesActiveTransactions(ns netscaler.NSAPIResponse) {
+	e.servicesActiveTransactions.Reset()
+
+	for _, service := range ns.Services {
+		val, _ := strconv.ParseFloat(service.ActiveTransactions, 64)
+		e.servicesActiveTransactions.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
 // Collect is initiated by the Prometheus handler and gathers the metrics
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	nsClient := netscaler.NewNitroClient(*url, *username, *password)
@@ -733,6 +1210,11 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	virtualServers, err := netscaler.GetVirtualServerStats(nsClient)
+	if err != nil {
+		log.Error(err)
+	}
+
+	services, err := netscaler.GetServiceStats(nsClient)
 	if err != nil {
 		log.Error(err)
 	}
@@ -862,6 +1344,69 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectVirtualServerCurrentServerConnections(virtualServers)
 	e.virtualServersCurrentServerConnections.Collect(ch)
+
+	e.collectServicesThroughput(services)
+	e.servicesThroughput.Collect(ch)
+
+	e.collectServicesThroughputRate(services)
+	e.servicesThroughputRate.Collect(ch)
+
+	e.collectServicesAvgTTFB(services)
+	e.servicesAvgTTFB.Collect(ch)
+
+	e.collectServicesTotalRequests(services)
+	e.servicesTotalRequests.Collect(ch)
+
+	e.collectServicesRequestsRate(services)
+	e.servicesRequestsRate.Collect(ch)
+
+	e.collectServicesTotalResponses(services)
+	e.servicesTotalResponses.Collect(ch)
+
+	e.collectServicesResponsesRate(services)
+	e.servicesResponsesRate.Collect(ch)
+
+	e.collectServicesTotalRequestBytes(services)
+	e.servicesTotalRequestBytes.Collect(ch)
+
+	e.collectServicesRequestBytesRate(services)
+	e.servicesRequestBytesRate.Collect(ch)
+
+	e.collectServicesTotalResponseBytes(services)
+	e.servicesTotalResponseBytes.Collect(ch)
+
+	e.collectServicesResponseBytesRate(services)
+	e.servicesResponseBytesRate.Collect(ch)
+
+	e.collectServicesCurrentClientConns(services)
+	e.servicesCurrentClientConns.Collect(ch)
+
+	e.collectServicesSurgeCount(services)
+	e.servicesSurgeCount.Collect(ch)
+
+	e.collectServicesCurrentServerConns(services)
+	e.servicesCurrentServerConns.Collect(ch)
+
+	e.collectServicesServerEstablishedConnections(services)
+	e.servicesServerEstablishedConnections.Collect(ch)
+
+	e.collectServicesCurrentReusePool(services)
+	e.servicesCurrentReusePool.Collect(ch)
+
+	e.collectServicesMaxClients(services)
+	e.servicesMaxClients.Collect(ch)
+
+	e.collectServicesCurrentLoad(services)
+	e.servicesCurrentLoad.Collect(ch)
+
+	e.collectServicesVirtualServerServiceHits(services)
+	e.servicesVirtualServerServiceHits.Collect(ch)
+
+	e.collectServicesVirtualServerServiceHitsRate(services)
+	e.servicesVirtualServerServiceHitsRate.Collect(ch)
+
+	e.collectServicesActiveTransactions(services)
+	e.servicesActiveTransactions.Collect(ch)
 }
 
 func main() {

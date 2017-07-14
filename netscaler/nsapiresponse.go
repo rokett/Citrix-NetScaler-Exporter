@@ -8,4 +8,5 @@ type NSAPIResponse struct {
 	NS             NSStats              `json:"ns"`
 	Interfaces     []InterfaceStats     `json:"Interface"`
 	VirtualServers []VirtualServerStats `json:"lbvserver"`
+	Services       []ServiceStats       `json:"service"`
 }
