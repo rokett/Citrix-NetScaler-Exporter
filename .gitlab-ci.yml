@@ -9,7 +9,8 @@ image: golang:latest
 before_script:
     - ln -s /builds /go/src/Citrix-NetScaler-Exporter
     - cd /go/src/Citrix-NetScaler-Exporter
-
+    - ls
+    
 stages:
     - build
 
