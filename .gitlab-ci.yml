@@ -11,8 +11,11 @@ before_script:
     - ls
     - cd /builds/rokett
     - ls
-    - ln -s /builds /go/src/Citrix-NetScaler-Exporter/rokett/Citrix-NetScaler-Exporter
+    - ln -s /builds/ /go/src/Citrix-NetScaler-Exporter/rokett/Citrix-NetScaler-Exporter
     - cd /go/src/Citrix-NetScaler-Exporter/rokett/Citrix-NetScaler-Exporter
+    - ls
+    - ln -s /builds /go/src/rokett
+    - cd /go/src/rokett/Citrix-NetScaler-Exporter
     - ls
     
 stages:
