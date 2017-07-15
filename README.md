@@ -39,6 +39,9 @@ This will run the exporter using the default bind port.  If you need to change t
 ### Running as a service
 Ideally you'll run the exporter as a service.  There are many ways to do that, so it's really up to you.  If you're running it on Windows I would recommend [NSSM](https://nssm.cc/).
 
+## Downloading a release
+https://gitlab.com/rokett/Citrix-NetScaler-Exporter/tags
+
 ## Building the executable
 All dependencies are version controlled, so building the project is really easy.
 
