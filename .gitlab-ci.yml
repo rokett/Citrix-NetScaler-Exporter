@@ -30,3 +30,4 @@ compile:
     artifacts:
         paths:
             - Citrix-NetScaler-Exporter.exe
+        expire_in: 2 weeks
