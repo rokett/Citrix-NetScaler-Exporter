@@ -7,9 +7,9 @@ image: golang:latest
 # repository in /go/src/mydomainperso.com/repos/projectname 
 # Thus, making a symbolic link corrects this.
 before_script:
-    - ln -s /builds /go/src/rokett
-    - cd /go/src/rokett/Citrix-NetScaler-Exporter
-
+    - ln -s /builds/rokett/Citrix-NetScaler-Exporter /go/src/Citrix-NetScaler-Exporter
+    - cd /go/src/Citrix-NetScaler-Exporter
+    
 stages:
     - test
     - build
@@ -26,7 +26,7 @@ compile:
     script:
         - go get github.com/alecthomas/kingpin
         # Better put this in a Makefile
-        - go build -race -ldflags "-extldflags '-static'" -o mybinary
+        - go build -race -ldflags "-extldflags '-static'" -o Citrix-NetScaler-Exporter.exe
     artifacts:
         paths:
-            - mybinary
+            - Citrix-NetScaler-Exporter.exe

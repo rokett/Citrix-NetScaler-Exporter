@@ -11,15 +11,15 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
+	"github.com/kardianos/service"
 	log "github.com/sirupsen/logrus"
-	"golang.org/x/sys/windows/svc"
 )
 
 var (
 	url      = flag.String("url", "", "Base URL of the NetScaler management interface.  Normally something like https://my-netscaler.something.x")
 	username = flag.String("username", "", "Username with which to connect to the NetScaler API")
 	password = flag.String("password", "", "Password with which to connect to the NetScaler API")
-	bindPort = flag.Int("bind_port", 9279, "Port to bind the exporter endpoint to")
+	bindPort = flag.Int("bind_port", 9280, "Port to bind the exporter endpoint to")
 
 	nsInstance string
 
@@ -1420,9 +1420,7 @@ func main() {
 	nsInstance = strings.TrimLeft(*url, "https://")
 	nsInstance = strings.Trim(nsInstance, " /")
 
-	interactive, _ := svc.IsAnInteractiveSession()
-
-	if interactive != true {
+	if service.Interactive() != true {
 		log.SetFormatter(&log.JSONFormatter{})
 
 		logfile := nsInstance + ".log"

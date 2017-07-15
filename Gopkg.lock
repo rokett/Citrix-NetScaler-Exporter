@@ -14,6 +14,18 @@
   revision = "0a4f71a498b7c4812f64969510bcb4eca251e33a"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/kardianos/osext"
+  packages = ["."]
+  revision = "ae77be60afb1dcacde03767a8c37337fad28ac14"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/kardianos/service"
+  packages = ["."]
+  revision = "f6635a45eccea31fd54922e3c1bf7e5e5a5df097"
+
+[[projects]]
   name = "github.com/matttproud/golang_protobuf_extensions"
   packages = ["pbutil"]
   revision = "3247c84500bff8d9fb6d579d800f20b3e091582c"
@@ -58,12 +70,12 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix","windows","windows/svc"]
+  packages = ["unix","windows","windows/registry","windows/svc","windows/svc/eventlog","windows/svc/mgr"]
   revision = "abf9c25f54453410d0c6668e519582a9e1115027"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dc4dbbadf54af831a0964697af211cffdc160ae6e48e521b221e3ab9950ca94d"
+  inputs-digest = "2663206a1429f71b2baba8aad494da7353092f191fae1139485ff45a769f7c6d"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -25,7 +25,7 @@ You can monitor multiple NetScaler instances by passing in the URL, username, an
 | url       | Base URL of the NetScaler management interface.  Normally something like https://mynetscaler.internal.com | none          |
 | username  | Username with which to connect to the NetScaler API                                                       | none          |
 | password  | Password with which to connect to the NetScaler API                                                       | none          |
-| bind_port | Port to bind the exporter endpoint to                                                                     | 9279          |
+| bind_port | Port to bind the exporter endpoint to                                                                     | 9280          |
 
 
 Run the exporter manually using the following command:
