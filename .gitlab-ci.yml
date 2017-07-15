@@ -8,28 +8,25 @@ image: golang:latest
 # Thus, making a symbolic link corrects this.
 before_script:
     - ln -s /builds/rokett/Citrix-NetScaler-Exporter /go/src/Citrix-NetScaler-Exporter
-    #- cd /go/src/rokett/rokett/Citrix-NetScaler-Exporter
     - cd /go/src/Citrix-NetScaler-Exporter
-    - ls
-    - go version
-#/go/src/Citrix-NetScaler-Exporter/netscaler
+    
 stages:
+    - test
     - build
 
-#format:
-#    stage: test
-#    script:
-#        - go get github.com/alecthomas/kingpin
-#        - go tool vet -composites=false -shadow=true *.go
-#        - go test -race $(go list ./... | grep -v /vendor/)
+format:
+    stage: test
+    script:
+        - go get github.com/alecthomas/kingpin
+        - go tool vet -composites=false -shadow=true *.go
+        - go test -race $(go list ./... | grep -v /vendor/)
 
 compile:
     stage: build
     script:
         - go get github.com/alecthomas/kingpin
         # Better put this in a Makefile
-        #- go build -race -ldflags "-extldflags '-static'" -o mybinary
-        - go build -o mybinary
+        - go build -race -ldflags "-extldflags '-static'" -o Citrix-NetScaler-Exporter.exe
     artifacts:
         paths:
-            - mybinary
+            - Citrix-NetScaler-Exporter.exe
