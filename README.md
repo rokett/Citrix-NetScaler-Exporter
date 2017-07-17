@@ -39,10 +39,10 @@ This will run the exporter using the default bind port.  If you need to change t
 ### Running as a service
 Ideally you'll run the exporter as a service.  There are many ways to do that, so it's really up to you.  If you're running it on Windows I would recommend [NSSM](https://nssm.cc/).
 
-## Exported stats
+## Exported metrics
 ### NetScaler
 
-| Statistic                              | Metric Type | Unit    |
+| Metric                                 | Metric Type | Unit    |
 | -------------------------------------- | ----------- | ------- |
 | CPU usage                              | Gauge       | Percent |
 | Memory usage                           | Gauge       | Percent |
@@ -58,6 +58,22 @@ Ideally you'll run the exporter as a service.  There are many ways to do that, s
 | Current established client connections | Gauge       | None    |
 | Current server connections             | Gauge       | None    |
 | Current established server connections | Gauge       | None    |
+
+### Interfaces
+For each interface, the following metrics are retrieved.
+
+| Metric                                 | Metric Type | Unit    |
+| -------------------------------------- | ----------- | ------- |
+| Interface ID                           | N/A         | None    |
+| Received bytes per second              | Gauge       | None    |
+| Transmitted bytes per second           | Gauge       | None    |
+| Received packets per second            | Gauge       | None    |
+| Transmitted packets per second         | Gauge       | None    |
+| Jumbo packets retrieved per second     | Gauge       | None    |
+| Jumbo packets transmitted per second   | Gauge       | None    |
+| Error packets received per second      | Gauge       | None    |
+| Intrerface alias                       | N/A         | None    |
+
 
 ## Building the executable
 All dependencies are version controlled, so building the project is really easy.
