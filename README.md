@@ -7,10 +7,10 @@ The exporter works with any local NetScaler user account which has permissions t
 If you lean towards the NetScaler CLI, you want to do something like the following (obviously changing the username as you see fit).
 
 ````
-# Create a new Command Policy which is only allow to run the stat command
+# Create a new Command Policy which is only allowed to run the stat command
 add system cmdPolicy stat ALLOW "^stat.*"
 
-# Create a new user.  Disabling externalAuth is important as if it is enabled a user created in AD with the same name could login
+# Create a new user.  Disabling externalAuth is important as if it is enabled a user created in AD (or other external source) with the same name could login
 add system user stats "password" -externalAuth DISABLED # Change the password to reflect whatever complex password you want
 
 # Bind the local user account to the new Command Policy
@@ -38,6 +38,26 @@ This will run the exporter using the default bind port.  If you need to change t
 
 ### Running as a service
 Ideally you'll run the exporter as a service.  There are many ways to do that, so it's really up to you.  If you're running it on Windows I would recommend [NSSM](https://nssm.cc/).
+
+## Exported stats
+### NetScaler
+
+| Statistic                              | Metric Type | Unit    |
+| -------------------------------------- | ----------- | ------- |
+| CPU usage                              | Gauge       | Percent |
+| Memory usage                           | Gauge       | Percent |
+| Management CPU usage                   | Gauge       | Percent |
+| Packet engine CPU usage                | Gauge       | Percent |
+| /flash partition usage                 | Gauge       | Percent |
+| /var partition usage                   | Gauge       | Percent |
+| MB received per second                 | Gauge       | MB/s    |
+| MB sent per second                     | Gauge       | MB/s    |
+| HTTP requests per second               | Gauge       | None    |
+| HTTP responses per second              | Gauge       | None    |
+| Current client connections             | Gauge       | None    |
+| Current established client connections | Gauge       | None    |
+| Current server connections             | Gauge       | None    |
+| Current established server connections | Gauge       | None    |
 
 ## Building the executable
 All dependencies are version controlled, so building the project is really easy.
