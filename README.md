@@ -97,6 +97,8 @@ For each virtual server, the following metrics are retrieved.
 | Current client connections | Gauge       | None    |
 | Current server connections | Gauge       | None    |
 
+## Downloading a release
+https://gitlab.com/rokett/Citrix-NetScaler-Exporter/tags
 
 ## Building the executable
 All dependencies are version controlled, so building the project is really easy.
