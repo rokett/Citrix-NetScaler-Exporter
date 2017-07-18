@@ -3,6 +3,7 @@ package main
 import (
 	"Citrix-NetScaler-Exporter/netscaler"
 	"flag"
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -1446,6 +1447,34 @@ func main() {
 	})
 
 	http.Handle("/metrics", promhttp.Handler())
+
+	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+		nsClient := netscaler.NewNitroClient(*url, *username, *password)
+
+		servicegroups, err := netscaler.GetServiceGroups(nsClient, "attrs=servicegroupname")
+		if err != nil {
+			log.Error(err)
+		}
+
+		for _, sg := range servicegroups.ServiceGroups {
+			bindings, err := netscaler.GetServiceGroupMemberBindings(nsClient, sg.Name)
+			if err != nil {
+				log.Error(err)
+			}
+
+			for _, member := range bindings.ServiceGroupMemberBindings {
+
+				port := strconv.FormatInt(member.Port, 10)
+				qs := "args=servicegroupname:" + sg.Name + ",servername:" + member.ServerName + ",port:" + port
+				stats, err := netscaler.GetServiceGroupMemberStats(nsClient, qs)
+				if err != nil {
+					log.Error(err)
+				}
+				fmt.Println(sg.Name + " : " + member.ServerName + ":" + strconv.FormatInt(member.Port, 10) + " : " + stats.ServiceGroupMemberStats.TotalRequests)
+
+			}
+		}
+	})
 
 	listeningPort := ":" + strconv.Itoa(*bindPort)
 	log.Infof("Listening on port %s", listeningPort)

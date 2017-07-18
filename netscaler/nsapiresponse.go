@@ -9,4 +9,7 @@ type NSAPIResponse struct {
 	InterfaceStats             []InterfaceStats             `json:"Interface"`
 	VirtualServerStats         []VirtualServerStats         `json:"lbvserver"`
 	ServiceStats               []ServiceStats               `json:"service"`
+	ServiceGroups              []ServiceGroups              `json:"servicegroup"`
+	ServiceGroupMemberBindings []ServiceGroupMemberBindings `json:"servicegroup_servicegroupmember_binding"`
+	ServiceGroupMemberStats    []ServiceGroupMemberStats    `json:"servicegroupmember"`
 }
