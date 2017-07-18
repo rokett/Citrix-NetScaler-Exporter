@@ -97,6 +97,35 @@ For each virtual server, the following metrics are retrieved.
 | Current client connections | Gauge       | None    |
 | Current server connections | Gauge       | None    |
 
+## Services
+For each service, the following metrics are retrieved.
+
+| Metric                         | Metric Type | Unit    |
+| -------------------------------| ----------- | ------- |
+| Name                           | N/A         | None    |
+| Throughput                     | Counter     | MB      |
+| Throughput rate                | Gauge       | MB/s    |
+| Average time to first byte     | Gauge       | Seconds |
+| State                          | Gauge       | None    |
+| Total requests                 | Counter     | None    |
+| Requests rate                  | Gauge       | None    |
+| Total responses                | Counter     | None    |
+| Responses rate                 | Gauge       | None    |
+| Total request bytes            | Counter     | Bytes   |
+| Request bytes rate             | Gauge       | Bytes/s |
+| Total response bytes           | Counter     | Bytes   |
+| Response bytes rate            | Gauge       | Bytes/s |
+| Current client connections     | Gauge       | None    |
+| Surge count                    | Gauge       | None    |
+| Current server connections     | Gauge       | None    |
+| Server established connections | Gauge       | None    |
+| Current reuse pool             | Gauge       | None    |
+| Max clients                    | Gauge       | None    |
+| Current load                   | Gauge       | Percent |
+| Service hits                   | Counter     | None    |
+| Service hits rate              | Gauge       | None    |
+| Active transactions            | Gauge       | None    |
+
 ## Downloading a release
 https://gitlab.com/rokett/Citrix-NetScaler-Exporter/tags
 
