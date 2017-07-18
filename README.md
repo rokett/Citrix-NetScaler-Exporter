@@ -65,14 +65,37 @@ For each interface, the following metrics are retrieved.
 | Metric                                 | Metric Type | Unit    |
 | -------------------------------------- | ----------- | ------- |
 | Interface ID                           | N/A         | None    |
-| Received bytes per second              | Gauge       | None    |
-| Transmitted bytes per second           | Gauge       | None    |
+| Received bytes per second              | Gauge       | Bytes   |
+| Transmitted bytes per second           | Gauge       | Bytes   |
 | Received packets per second            | Gauge       | None    |
 | Transmitted packets per second         | Gauge       | None    |
 | Jumbo packets retrieved per second     | Gauge       | None    |
 | Jumbo packets transmitted per second   | Gauge       | None    |
 | Error packets received per second      | Gauge       | None    |
 | Intrerface alias                       | N/A         | None    |
+
+## Virtual Servers
+For each virtual server, the following metrics are retrieved.
+
+| Metric                     | Metric Type | Unit    |
+| ---------------------------| ----------- | ------- |
+| Name                       | N/A         | None    |
+| Waiting requests           | Gauge       | None    |
+| Health                     | Gauge       | Percent |
+| Inactive services          | Gauge       | None    |
+| Active services            | Gauge       | None    |
+| Total hits                 | Counter     | None    |
+| Hits rate                  | Gauge       | None    |
+| Total requests             | Counter     | None    |
+| Requests rate              | Gauge       | None    |
+| Total responses            | Counter     | None    |
+| Responses rate             | Gauge       | None    |
+| Total request bytes        | Counter     | Bytes   |
+| Request bytes rate         | Gauge       | Bytes/s |
+| Total response bytes       | Counter     | Bytes   |
+| Response bytes rate        | Gauge       | Bytes/s |
+| Current client connections | Gauge       | None    |
+| Current server connections | Gauge       | None    |
 
 
 ## Building the executable
