@@ -23,7 +23,7 @@ var (
 
 	nsInstance string
 
-	model_id = prometheus.NewDesc(
+	modelID = prometheus.NewDesc(
 		"model_id",
 		"NetScaler model - reflects the bandwidth available; for example VPX 10 would report as 10.",
 		[]string{
@@ -643,7 +643,7 @@ var (
 
 // Exporter represents the metrics exported to Prometheus
 type Exporter struct {
-	model_id                               *prometheus.Desc
+	modelID                                *prometheus.Desc
 	mgmtCPUUsage                           *prometheus.Desc
 	memUsage                               *prometheus.Desc
 	pktCPUUsage                            *prometheus.Desc
@@ -1211,6 +1211,11 @@ func (e *Exporter) collectServicesActiveTransactions(ns netscaler.NSAPIResponse)
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	nsClient := netscaler.NewNitroClient(*url, *username, *password)
 
+	nslicense, err := netscaler.GetNSLicense(nsClient, "")
+	if err != nil {
+		log.Error(err)
+	}
+
 	ns, err := netscaler.GetNSStats(nsClient, "")
 	if err != nil {
 		log.Error(err)
@@ -1231,13 +1236,15 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		log.Error(err)
 	}
 
+	fltModelID, _ := strconv.ParseFloat(nslicense.NSLicense.ModelID, 64)
+
 	fltTCPCurrentClientConnections, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentClientConnections, 64)
 	fltTCPCurrentClientConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentClientConnectionsEstablished, 64)
 	fltTCPCurrentServerConnections, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnections, 64)
 	fltTCPCurrentServerConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnectionsEstablished, 64)
 
 	ch <- prometheus.MustNewConstMetric(
-		modelID, prometheus.GaugeValue, ns.NSLicense.ModelID, nsInstance,
+		modelID, prometheus.GaugeValue, fltModelID, nsInstance,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
