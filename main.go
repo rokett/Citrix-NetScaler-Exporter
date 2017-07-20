@@ -23,6 +23,15 @@ var (
 
 	nsInstance string
 
+	model_id = prometheus.NewDesc(
+		"model_id",
+		"NetScaler model - reflects the bandwidth available; for example VPX 10 would report as 10.",
+		[]string{
+			"ns_instance",
+		},
+		nil,
+	)
+
 	mgmtCPUUsage = prometheus.NewDesc(
 		"mgmt_cpu_usage",
 		"Current CPU utilisation for management",
@@ -634,6 +643,7 @@ var (
 
 // Exporter represents the metrics exported to Prometheus
 type Exporter struct {
+	model_id                               *prometheus.Desc
 	mgmtCPUUsage                           *prometheus.Desc
 	memUsage                               *prometheus.Desc
 	pktCPUUsage                            *prometheus.Desc
@@ -696,6 +706,7 @@ type Exporter struct {
 // NewExporter initialises the exporter
 func NewExporter() (*Exporter, error) {
 	return &Exporter{
+		modelID:                                modelID,
 		mgmtCPUUsage:                           mgmtCPUUsage,
 		memUsage:                               memUsage,
 		pktCPUUsage:                            pktCPUUsage,
@@ -758,6 +769,7 @@ func NewExporter() (*Exporter, error) {
 
 // Describe implements Collector
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
+	ch <- modelID
 	ch <- mgmtCPUUsage
 	ch <- memUsage
 	ch <- pktCPUUsage
@@ -1223,6 +1235,10 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	fltTCPCurrentClientConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentClientConnectionsEstablished, 64)
 	fltTCPCurrentServerConnections, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnections, 64)
 	fltTCPCurrentServerConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnectionsEstablished, 64)
+
+	ch <- prometheus.MustNewConstMetric(
+		modelID, prometheus.GaugeValue, ns.NSLicense.ModelID, nsInstance,
+	)
 
 	ch <- prometheus.MustNewConstMetric(
 		mgmtCPUUsage, prometheus.GaugeValue, ns.NSStats.MgmtCPUUsagePcnt, nsInstance,
