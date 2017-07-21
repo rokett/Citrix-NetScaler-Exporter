@@ -442,6 +442,17 @@ var (
 		},
 	)
 
+	servicesState = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_state",
+			Help: "Current state of the service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
 	servicesTotalRequests = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "service_total_requests",
@@ -683,6 +694,7 @@ type Exporter struct {
 	servicesThroughput                     *prometheus.CounterVec
 	servicesThroughputRate                 *prometheus.GaugeVec
 	servicesAvgTTFB                        *prometheus.GaugeVec
+	servicesState                          *prometheus.GaugeVec
 	servicesTotalRequests                  *prometheus.CounterVec
 	servicesRequestsRate                   *prometheus.GaugeVec
 	servicesTotalResponses                 *prometheus.CounterVec
@@ -746,6 +758,7 @@ func NewExporter() (*Exporter, error) {
 		servicesThroughput:                     servicesThroughput,
 		servicesThroughputRate:                 servicesThroughputRate,
 		servicesAvgTTFB:                        servicesAvgTTFB,
+		servicesState:                          servicesState,
 		servicesTotalRequests:                  servicesTotalRequests,
 		servicesRequestsRate:                   servicesRequestsRate,
 		servicesTotalResponses:                 servicesTotalResponses,
@@ -783,6 +796,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- tcpCurrentClientConnectionsEstablished
 	ch <- tcpCurrentServerConnections
 	ch <- tcpCurrentServerConnectionsEstablished
+
 	e.interfacesRxBytesPerSecond.Describe(ch)
 	e.interfacesTxBytesPerSecond.Describe(ch)
 	e.interfacesRxPacketsPerSecond.Describe(ch)
@@ -790,6 +804,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.interfacesJumboPacketsRxPerSecond.Describe(ch)
 	e.interfacesJumboPacketsTxPerSecond.Describe(ch)
 	e.interfacesErrorPacketsRxPerSecond.Describe(ch)
+
 	e.virtualServersWaitingRequests.Describe(ch)
 	e.virtualServersHealth.Describe(ch)
 	e.virtualServersInactiveServices.Describe(ch)
@@ -806,9 +821,11 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.virtualServersReponseBytesRate.Describe(ch)
 	e.virtualServersCurrentClientConnections.Describe(ch)
 	e.virtualServersCurrentServerConnections.Describe(ch)
+
 	e.servicesThroughput.Describe(ch)
 	e.servicesThroughputRate.Describe(ch)
 	e.servicesAvgTTFB.Describe(ch)
+	e.servicesState.Describe(ch)
 	e.servicesTotalRequests.Describe(ch)
 	e.servicesRequestsRate.Describe(ch)
 	e.servicesTotalResponses.Describe(ch)
@@ -1047,6 +1064,20 @@ func (e *Exporter) collectServicesAvgTTFB(ns netscaler.NSAPIResponse) {
 	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.AvgTimeToFirstByte, 64)
 		e.servicesAvgTTFB.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesState(ns netscaler.NSAPIResponse) {
+	e.servicesState.Reset()
+
+	for _, service := range ns.ServiceStats {
+		state := 0.0
+
+		if service.State == "UP" {
+			state = 1.0
+		}
+
+		e.servicesState.WithLabelValues(nsInstance, service.Name).Set(state)
 	}
 }
 
@@ -1376,6 +1407,9 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectServicesAvgTTFB(services)
 	e.servicesAvgTTFB.Collect(ch)
+
+	e.collectServicesState(services)
+	e.servicesState.Collect(ch)
 
 	e.collectServicesTotalRequests(services)
 	e.servicesTotalRequests.Collect(ch)
