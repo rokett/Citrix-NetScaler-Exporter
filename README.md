@@ -8,7 +8,7 @@ If you lean towards the NetScaler CLI, you want to do something like the followi
 
 ````
 # Create a new Command Policy which is only allowed to run the stat command
-add system cmdPolicy stat ALLOW "^stat.*"
+add system cmdPolicy stat ALLOW "(^stat.*|show ns license)"
 
 # Create a new user.  Disabling externalAuth is important as if it is enabled a user created in AD (or other external source) with the same name could login
 add system user stats "password" -externalAuth DISABLED # Change the password to reflect whatever complex password you want
@@ -125,6 +125,12 @@ For each service, the following metrics are retrieved.
 | Service hits                   | Counter     | None    |
 | Service hits rate              | Gauge       | None    |
 | Active transactions            | Gauge       | None    |
+
+## Licensing
+
+| Metric                         | Metric Type | Unit    |
+| -------------------------------| ----------- | ------- |
+| Model ID                       | Gauge       | None    |
 
 ## Downloading a release
 https://gitlab.com/rokett/Citrix-NetScaler-Exporter/tags
