@@ -3,7 +3,6 @@ package main
 import (
 	"Citrix-NetScaler-Exporter/netscaler"
 	"flag"
-	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -847,7 +846,7 @@ var (
 
 // Exporter represents the metrics exported to Prometheus
 type Exporter struct {
-    modelID                                   *prometheus.Desc
+	modelID                                   *prometheus.Desc
 	mgmtCPUUsage                              *prometheus.Desc
 	memUsage                                  *prometheus.Desc
 	pktCPUUsage                               *prometheus.Desc
@@ -927,7 +926,7 @@ type Exporter struct {
 // NewExporter initialises the exporter
 func NewExporter() (*Exporter, error) {
 	return &Exporter{
-        modelID:                                   modelID,
+		modelID:                                   modelID,
 		mgmtCPUUsage:                              mgmtCPUUsage,
 		memUsage:                                  memUsage,
 		pktCPUUsage:                               pktCPUUsage,
