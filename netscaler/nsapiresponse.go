@@ -5,6 +5,7 @@ type NSAPIResponse struct {
 	Errorcode                  int64                        `json:"errorcode"`
 	Message                    string                       `json:"message"`
 	Severity                   string                       `json:"severity"`
+	NSLicense                  NSLicense                    `json:"nslicense"`
 	NSStats                    NSStats                      `json:"ns"`
 	InterfaceStats             []InterfaceStats             `json:"Interface"`
 	VirtualServerStats         []VirtualServerStats         `json:"lbvserver"`

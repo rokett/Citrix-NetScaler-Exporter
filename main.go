@@ -24,6 +24,15 @@ var (
 
 	nsInstance string
 
+	modelID = prometheus.NewDesc(
+		"model_id",
+		"NetScaler model - reflects the bandwidth available; for example VPX 10 would report as 10.",
+		[]string{
+			"ns_instance",
+		},
+		nil,
+	)
+
 	mgmtCPUUsage = prometheus.NewDesc(
 		"mgmt_cpu_usage",
 		"Current CPU utilisation for management",
@@ -434,6 +443,17 @@ var (
 		},
 	)
 
+	servicesState = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_state",
+			Help: "Current state of the service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
 	servicesTotalRequests = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "service_total_requests",
@@ -827,6 +847,7 @@ var (
 
 // Exporter represents the metrics exported to Prometheus
 type Exporter struct {
+    modelID                                   *prometheus.Desc
 	mgmtCPUUsage                              *prometheus.Desc
 	memUsage                                  *prometheus.Desc
 	pktCPUUsage                               *prometheus.Desc
@@ -866,6 +887,7 @@ type Exporter struct {
 	servicesThroughput                        *prometheus.CounterVec
 	servicesThroughputRate                    *prometheus.GaugeVec
 	servicesAvgTTFB                           *prometheus.GaugeVec
+	servicesState                             *prometheus.GaugeVec
 	servicesTotalRequests                     *prometheus.CounterVec
 	servicesRequestsRate                      *prometheus.GaugeVec
 	servicesTotalResponses                    *prometheus.CounterVec
@@ -905,6 +927,7 @@ type Exporter struct {
 // NewExporter initialises the exporter
 func NewExporter() (*Exporter, error) {
 	return &Exporter{
+        modelID:                                   modelID,
 		mgmtCPUUsage:                              mgmtCPUUsage,
 		memUsage:                                  memUsage,
 		pktCPUUsage:                               pktCPUUsage,
@@ -944,6 +967,7 @@ func NewExporter() (*Exporter, error) {
 		servicesThroughput:                        servicesThroughput,
 		servicesThroughputRate:                    servicesThroughputRate,
 		servicesAvgTTFB:                           servicesAvgTTFB,
+		servicesState:                             servicesState,
 		servicesTotalRequests:                     servicesTotalRequests,
 		servicesRequestsRate:                      servicesRequestsRate,
 		servicesTotalResponses:                    servicesTotalResponses,
@@ -983,6 +1007,7 @@ func NewExporter() (*Exporter, error) {
 
 // Describe implements Collector
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
+	ch <- modelID
 	ch <- mgmtCPUUsage
 	ch <- memUsage
 	ch <- pktCPUUsage
@@ -1025,6 +1050,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.servicesThroughput.Describe(ch)
 	e.servicesThroughputRate.Describe(ch)
 	e.servicesAvgTTFB.Describe(ch)
+	e.servicesState.Describe(ch)
 	e.servicesTotalRequests.Describe(ch)
 	e.servicesRequestsRate.Describe(ch)
 	e.servicesTotalResponses.Describe(ch)
@@ -1280,6 +1306,20 @@ func (e *Exporter) collectServicesAvgTTFB(ns netscaler.NSAPIResponse) {
 	for _, service := range ns.ServiceStats {
 		val, _ := strconv.ParseFloat(service.AvgTimeToFirstByte, 64)
 		e.servicesAvgTTFB.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectServicesState(ns netscaler.NSAPIResponse) {
+	e.servicesState.Reset()
+
+	for _, service := range ns.ServiceStats {
+		state := 0.0
+
+		if service.State == "UP" {
+			state = 1.0
+		}
+
+		e.servicesState.WithLabelValues(nsInstance, service.Name).Set(state)
 	}
 }
 
@@ -1589,6 +1629,11 @@ func (e *Exporter) collectServiceGroupsMaxClients(ns netscaler.NSAPIResponse, sg
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	nsClient := netscaler.NewNitroClient(*url, *username, *password)
 
+	nslicense, err := netscaler.GetNSLicense(nsClient, "")
+	if err != nil {
+		log.Error(err)
+	}
+
 	ns, err := netscaler.GetNSStats(nsClient, "")
 	if err != nil {
 		log.Error(err)
@@ -1609,10 +1654,16 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		log.Error(err)
 	}
 
+	fltModelID, _ := strconv.ParseFloat(nslicense.NSLicense.ModelID, 64)
+
 	fltTCPCurrentClientConnections, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentClientConnections, 64)
 	fltTCPCurrentClientConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentClientConnectionsEstablished, 64)
 	fltTCPCurrentServerConnections, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnections, 64)
 	fltTCPCurrentServerConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnectionsEstablished, 64)
+
+	ch <- prometheus.MustNewConstMetric(
+		modelID, prometheus.GaugeValue, fltModelID, nsInstance,
+	)
 
 	ch <- prometheus.MustNewConstMetric(
 		mgmtCPUUsage, prometheus.GaugeValue, ns.NSStats.MgmtCPUUsagePcnt, nsInstance,
@@ -1743,6 +1794,9 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectServicesAvgTTFB(services)
 	e.servicesAvgTTFB.Collect(ch)
+
+	e.collectServicesState(services)
+	e.servicesState.Collect(ch)
 
 	e.collectServicesTotalRequests(services)
 	e.servicesTotalRequests.Collect(ch)

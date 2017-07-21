@@ -148,6 +148,12 @@ For each service group member, the following metrics are retrieved.
 | Current reuse pool             | Gauge       | None    |
 | Max clients                    | Gauge       | None    |
 
+## Licensing
+
+| Metric                         | Metric Type | Unit    |
+| -------------------------------| ----------- | ------- |
+| Model ID                       | Gauge       | None    |
+
 ## Downloading a release
 https://gitlab.com/rokett/Citrix-NetScaler-Exporter/tags
 
