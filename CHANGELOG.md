@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.3.0] - 2017-07-xx
+### Added
+ - Exporting Service Group metrics
+
 ## [1.2.0] - 2017-07-21
 ### Added
  - Added service state; 1 if service is up and 0 for any other state.

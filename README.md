@@ -8,7 +8,7 @@ If you lean towards the NetScaler CLI, you want to do something like the followi
 
 ````
 # Create a new Command Policy which is only allowed to run the stat command
-add system cmdPolicy stat ALLOW "(^stat.*|show ns license)"
+add system cmdPolicy stat ALLOW (^stat.*|show ns license|show serviceGroup)
 
 # Create a new user.  Disabling externalAuth is important as if it is enabled a user created in AD (or other external source) with the same name could login
 add system user stats "password" -externalAuth DISABLED # Change the password to reflect whatever complex password you want
@@ -125,6 +125,28 @@ For each service, the following metrics are retrieved.
 | Service hits                   | Counter     | None    |
 | Service hits rate              | Gauge       | None    |
 | Active transactions            | Gauge       | None    |
+
+## Service Groups
+For each service group member, the following metrics are retrieved.
+
+| Metric                         | Metric Type | Unit    |
+| -------------------------------| ----------- | ------- |
+| Average time to first byte     | Gauge       | Seconds |
+| State                          | Gauge       | None    |
+| Total requests                 | Counter     | None    |
+| Requests rate                  | Gauge       | None    |
+| Total responses                | Counter     | None    |
+| Responses rate                 | Gauge       | None    |
+| Total request bytes            | Counter     | Bytes   |
+| Request bytes rate             | Gauge       | Bytes/s |
+| Total response bytes           | Counter     | Bytes   |
+| Response bytes rate            | Gauge       | Bytes/s |
+| Current client connections     | Gauge       | None    |
+| Surge count                    | Gauge       | None    |
+| Current server connections     | Gauge       | None    |
+| Server established connections | Gauge       | None    |
+| Current reuse pool             | Gauge       | None    |
+| Max clients                    | Gauge       | None    |
 
 ## Licensing
 
