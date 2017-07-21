@@ -996,6 +996,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- tcpCurrentClientConnectionsEstablished
 	ch <- tcpCurrentServerConnections
 	ch <- tcpCurrentServerConnectionsEstablished
+
 	e.interfacesRxBytesPerSecond.Describe(ch)
 	e.interfacesTxBytesPerSecond.Describe(ch)
 	e.interfacesRxPacketsPerSecond.Describe(ch)
@@ -1003,6 +1004,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.interfacesJumboPacketsRxPerSecond.Describe(ch)
 	e.interfacesJumboPacketsTxPerSecond.Describe(ch)
 	e.interfacesErrorPacketsRxPerSecond.Describe(ch)
+
 	e.virtualServersWaitingRequests.Describe(ch)
 	e.virtualServersHealth.Describe(ch)
 	e.virtualServersInactiveServices.Describe(ch)
@@ -1019,6 +1021,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.virtualServersReponseBytesRate.Describe(ch)
 	e.virtualServersCurrentClientConnections.Describe(ch)
 	e.virtualServersCurrentServerConnections.Describe(ch)
+
 	e.servicesThroughput.Describe(ch)
 	e.servicesThroughputRate.Describe(ch)
 	e.servicesAvgTTFB.Describe(ch)
@@ -1437,6 +1440,151 @@ func (e *Exporter) collectServicesActiveTransactions(ns netscaler.NSAPIResponse)
 	}
 }
 
+func (e *Exporter) collectServiceGroupsState(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsState.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		state := 0.0
+
+		if sg.State == "UP" {
+			state = 1.0
+		}
+
+		e.serviceGroupsState.WithLabelValues(nsInstance, sgName, servername).Set(state)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsAvgTTFB(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsAvgTTFB.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.AvgTimeToFirstByte, 64)
+		e.serviceGroupsAvgTTFB.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsTotalRequests(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsTotalRequests.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.TotalRequests, 64)
+		e.serviceGroupsTotalRequests.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsRequestsRate(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsRequestsRate.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		e.serviceGroupsRequestsRate.WithLabelValues(nsInstance, sgName, servername).Set(sg.RequestsRate)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsTotalResponses(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsTotalResponses.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.TotalResponses, 64)
+		e.serviceGroupsTotalResponses.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsResponsesRate(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsResponsesRate.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		e.serviceGroupsResponsesRate.WithLabelValues(nsInstance, sgName, servername).Set(sg.ResponsesRate)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsTotalRequestBytes(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsTotalRequestBytes.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.TotalRequestBytes, 64)
+		e.serviceGroupsTotalRequestBytes.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsRequestBytesRate(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsRequestBytesRate.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		e.serviceGroupsRequestBytesRate.WithLabelValues(nsInstance, sgName, servername).Set(sg.RequestBytesRate)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsTotalResponseBytes(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsTotalResponseBytes.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.TotalResponseBytes, 64)
+		e.serviceGroupsTotalResponseBytes.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsResponseBytesRate(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsResponseBytesRate.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		e.serviceGroupsResponseBytesRate.WithLabelValues(nsInstance, sgName, servername).Set(sg.ResponseBytesRate)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsCurrentClientConnections(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsCurrentClientConnections.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.CurrentClientConnections, 64)
+		e.serviceGroupsCurrentClientConnections.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsSurgeCount(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsSurgeCount.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.SurgeCount, 64)
+		e.serviceGroupsSurgeCount.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsCurrentServerConnections(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsCurrentServerConnections.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.CurrentServerConnections, 64)
+		e.serviceGroupsCurrentServerConnections.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsServerEstablishedConnections(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsServerEstablishedConnections.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.ServerEstablishedConnections, 64)
+		e.serviceGroupsServerEstablishedConnections.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsCurrentReusePool(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsCurrentReusePool.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.CurrentReusePool, 64)
+		e.serviceGroupsCurrentReusePool.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
+func (e *Exporter) collectServiceGroupsMaxClients(ns netscaler.NSAPIResponse, sgName string, servername string) {
+	e.serviceGroupsMaxClients.Reset()
+
+	for _, sg := range ns.ServiceGroupMemberStats {
+		val, _ := strconv.ParseFloat(sg.MaxClients, 64)
+		e.serviceGroupsMaxClients.WithLabelValues(nsInstance, sgName, servername).Set(val)
+	}
+}
+
 // Collect is initiated by the Prometheus handler and gathers the metrics
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	nsClient := netscaler.NewNitroClient(*url, *username, *password)
@@ -1650,53 +1798,75 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	e.collectServicesActiveTransactions(services)
 	e.servicesActiveTransactions.Collect(ch)
 
-	e.collectServiceGroupsState(serviceGroups)
-	e.serviceGroupsState.Collect(ch)
+	servicegroups, err := netscaler.GetServiceGroups(nsClient, "attrs=servicegroupname")
+	if err != nil {
+		log.Error(err)
+	}
 
-	e.collectServiceGroupsAvgTTFB(serviceGroups)
-	e.serviceGroupsAvgTTFB.Collect(ch)
+	for _, sg := range servicegroups.ServiceGroups {
+		bindings, err := netscaler.GetServiceGroupMemberBindings(nsClient, sg.Name)
+		if err != nil {
+			log.Error(err)
+		}
 
-	e.collectServiceGroupsTotalRequests(serviceGroups)
-	e.serviceGroupsTotalRequests.Collect(ch)
+		for _, member := range bindings.ServiceGroupMemberBindings {
 
-	e.collectServiceGroupsRequestsRate(serviceGroups)
-	e.serviceGroupsRequestsRate.Collect(ch)
+			port := strconv.FormatInt(member.Port, 10)
+			qs := "args=servicegroupname:" + sg.Name + ",servername:" + member.ServerName + ",port:" + port
+			stats, err := netscaler.GetServiceGroupMemberStats(nsClient, qs)
+			if err != nil {
+				log.Error(err)
+			}
 
-	e.collectServiceGroupsTotalResponses(serviceGroups)
-	e.serviceGroupsTotalResponses.Collect(ch)
+			e.collectServiceGroupsState(stats, sg.Name, member.ServerName)
+			e.serviceGroupsState.Collect(ch)
 
-	e.collectServiceGroupsResponsesRate(serviceGroups)
-	e.serviceGroupsResponsesRate.Collect(ch)
+			e.collectServiceGroupsAvgTTFB(stats, sg.Name, member.ServerName)
+			e.serviceGroupsAvgTTFB.Collect(ch)
 
-	e.collectServiceGroupsTotalRequestBytes(serviceGroups)
-	e.serviceGroupsTotalRequestBytes.Collect(ch)
+			e.collectServiceGroupsTotalRequests(stats, sg.Name, member.ServerName)
+			e.serviceGroupsTotalRequests.Collect(ch)
 
-	e.collectServiceGroupsRequestBytesRate(serviceGroups)
-	e.serviceGroupsRequestBytesRate.Collect(ch)
+			e.collectServiceGroupsRequestsRate(stats, sg.Name, member.ServerName)
+			e.serviceGroupsRequestsRate.Collect(ch)
 
-	e.collectServiceGroupsTotalResponseBytes(serviceGroups)
-	e.serviceGroupsTotalResponseBytes.Collect(ch)
+			e.collectServiceGroupsTotalResponses(stats, sg.Name, member.ServerName)
+			e.serviceGroupsTotalResponses.Collect(ch)
 
-	e.collectServiceGroupsResponseBytesRate(serviceGroups)
-	e.serviceGroupsResponseBytesRate.Collect(ch)
+			e.collectServiceGroupsResponsesRate(stats, sg.Name, member.ServerName)
+			e.serviceGroupsResponsesRate.Collect(ch)
 
-	e.collectServiceGroupsCurrentClientConnections(serviceGroups)
-	e.serviceGroupsCurrentClientConnections.Collect(ch)
+			e.collectServiceGroupsTotalRequestBytes(stats, sg.Name, member.ServerName)
+			e.serviceGroupsTotalRequestBytes.Collect(ch)
 
-	e.collectServiceGroupsSurgeCount(serviceGroups)
-	e.serviceGroupsSurgeCount.Collect(ch)
+			e.collectServiceGroupsRequestBytesRate(stats, sg.Name, member.ServerName)
+			e.serviceGroupsRequestBytesRate.Collect(ch)
 
-	e.collectServiceGroupsCurrentServerConnections(serviceGroups)
-	e.serviceGroupsCurrentServerConnections.Collect(ch)
+			e.collectServiceGroupsTotalResponseBytes(stats, sg.Name, member.ServerName)
+			e.serviceGroupsTotalResponseBytes.Collect(ch)
 
-	e.collectServiceGroupsServerEstablishedConnections(serviceGroups)
-	e.serviceGroupsServerEstablishedConnections.Collect(ch)
+			e.collectServiceGroupsResponseBytesRate(stats, sg.Name, member.ServerName)
+			e.serviceGroupsResponseBytesRate.Collect(ch)
 
-	e.collectServiceGroupsCurrentReusePool(serviceGroups)
-	e.serviceGroupsCurrentReusePool.Collect(ch)
+			e.collectServiceGroupsCurrentClientConnections(stats, sg.Name, member.ServerName)
+			e.serviceGroupsCurrentClientConnections.Collect(ch)
 
-	e.collectServiceGroupsMaxClients(serviceGroups)
-	e.serviceGroupsMaxClients.Collect(ch)
+			e.collectServiceGroupsSurgeCount(stats, sg.Name, member.ServerName)
+			e.serviceGroupsSurgeCount.Collect(ch)
+
+			e.collectServiceGroupsCurrentServerConnections(stats, sg.Name, member.ServerName)
+			e.serviceGroupsCurrentServerConnections.Collect(ch)
+
+			e.collectServiceGroupsServerEstablishedConnections(stats, sg.Name, member.ServerName)
+			e.serviceGroupsServerEstablishedConnections.Collect(ch)
+
+			e.collectServiceGroupsCurrentReusePool(stats, sg.Name, member.ServerName)
+			e.serviceGroupsCurrentReusePool.Collect(ch)
+
+			e.collectServiceGroupsMaxClients(stats, sg.Name, member.ServerName)
+			e.serviceGroupsMaxClients.Collect(ch)
+		}
+	}
 }
 
 func main() {
@@ -1736,34 +1906,6 @@ func main() {
 	})
 
 	http.Handle("/metrics", promhttp.Handler())
-
-	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
-		nsClient := netscaler.NewNitroClient(*url, *username, *password)
-
-		servicegroups, err := netscaler.GetServiceGroups(nsClient, "attrs=servicegroupname")
-		if err != nil {
-			log.Error(err)
-		}
-
-		for _, sg := range servicegroups.ServiceGroups {
-			bindings, err := netscaler.GetServiceGroupMemberBindings(nsClient, sg.Name)
-			if err != nil {
-				log.Error(err)
-			}
-
-			for _, member := range bindings.ServiceGroupMemberBindings {
-
-				port := strconv.FormatInt(member.Port, 10)
-				qs := "args=servicegroupname:" + sg.Name + ",servername:" + member.ServerName + ",port:" + port
-				stats, err := netscaler.GetServiceGroupMemberStats(nsClient, qs)
-				if err != nil {
-					log.Error(err)
-				}
-				fmt.Println(sg.Name + " : " + member.ServerName + ":" + strconv.FormatInt(member.Port, 10) + " : " + stats.ServiceGroupMemberStats[0].TotalRequests)
-
-			}
-		}
-	})
 
 	listeningPort := ":" + strconv.Itoa(*bindPort)
 	log.Infof("Listening on port %s", listeningPort)
