@@ -126,6 +126,12 @@ For each service, the following metrics are retrieved.
 | Service hits rate              | Gauge       | None    |
 | Active transactions            | Gauge       | None    |
 
+## Licensing
+
+| Metric                         | Metric Type | Unit    |
+| -------------------------------| ----------- | ------- |
+| Model ID                       | Gauge       | None    |
+
 ## Downloading a release
 https://gitlab.com/rokett/Citrix-NetScaler-Exporter/tags
 
