@@ -1633,6 +1633,11 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		log.Error(err)
 	}
 
+	/*_, err := netscaler.Connect(nsClient)
+	if err != nil {
+		log.Fatal(err)
+	}*/
+
 	ns, err := netscaler.GetNSStats(nsClient, "")
 	if err != nil {
 		log.Error(err)
