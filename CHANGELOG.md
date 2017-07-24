@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.3.0] - 2017-07-xx
+## [1.3.0] - 2017-07-21
 ### Added
  - Exporting Service Group metrics
 
