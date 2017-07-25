@@ -1865,18 +1865,18 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	for _, sg := range servicegroups.ServiceGroups {
-		bindings, err := netscaler.GetServiceGroupMemberBindings(nsClient, sg.Name)
-		if err != nil {
-			log.Error(err)
+		bindings, err2 := netscaler.GetServiceGroupMemberBindings(nsClient, sg.Name)
+		if err2 != nil {
+			log.Error(err2)
 		}
 
 		for _, member := range bindings.ServiceGroupMemberBindings {
 
 			port := strconv.FormatInt(member.Port, 10)
 			qs := "args=servicegroupname:" + sg.Name + ",servername:" + member.ServerName + ",port:" + port
-			stats, err := netscaler.GetServiceGroupMemberStats(nsClient, qs)
-			if err != nil {
-				log.Error(err)
+			stats, err2 := netscaler.GetServiceGroupMemberStats(nsClient, qs)
+			if err2 != nil {
+				log.Error(err2)
 			}
 
 			e.collectServiceGroupsState(stats, sg.Name, member.ServerName)
