@@ -2,7 +2,7 @@
 This exporter collects statistics from Citrix NetScaler and makes them available for Prometheus to pull.  As the NetScaler is an appliance it's not recommended to run the exporter directly on it, so it will need to run elsewhere.
 
 ## NetScaler configuration
-The exporter works with any local NetScaler user account which has permissions to run the ``stats`` command.  It would be preferable to configure a specific user for this which only has permissions to retrieve stats.
+The exporter works via a local NetScaler user account.  It would be preferable to configure a specific user for this which only has permissions to retrieve stats and specific configuration details.
 
 If you lean towards the NetScaler CLI, you want to do something like the following (obviously changing the username as you see fit).
 
