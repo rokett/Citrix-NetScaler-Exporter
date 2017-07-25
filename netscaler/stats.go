@@ -21,8 +21,6 @@ func (c *NitroClient) GetStats(statsType string, querystring string) ([]byte, er
 	}
 
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("X-NITRO-USER", c.username)
-	req.Header.Set("X-NITRO-PASS", c.password)
 
 	resp, err := c.client.Do(req)
 	if resp != nil {

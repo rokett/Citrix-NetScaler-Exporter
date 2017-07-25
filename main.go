@@ -1626,17 +1626,20 @@ func (e *Exporter) collectServiceGroupsMaxClients(ns netscaler.NSAPIResponse, sg
 
 // Collect is initiated by the Prometheus handler and gathers the metrics
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
-	nsClient := netscaler.NewNitroClient(*url, *username, *password)
+	nsClient, err := netscaler.NewNitroClient(*url, *username, *password)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = netscaler.Connect(nsClient)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	nslicense, err := netscaler.GetNSLicense(nsClient, "")
 	if err != nil {
 		log.Error(err)
 	}
-
-	/*_, err := netscaler.Connect(nsClient)
-	if err != nil {
-		log.Fatal(err)
-	}*/
 
 	ns, err := netscaler.GetNSStats(nsClient, "")
 	if err != nil {
@@ -1924,6 +1927,11 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 			e.collectServiceGroupsMaxClients(stats, sg.Name, member.ServerName)
 			e.serviceGroupsMaxClients.Collect(ch)
 		}
+	}
+
+	err = netscaler.Disconnect(nsClient)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
