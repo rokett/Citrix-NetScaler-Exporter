@@ -1626,7 +1626,15 @@ func (e *Exporter) collectServiceGroupsMaxClients(ns netscaler.NSAPIResponse, sg
 
 // Collect is initiated by the Prometheus handler and gathers the metrics
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
-	nsClient := netscaler.NewNitroClient(*url, *username, *password)
+	nsClient, err := netscaler.NewNitroClient(*url, *username, *password)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = netscaler.Connect(nsClient)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	nslicense, err := netscaler.GetNSLicense(nsClient, "")
 	if err != nil {
@@ -1857,18 +1865,18 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	for _, sg := range servicegroups.ServiceGroups {
-		bindings, err := netscaler.GetServiceGroupMemberBindings(nsClient, sg.Name)
-		if err != nil {
-			log.Error(err)
+		bindings, err2 := netscaler.GetServiceGroupMemberBindings(nsClient, sg.Name)
+		if err2 != nil {
+			log.Error(err2)
 		}
 
 		for _, member := range bindings.ServiceGroupMemberBindings {
 
 			port := strconv.FormatInt(member.Port, 10)
 			qs := "args=servicegroupname:" + sg.Name + ",servername:" + member.ServerName + ",port:" + port
-			stats, err := netscaler.GetServiceGroupMemberStats(nsClient, qs)
-			if err != nil {
-				log.Error(err)
+			stats, err2 := netscaler.GetServiceGroupMemberStats(nsClient, qs)
+			if err2 != nil {
+				log.Error(err2)
 			}
 
 			e.collectServiceGroupsState(stats, sg.Name, member.ServerName)
@@ -1919,6 +1927,11 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 			e.collectServiceGroupsMaxClients(stats, sg.Name, member.ServerName)
 			e.serviceGroupsMaxClients.Collect(ch)
 		}
+	}
+
+	err = netscaler.Disconnect(nsClient)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 

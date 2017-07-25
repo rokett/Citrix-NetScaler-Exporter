@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.4.0] - 2017-07-25
+### Changed
+ - Authentication to the NetScaler now only happens once per scrape; the session cookie is saved and re-used in future requests.  When the scrape finishes, the session is disconnected.  Previously each API request was authenticated individually.
+
 ## [1.3.0] - 2017-07-21
 ### Added
  - Exporting Service Group metrics
