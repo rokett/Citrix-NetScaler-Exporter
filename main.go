@@ -1871,61 +1871,65 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		}
 
 		for _, member := range bindings.ServiceGroupMemberBindings {
+			// NetScaler API has a bug which means it throws errors if you try to retrieve stats for a wildcard port (* in GUI, 65535 in API and CLI).
+			// Until Citrix resolve the issue we skip attempting to retrieve stats for those service groups.
+			if member.Port != 65535 {
+				port := strconv.FormatInt(member.Port, 10)
 
-			port := strconv.FormatInt(member.Port, 10)
-			qs := "args=servicegroupname:" + sg.Name + ",servername:" + member.ServerName + ",port:" + port
-			stats, err2 := netscaler.GetServiceGroupMemberStats(nsClient, qs)
-			if err2 != nil {
-				log.Error(err2)
+				qs := "args=servicegroupname:" + sg.Name + ",servername:" + member.ServerName + ",port:" + port
+				stats, err2 := netscaler.GetServiceGroupMemberStats(nsClient, qs)
+				if err2 != nil {
+					log.Error(err2)
+				}
+
+				e.collectServiceGroupsState(stats, sg.Name, member.ServerName)
+				e.serviceGroupsState.Collect(ch)
+
+				e.collectServiceGroupsAvgTTFB(stats, sg.Name, member.ServerName)
+				e.serviceGroupsAvgTTFB.Collect(ch)
+
+				e.collectServiceGroupsTotalRequests(stats, sg.Name, member.ServerName)
+				e.serviceGroupsTotalRequests.Collect(ch)
+
+				e.collectServiceGroupsRequestsRate(stats, sg.Name, member.ServerName)
+				e.serviceGroupsRequestsRate.Collect(ch)
+
+				e.collectServiceGroupsTotalResponses(stats, sg.Name, member.ServerName)
+				e.serviceGroupsTotalResponses.Collect(ch)
+
+				e.collectServiceGroupsResponsesRate(stats, sg.Name, member.ServerName)
+				e.serviceGroupsResponsesRate.Collect(ch)
+
+				e.collectServiceGroupsTotalRequestBytes(stats, sg.Name, member.ServerName)
+				e.serviceGroupsTotalRequestBytes.Collect(ch)
+
+				e.collectServiceGroupsRequestBytesRate(stats, sg.Name, member.ServerName)
+				e.serviceGroupsRequestBytesRate.Collect(ch)
+
+				e.collectServiceGroupsTotalResponseBytes(stats, sg.Name, member.ServerName)
+				e.serviceGroupsTotalResponseBytes.Collect(ch)
+
+				e.collectServiceGroupsResponseBytesRate(stats, sg.Name, member.ServerName)
+				e.serviceGroupsResponseBytesRate.Collect(ch)
+
+				e.collectServiceGroupsCurrentClientConnections(stats, sg.Name, member.ServerName)
+				e.serviceGroupsCurrentClientConnections.Collect(ch)
+
+				e.collectServiceGroupsSurgeCount(stats, sg.Name, member.ServerName)
+				e.serviceGroupsSurgeCount.Collect(ch)
+
+				e.collectServiceGroupsCurrentServerConnections(stats, sg.Name, member.ServerName)
+				e.serviceGroupsCurrentServerConnections.Collect(ch)
+
+				e.collectServiceGroupsServerEstablishedConnections(stats, sg.Name, member.ServerName)
+				e.serviceGroupsServerEstablishedConnections.Collect(ch)
+
+				e.collectServiceGroupsCurrentReusePool(stats, sg.Name, member.ServerName)
+				e.serviceGroupsCurrentReusePool.Collect(ch)
+
+				e.collectServiceGroupsMaxClients(stats, sg.Name, member.ServerName)
+				e.serviceGroupsMaxClients.Collect(ch)
 			}
-
-			e.collectServiceGroupsState(stats, sg.Name, member.ServerName)
-			e.serviceGroupsState.Collect(ch)
-
-			e.collectServiceGroupsAvgTTFB(stats, sg.Name, member.ServerName)
-			e.serviceGroupsAvgTTFB.Collect(ch)
-
-			e.collectServiceGroupsTotalRequests(stats, sg.Name, member.ServerName)
-			e.serviceGroupsTotalRequests.Collect(ch)
-
-			e.collectServiceGroupsRequestsRate(stats, sg.Name, member.ServerName)
-			e.serviceGroupsRequestsRate.Collect(ch)
-
-			e.collectServiceGroupsTotalResponses(stats, sg.Name, member.ServerName)
-			e.serviceGroupsTotalResponses.Collect(ch)
-
-			e.collectServiceGroupsResponsesRate(stats, sg.Name, member.ServerName)
-			e.serviceGroupsResponsesRate.Collect(ch)
-
-			e.collectServiceGroupsTotalRequestBytes(stats, sg.Name, member.ServerName)
-			e.serviceGroupsTotalRequestBytes.Collect(ch)
-
-			e.collectServiceGroupsRequestBytesRate(stats, sg.Name, member.ServerName)
-			e.serviceGroupsRequestBytesRate.Collect(ch)
-
-			e.collectServiceGroupsTotalResponseBytes(stats, sg.Name, member.ServerName)
-			e.serviceGroupsTotalResponseBytes.Collect(ch)
-
-			e.collectServiceGroupsResponseBytesRate(stats, sg.Name, member.ServerName)
-			e.serviceGroupsResponseBytesRate.Collect(ch)
-
-			e.collectServiceGroupsCurrentClientConnections(stats, sg.Name, member.ServerName)
-			e.serviceGroupsCurrentClientConnections.Collect(ch)
-
-			e.collectServiceGroupsSurgeCount(stats, sg.Name, member.ServerName)
-			e.serviceGroupsSurgeCount.Collect(ch)
-
-			e.collectServiceGroupsCurrentServerConnections(stats, sg.Name, member.ServerName)
-			e.serviceGroupsCurrentServerConnections.Collect(ch)
-
-			e.collectServiceGroupsServerEstablishedConnections(stats, sg.Name, member.ServerName)
-			e.serviceGroupsServerEstablishedConnections.Collect(ch)
-
-			e.collectServiceGroupsCurrentReusePool(stats, sg.Name, member.ServerName)
-			e.serviceGroupsCurrentReusePool.Collect(ch)
-
-			e.collectServiceGroupsMaxClients(stats, sg.Name, member.ServerName)
-			e.serviceGroupsMaxClients.Collect(ch)
 		}
 	}
 
