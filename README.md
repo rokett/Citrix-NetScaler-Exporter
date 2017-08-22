@@ -163,3 +163,9 @@ All dependencies are version controlled, so building the project is really easy.
 1. Clone the repository locally.
 2. From within the repository directory run ``go build``.
 3. Hey presto, you have an executable.
+
+## Dockerfile 
+A Dockerfile has been setup to create the exporter using golang:alpine3.6
+
+This Dockerfile will create a container that will set the entrypoint as /Citrix-Netscaler-Exporter so you can just pass in the command line options
+mentioned about to the container without needing to call the executable
