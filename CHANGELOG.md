@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2017-10-10
+### Changed
+ - Log entries are no longer sent to a file.  Instead they are logged to stdout in logfmt format.
+
 ## [1.4.1] - 2017-08-22
 ### Fixed
  - NetScaler API bug meant that trying to retrieve stats from a service group member which used a wildcard port (65535 in API and CLI, * in GUI) resulted in error.  Skipping these members until the bug is resolved.

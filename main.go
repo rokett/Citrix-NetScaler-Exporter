@@ -3,6 +3,7 @@ package main
 import (
 	"Citrix-NetScaler-Exporter/netscaler"
 	"flag"
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -11,15 +12,20 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/kardianos/service"
-	log "github.com/sirupsen/logrus"
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/log/level"
 )
 
 var (
-	url      = flag.String("url", "", "Base URL of the NetScaler management interface.  Normally something like https://my-netscaler.something.x")
-	username = flag.String("username", "", "Username with which to connect to the NetScaler API")
-	password = flag.String("password", "", "Password with which to connect to the NetScaler API")
-	bindPort = flag.Int("bind_port", 9280, "Port to bind the exporter endpoint to")
+	app        = "Citrix-NetScaler-Exporter"
+	version    string
+	build      string
+	url        = flag.String("url", "", "Base URL of the NetScaler management interface.  Normally something like https://my-netscaler.something.x")
+	username   = flag.String("username", "", "Username with which to connect to the NetScaler API")
+	password   = flag.String("password", "", "Password with which to connect to the NetScaler API")
+	bindPort   = flag.Int("bind_port", 9280, "Port to bind the exporter endpoint to")
+	versionFlg = flag.Bool("version", false, "Display application version")
+	logger     log.Logger
 
 	nsInstance string
 
@@ -1628,37 +1634,39 @@ func (e *Exporter) collectServiceGroupsMaxClients(ns netscaler.NSAPIResponse, sg
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	nsClient, err := netscaler.NewNitroClient(*url, *username, *password)
 	if err != nil {
-		log.Fatal(err)
+		level.Error(logger).Log("msg", err)
+		os.Exit(1)
 	}
 
 	err = netscaler.Connect(nsClient)
 	if err != nil {
-		log.Fatal(err)
+		level.Error(logger).Log("msg", err)
+		os.Exit(1)
 	}
 
 	nslicense, err := netscaler.GetNSLicense(nsClient, "")
 	if err != nil {
-		log.Error(err)
+		level.Error(logger).Log("msg", err)
 	}
 
 	ns, err := netscaler.GetNSStats(nsClient, "")
 	if err != nil {
-		log.Error(err)
+		level.Error(logger).Log("msg", err)
 	}
 
 	interfaces, err := netscaler.GetInterfaceStats(nsClient, "")
 	if err != nil {
-		log.Error(err)
+		level.Error(logger).Log("msg", err)
 	}
 
 	virtualServers, err := netscaler.GetVirtualServerStats(nsClient, "")
 	if err != nil {
-		log.Error(err)
+		level.Error(logger).Log("msg", err)
 	}
 
 	services, err := netscaler.GetServiceStats(nsClient, "")
 	if err != nil {
-		log.Error(err)
+		level.Error(logger).Log("msg", err)
 	}
 
 	fltModelID, _ := strconv.ParseFloat(nslicense.NSLicense.ModelID, 64)
@@ -1861,13 +1869,13 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	servicegroups, err := netscaler.GetServiceGroups(nsClient, "attrs=servicegroupname")
 	if err != nil {
-		log.Error(err)
+		level.Error(logger).Log("msg", err)
 	}
 
 	for _, sg := range servicegroups.ServiceGroups {
 		bindings, err2 := netscaler.GetServiceGroupMemberBindings(nsClient, sg.Name)
 		if err2 != nil {
-			log.Error(err2)
+			level.Error(logger).Log("msg", err2)
 		}
 
 		for _, member := range bindings.ServiceGroupMemberBindings {
@@ -1879,7 +1887,7 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 				qs := "args=servicegroupname:" + sg.Name + ",servername:" + member.ServerName + ",port:" + port
 				stats, err2 := netscaler.GetServiceGroupMemberStats(nsClient, qs)
 				if err2 != nil {
-					log.Error(err2)
+					level.Error(logger).Log("msg", err2)
 				}
 
 				e.collectServiceGroupsState(stats, sg.Name, member.ServerName)
@@ -1935,12 +1943,18 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	err = netscaler.Disconnect(nsClient)
 	if err != nil {
-		log.Fatal(err)
+		level.Error(logger).Log("msg", err)
+		os.Exit(1)
 	}
 }
 
 func main() {
 	flag.Parse()
+
+	if *versionFlg {
+		fmt.Println(app + " v" + version + " build " + build)
+		os.Exit(0)
+	}
 
 	if *url == "" || *username == "" || *password == "" {
 		flag.PrintDefaults()
@@ -1950,17 +1964,8 @@ func main() {
 	nsInstance = strings.TrimLeft(*url, "https://")
 	nsInstance = strings.Trim(nsInstance, " /")
 
-	if service.Interactive() != true {
-		log.SetFormatter(&log.JSONFormatter{})
-
-		logfile := nsInstance + ".log"
-		file, err := os.OpenFile(logfile, os.O_CREATE|os.O_WRONLY, 0666)
-		if err == nil {
-			log.SetOutput(file)
-		} else {
-			log.Info("Failed to log to file, using default stderr")
-		}
-	}
+	logger = log.NewLogfmtLogger(os.Stdout)
+	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller, "app", app, "bind_port", *bindPort, "url", *url, "version", "v"+version, "build", build)
 
 	exporter, _ := NewExporter()
 	prometheus.MustRegister(exporter)
@@ -1978,6 +1983,11 @@ func main() {
 	http.Handle("/metrics", promhttp.Handler())
 
 	listeningPort := ":" + strconv.Itoa(*bindPort)
-	log.Infof("Listening on port %s", listeningPort)
-	log.Fatal(http.ListenAndServe(listeningPort, nil))
+	level.Info(logger).Log("msg", "Listening on port "+listeningPort)
+
+	err := http.ListenAndServe(listeningPort, nil)
+	if err != nil {
+		level.Error(logger).Log("msg", err)
+		os.Exit(1)
+	}
 }
