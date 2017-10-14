@@ -1,13 +1,14 @@
 package main
 
 import (
-	"Citrix-NetScaler-Exporter/netscaler"
 	"flag"
 	"fmt"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/rokett/citrix-netscaler-exporter/netscaler"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

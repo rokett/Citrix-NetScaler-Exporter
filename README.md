@@ -160,7 +160,7 @@ For each service group member, the following metrics are retrieved.
 ## Building the executable
 All dependencies are version controlled, so building the project is really easy.
 
-1. Clone the repository locally.
+1. ``go get github.com/rokett/citrix-netscaler-exporter``.
 2. From within the repository directory run ``go build``.
 3. Hey presto, you have an executable.
 
