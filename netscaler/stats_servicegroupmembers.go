@@ -11,13 +11,9 @@ type ServiceGroupMemberStats struct {
 	State                        string  `json:"state"`
 	AvgTimeToFirstByte           string  `json:"avgsvrttfb"`
 	TotalRequests                string  `json:"totalrequests"`
-	RequestsRate                 float64 `json:"requestsrate"`
 	TotalResponses               string  `json:"totalresponses"`
-	ResponsesRate                float64 `json:"responsesrate"`
 	TotalRequestBytes            string  `json:"totalrequestbytes"`
-	RequestBytesRate             float64 `json:"requestbytesrate"`
 	TotalResponseBytes           string  `json:"totalresponsebytes"`
-	ResponseBytesRate            float64 `json:"responsebytesrate"`
 	CurrentClientConnections     string  `json:"curclntconnections"`
 	SurgeCount                   string  `json:"surgecount"`
 	CurrentServerConnections     string  `json:"cursrvrconnections"`

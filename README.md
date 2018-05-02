@@ -50,10 +50,10 @@ Ideally you'll run the exporter as a service.  There are many ways to do that, s
 | Packet engine CPU usage                | Gauge       | Percent |
 | /flash partition usage                 | Gauge       | Percent |
 | /var partition usage                   | Gauge       | Percent |
-| MB received per second                 | Gauge       | MB/s    |
-| MB sent per second                     | Gauge       | MB/s    |
-| HTTP requests per second               | Gauge       | None    |
-| HTTP responses per second              | Gauge       | None    |
+| Total received MB                      | Gauge       | MB      |
+| Total transmitted MB                   | Gauge       | MB      |
+| HTTP requests                          | Gauge       | None    |
+| HTTP responses                         | Gauge       | None    |
 | Current client connections             | Gauge       | None    |
 | Current established client connections | Gauge       | None    |
 | Current server connections             | Gauge       | None    |
@@ -62,17 +62,17 @@ Ideally you'll run the exporter as a service.  There are many ways to do that, s
 ### Interfaces
 For each interface, the following metrics are retrieved.
 
-| Metric                                 | Metric Type | Unit    |
-| -------------------------------------- | ----------- | ------- |
-| Interface ID                           | N/A         | None    |
-| Received bytes per second              | Gauge       | Bytes   |
-| Transmitted bytes per second           | Gauge       | Bytes   |
-| Received packets per second            | Gauge       | None    |
-| Transmitted packets per second         | Gauge       | None    |
-| Jumbo packets retrieved per second     | Gauge       | None    |
-| Jumbo packets transmitted per second   | Gauge       | None    |
-| Error packets received per second      | Gauge       | None    |
-| Intrerface alias                       | N/A         | None    |
+| Metric                               | Metric Type | Unit  |
+| ------------------------------------ | ----------- | ----- |
+| Interface ID                         | N/A         | None  |
+| Received bytes                       | Gauge       | Bytes |
+| Transmitted bytes                    | Gauge       | Bytes |
+| Received packets                     | Gauge       | None  |
+| Transmitted packets                  | Gauge       | None  |
+| Jumbo packets retrieved              | Gauge       | None  |
+| Jumbo packets transmitted            | Gauge       | None  |
+| Error packets received               | Gauge       | None  |
+| Intrerface alias                     | N/A         | None  |
 
 ## Virtual Servers
 For each virtual server, the following metrics are retrieved.
@@ -84,16 +84,11 @@ For each virtual server, the following metrics are retrieved.
 | Health                     | Gauge       | Percent |
 | Inactive services          | Gauge       | None    |
 | Active services            | Gauge       | None    |
-| Total hits                 | Counter     | None    |
-| Hits rate                  | Gauge       | None    |
-| Total requests             | Counter     | None    |
-| Requests rate              | Gauge       | None    |
-| Total responses            | Counter     | None    |
-| Responses rate             | Gauge       | None    |
-| Total request bytes        | Counter     | Bytes   |
-| Request bytes rate         | Gauge       | Bytes/s |
-| Total response bytes       | Counter     | Bytes   |
-| Response bytes rate        | Gauge       | Bytes/s |
+| Total hits                 | Gauge       | None    |
+| Total requests             | Gauge       | None    |
+| Total responses            | Gauge       | None    |
+| Total request bytes        | Gauge       | Bytes   |
+| Total response bytes       | Gauge       | Bytes   |
 | Current client connections | Gauge       | None    |
 | Current server connections | Gauge       | None    |
 
@@ -104,17 +99,12 @@ For each service, the following metrics are retrieved.
 | -------------------------------| ----------- | ------- |
 | Name                           | N/A         | None    |
 | Throughput                     | Counter     | MB      |
-| Throughput rate                | Gauge       | MB/s    |
 | Average time to first byte     | Gauge       | Seconds |
 | State                          | Gauge       | None    |
-| Total requests                 | Counter     | None    |
-| Requests rate                  | Gauge       | None    |
-| Total responses                | Counter     | None    |
-| Responses rate                 | Gauge       | None    |
-| Total request bytes            | Counter     | Bytes   |
-| Request bytes rate             | Gauge       | Bytes/s |
-| Total response bytes           | Counter     | Bytes   |
-| Response bytes rate            | Gauge       | Bytes/s |
+| Total requests                 | Gauge       | None    |
+| Total responses                | Gauge       | None    |
+| Total request bytes            | Gauge       | Bytes   |
+| Total response bytes           | Gauge       | Bytes   |
 | Current client connections     | Gauge       | None    |
 | Surge count                    | Gauge       | None    |
 | Current server connections     | Gauge       | None    |
@@ -123,7 +113,6 @@ For each service, the following metrics are retrieved.
 | Max clients                    | Gauge       | None    |
 | Current load                   | Gauge       | Percent |
 | Service hits                   | Counter     | None    |
-| Service hits rate              | Gauge       | None    |
 | Active transactions            | Gauge       | None    |
 
 ## Service Groups
@@ -133,14 +122,10 @@ For each service group member, the following metrics are retrieved.
 | -------------------------------| ----------- | ------- |
 | Average time to first byte     | Gauge       | Seconds |
 | State                          | Gauge       | None    |
-| Total requests                 | Counter     | None    |
-| Requests rate                  | Gauge       | None    |
-| Total responses                | Counter     | None    |
-| Responses rate                 | Gauge       | None    |
-| Total request bytes            | Counter     | Bytes   |
-| Request bytes rate             | Gauge       | Bytes/s |
-| Total response bytes           | Counter     | Bytes   |
-| Response bytes rate            | Gauge       | Bytes/s |
+| Total requests                 | Gauge       | None    |
+| Total responses                | Gauge       | None    |
+| Total request bytes            | Gauge       | Bytes   |
+| Total response bytes           | Gauge       | Bytes   |
 | Current client connections     | Gauge       | None    |
 | Surge count                    | Gauge       | None    |
 | Current server connections     | Gauge       | None    |

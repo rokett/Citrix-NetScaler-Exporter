@@ -9,13 +9,13 @@ import (
 // InterfaceStats represents the data returned from the /stat/interface Nitro API endpoint
 type InterfaceStats struct {
 	ID                               string  `json:"id"`
-	ReceivedBytesPerSecond           float64 `json:"rxbytesrate"`
-	TransmitBytesPerSecond           float64 `json:"txbytesrate"`
-	ReceivedPacketsPerSecond         float64 `json:"rxpktsrate"`
-	TransmitPacketsPerSecond         float64 `json:"txpktsrate"`
-	JumboPacketsReceivedPerSecond    float64 `json:"jumbopktsreceivedrate"`
-	JumboPacketsTransmittedPerSecond float64 `json:"jumbopktstransmittedrate"`
-	ErrorPacketsReceivedPerSecond    float64 `json:"errpktrxrate"`
+	TotalReceivedBytes           string `json:"totrxbytes"`
+	TotalTransmitBytes           string `json:"tottxbytes"`
+	TotalReceivedPackets         string `json:"totrxpkts"`
+	TotalTransmitPackets         string `json:"tottxpkts"`
+	JumboPacketsReceived    string `json:"jumbopktsreceived"`
+	JumboPacketsTransmitted string `json:"jumbopktstransmitted"`
+	ErrorPacketsReceived    string `json:"errpktrx"`
 	Alias                            string  `json:"interfacealias"`
 }
 
