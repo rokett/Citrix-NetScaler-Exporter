@@ -10,17 +10,12 @@ import (
 type ServiceStats struct {
 	Name                         string  `json:"name"`
 	Throughput                   string  `json:"throughput"`
-	ThroughputRate               float64 `json:"throughputrate"`
 	AvgTimeToFirstByte           string  `json:"avgsvrttfb"`
 	State                        string  `json:"state"`
 	TotalRequests                string  `json:"totalrequests"`
-	RequestsRate                 float64 `json:"requestsrate"`
 	TotalResponses               string  `json:"totalresponses"`
-	ResponsesRate                float64 `json:"responsesrate"`
 	TotalRequestBytes            string  `json:"totalrequestbytes"`
-	RequestBytesRate             float64 `json:"requestbytesrate"`
 	TotalResponseBytes           string  `json:"totalresponsebytes"`
-	ResponseBytesRate            float64 `json:"responsebytesrate"`
 	CurrentClientConnections     string  `json:"curclntconnections"`
 	SurgeCount                   string  `json:"surgecount"`
 	CurrentServerConnections     string  `json:"cursrvrconnections"`
@@ -29,7 +24,6 @@ type ServiceStats struct {
 	MaxClients                   string  `json:"maxclients"`
 	CurrentLoad                  string  `json:"curload"`
 	ServiceHits                  string  `json:"vsvrservicehits"`
-	ServiceHitsRate              float64 `json:"vsvrservicehitsrate"`
 	ActiveTransactions           string  `json:"activetransactions"`
 }
 

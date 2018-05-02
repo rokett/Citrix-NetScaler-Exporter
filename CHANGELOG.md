@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2018-05-01
+### Added
+ - The following metrics replace their equivalent rate/s.
+   - total_received_mb
+   - total_transmit_mb
+   - http_responses
+   - http_requests
+   - interfaces_received_bytes
+   - interfaces_received_bytes
+   - interfaces_received_packets
+   - interfaces_transmitted_packets
+   - interfaces_jumbo_packets_received
+   - interfaces_jumbo_packets_transmitted
+   - interfaces_error_packets_received
+
+### Removed
+ - The following metrics are not needed as Prometheus can calculate them from their equivalent totals.
+   - transmit_mb_per_second
+   - received_mb_per_second
+   - http_requests_rate
+   - http_responses_rate
+   - interfaces_received_bytes_per_second
+   - interfaces_received_bytes_per_second
+   - interfaces_received_packets_per_second
+   - interfaces_transmitted_packets_per_second
+   - interfaces_jumbo_packets_received_per_second
+   - interfaces_jumbo_packets_transmitted_per_second
+   - interfaces_error_packets_received_per_second
+   - virtual_servers_hits_rate
+   - virtual_servers_requests_rate
+   - virtual_servers_responses_rate
+   - virtual_servers_request_bytes_rate
+   - virtual_servers_reponse_bytes_rate
+   - service_throughput_rate
+   - service_request_rate
+   - service_responses_rate
+   - service_request_bytes_rate
+   - service_response_bytes_rate
+   - service_virtual_server_service_hits_rate
+   - servicegroup_requests_rate
+   - servicegroup_responses_rate
+   - servicegroup_request_bytes_rate
+   - servicegroup_response_bytes_rate
+
 ## [2.0.0] - 2017-10-10
 ### Changed
  - Log entries are no longer sent to a file.  Instead they are logged to stdout in logfmt format.
