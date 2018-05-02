@@ -26,6 +26,7 @@ var (
 	password   = flag.String("password", "", "Password with which to connect to the NetScaler API")
 	bindPort   = flag.Int("bind_port", 9280, "Port to bind the exporter endpoint to")
 	versionFlg = flag.Bool("version", false, "Display application version")
+	ignoreCert = flag.Bool("ignore-cert", false, "Ignore certificate errors; use with caution")
 	logger     log.Logger
 
 	nsInstance string
@@ -1305,7 +1306,7 @@ func (e *Exporter) collectServiceGroupsMaxClients(ns netscaler.NSAPIResponse, sg
 
 // Collect is initiated by the Prometheus handler and gathers the metrics
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
-	nsClient, err := netscaler.NewNitroClient(*url, *username, *password)
+	nsClient, err := netscaler.NewNitroClient(*url, *username, *password, *ignoreCert)
 	if err != nil {
 		level.Error(logger).Log("msg", err)
 		os.Exit(1)
