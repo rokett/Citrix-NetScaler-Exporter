@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2018-05-02
+### Added
+ - Option to ignore certificate errors.  This can be useful when the NetScaler uses a self-signed certificate which will error without this flag.  It should be used sparingly, and only when you fully trust the endpoint.
+
 ## [3.0.0] - 2018-05-01
 ### Added
  - The following metrics replace their equivalent rate/s.

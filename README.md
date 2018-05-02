@@ -20,12 +20,13 @@ bind system user stats stat 100
 ## Usage
 You can monitor multiple NetScaler instances by passing in the URL, username, and password as command line flags to the exporter.  If you're running multiple exporters on the same server, you'll also need to change the port that the exporter binds to.
 
-| Flag      | Description                                                                                               | Default Value |
-| --------- | --------------------------------------------------------------------------------------------------------- | ------------- |
-| url       | Base URL of the NetScaler management interface.  Normally something like https://mynetscaler.internal.com | none          |
-| username  | Username with which to connect to the NetScaler API                                                       | none          |
-| password  | Password with which to connect to the NetScaler API                                                       | none          |
-| bind_port | Port to bind the exporter endpoint to                                                                     | 9280          |
+| Flag        | Description                                                                                               | Default Value |
+| ----------- | --------------------------------------------------------------------------------------------------------- | ------------- |
+| url         | Base URL of the NetScaler management interface.  Normally something like https://mynetscaler.internal.com | none          |
+| username    | Username with which to connect to the NetScaler API                                                       | none          |
+| password    | Password with which to connect to the NetScaler API                                                       | none          |
+| bind_port   | Port to bind the exporter endpoint to                                                                     | 9280          |
+| ignore-cert | Ignore certificate errors.  Should be used sparingly and only when you fully trust the endpoint           | false         |
 
 
 Run the exporter manually using the following command:
