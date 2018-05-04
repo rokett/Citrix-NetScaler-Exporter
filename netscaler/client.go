@@ -5,6 +5,7 @@ import (
 	"net/http/cookiejar"
 	"strings"
 	"time"
+	"crypto/tls"
 
 	"github.com/pkg/errors"
 )
@@ -17,9 +18,10 @@ type NitroClient struct {
 	client   *http.Client
 }
 
-// NewNitroClient creates a new client used to interact with the Nirto API.
+// NewNitroClient creates a new client used to interact with the Nitro API.
 // URL, username and password are passed to this function to allow connections to any NetScaler endpoint.
-func NewNitroClient(url string, username string, password string) (*NitroClient, error) {
+// The ignoreCert parameter allows self-signed certificates to be accepted.  It should be used sparingly and only when you fully trust the endpoint.
+func NewNitroClient(url string, username string, password string, ignoreCert bool) (*NitroClient, error) {
 	c := new(NitroClient)
 
 	c.url = strings.Trim(url, " /") + "/nitro/v1/"
@@ -35,6 +37,16 @@ func NewNitroClient(url string, username string, password string) (*NitroClient,
 	c.client = &http.Client{
 		Timeout: 10 * time.Second,
 		Jar:     jar,
+	}
+
+	if ignoreCert {
+		transpCfg := &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		}
+
+		c.client.Transport = transpCfg
 	}
 
 	return c, nil
