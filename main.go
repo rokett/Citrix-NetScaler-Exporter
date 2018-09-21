@@ -361,6 +361,93 @@ var (
 		},
 	)
 
+	CsVserversState = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "content_switching_state",
+			Help: "Up or down state",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	CsVserversTotalHits = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "content_switching_total_hits",
+			Help: "Total context switching virtual server hits",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	CsVserversTotalRequests = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "content_switching_total_requests",
+			Help: "Total context switching virtual server requests",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	CsVserversTotalResponses = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "content_switching_total_responses",
+			Help: "Total context switching virtual server responses",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	CsVserversTotalRequestBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "content_switching_total_request_bytes",
+			Help: "Total context switching virtual server request bytes",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+	CsVserversTotalResponseBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "content_switching_total_response_bytes",
+			Help: "Total context switching virtual server response bytes",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	CsVserversCurrentClientConnections = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "content_switching_current_client_connections",
+			Help: "Number of current client connections on a specific context switching virtual server",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	CsVserversCurrentServerConnections = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "content_switching_current_server_connections",
+			Help: "Number of current connections to the actual servers behind the specific context switching virtual server.",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
 	servicesThroughput = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "service_throughput",
@@ -716,6 +803,14 @@ type Exporter struct {
 	virtualServersTotalResponseBytes          *prometheus.CounterVec
 	virtualServersCurrentClientConnections    *prometheus.GaugeVec
 	virtualServersCurrentServerConnections    *prometheus.GaugeVec
+	CsVserversState										  *prometheus.GaugeVec
+	CsVserversTotalHits                   *prometheus.CounterVec
+	CsVserversTotalRequests               *prometheus.CounterVec
+	CsVserversTotalResponses              *prometheus.CounterVec
+	CsVserversTotalRequestBytes           *prometheus.CounterVec
+	CsVserversTotalResponseBytes          *prometheus.CounterVec
+	CsVserversCurrentClientConnections    *prometheus.GaugeVec
+	CsVserversCurrentServerConnections    *prometheus.GaugeVec
 	servicesThroughput                        *prometheus.CounterVec
 	servicesAvgTTFB                           *prometheus.GaugeVec
 	servicesState                             *prometheus.GaugeVec
@@ -781,6 +876,14 @@ func NewExporter() (*Exporter, error) {
 		virtualServersTotalResponseBytes:          virtualServersTotalResponseBytes,
 		virtualServersCurrentClientConnections:    virtualServersCurrentClientConnections,
 		virtualServersCurrentServerConnections:    virtualServersCurrentServerConnections,
+    CsVserversState:             	         CsVserversState,
+		CsVserversTotalHits:                   CsVserversTotalHits,
+		CsVserversTotalRequests:               CsVserversTotalRequests,
+		CsVserversTotalResponses:              CsVserversTotalResponses,
+		CsVserversTotalRequestBytes:           CsVserversTotalRequestBytes,
+		CsVserversTotalResponseBytes:          CsVserversTotalResponseBytes,
+		CsVserversCurrentClientConnections:    CsVserversCurrentClientConnections,
+		CsVserversCurrentServerConnections:    CsVserversCurrentServerConnections,
 		servicesThroughput:                        servicesThroughput,
 		servicesAvgTTFB:                           servicesAvgTTFB,
 		servicesState:                             servicesState,
@@ -848,6 +951,15 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.virtualServersTotalResponseBytes.Describe(ch)
 	e.virtualServersCurrentClientConnections.Describe(ch)
 	e.virtualServersCurrentServerConnections.Describe(ch)
+
+	e.CsVserversState.Describe(ch)
+	e.CsVserversTotalHits.Describe(ch)
+	e.CsVserversTotalRequests.Describe(ch)
+	e.CsVserversTotalResponses.Describe(ch)
+	e.CsVserversTotalRequestBytes.Describe(ch)
+	e.CsVserversTotalResponseBytes.Describe(ch)
+	e.CsVserversCurrentClientConnections.Describe(ch)
+	e.CsVserversCurrentServerConnections.Describe(ch)
 
 	e.servicesThroughput.Describe(ch)
 	e.servicesAvgTTFB.Describe(ch)
@@ -1041,6 +1153,82 @@ func (e *Exporter) collectVirtualServerCurrentServerConnections(ns netscaler.NSA
 		e.virtualServersCurrentServerConnections.WithLabelValues(nsInstance, vs.Name).Set(currentServerConnections)
 	}
 }
+
+func (e *Exporter) collectCsVserverState(ns netscaler.NSAPIResponse) {
+	e.CsVserversState.Reset()
+
+	for _, vs := range ns.CsVserverStats {
+		state := 0
+		if vs.State == "UP"{
+			state = 1
+		}
+		e.CsVserversState.WithLabelValues(nsInstance, vs.Name).Set(state)
+	}
+}
+
+func (e *Exporter) collectCsVserverTotalHits(ns netscaler.NSAPIResponse) {
+	e.CsVserversTotalHits.Reset()
+
+	for _, vs := range ns.CsVserverStats {
+		totalHits, _ := strconv.ParseFloat(vs.TotalHits, 64)
+		e.CsVserversTotalHits.WithLabelValues(nsInstance, vs.Name).Set(totalHits)
+	}
+}
+
+func (e *Exporter) collectCsVserverTotalRequests(ns netscaler.NSAPIResponse) {
+	e.CsVserversTotalRequests.Reset()
+
+	for _, vs := range ns.CsVserverStats {
+		totalRequests, _ := strconv.ParseFloat(vs.TotalRequests, 64)
+		e.CsVserversTotalRequests.WithLabelValues(nsInstance, vs.Name).Set(totalRequests)
+	}
+}
+
+func (e *Exporter) collectCsVserverTotalResponses(ns netscaler.NSAPIResponse) {
+	e.CsVserversTotalResponses.Reset()
+
+	for _, vs := range ns.CsVserverStats {
+		totalResponses, _ := strconv.ParseFloat(vs.TotalResponses, 64)
+		e.CsVserversTotalResponses.WithLabelValues(nsInstance, vs.Name).Set(totalResponses)
+	}
+}
+
+func (e *Exporter) collectCsVserverTotalRequestBytes(ns netscaler.NSAPIResponse) {
+	e.CsVserversTotalRequestBytes.Reset()
+
+	for _, vs := range ns.CsVserverStats {
+		totalRequestBytes, _ := strconv.ParseFloat(vs.TotalRequestBytes, 64)
+		e.CsVserversTotalRequestBytes.WithLabelValues(nsInstance, vs.Name).Set(totalRequestBytes)
+	}
+}
+
+func (e *Exporter) collectCsVserverTotalResponseBytes(ns netscaler.NSAPIResponse) {
+	e.CsVserversTotalResponseBytes.Reset()
+
+	for _, vs := range ns.CsVserverStats {
+		totalResponseBytes, _ := strconv.ParseFloat(vs.TotalResponseBytes, 64)
+		e.CsVserversTotalResponseBytes.WithLabelValues(nsInstance, vs.Name).Set(totalResponseBytes)
+	}
+}
+
+func (e *Exporter) collectCsVserverCurrentClientConnections(ns netscaler.NSAPIResponse) {
+	e.CsVserversCurrentClientConnections.Reset()
+
+	for _, vs := range ns.CsVserverStats {
+		currentClientConnections, _ := strconv.ParseFloat(vs.CurrentClientConnections, 64)
+		e.CsVserversCurrentClientConnections.WithLabelValues(nsInstance, vs.Name).Set(currentClientConnections)
+	}
+}
+
+func (e *Exporter) collectCsVserverCurrentServerConnections(ns netscaler.NSAPIResponse) {
+	e.CsVserversCurrentServerConnections.Reset()
+
+	for _, vs := range ns.CsVserverStats {
+		currentServerConnections, _ := strconv.ParseFloat(vs.CurrentServerConnections, 64)
+		e.CsVserversCurrentServerConnections.WithLabelValues(nsInstance, vs.Name).Set(currentServerConnections)
+	}
+}
+
 
 func (e *Exporter) collectServicesThroughput(ns netscaler.NSAPIResponse) {
 	e.servicesThroughput.Reset()
@@ -1333,6 +1521,11 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		level.Error(logger).Log("msg", err)
 	}
 
+	csvservers, err := netscaler.GetCsVserverStats(nsClient, "")
+	if err != nil {
+		level.Error(logger).Log("msg", err)
+	}
+
 	virtualServers, err := netscaler.GetVirtualServerStats(nsClient, "")
 	if err != nil {
 		level.Error(logger).Log("msg", err)
@@ -1464,6 +1657,31 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectVirtualServerCurrentServerConnections(virtualServers)
 	e.virtualServersCurrentServerConnections.Collect(ch)
+
+	e.collectCsVserverState(csvservers)
+	e.CsVserversState.Collect(ch)
+
+	e.collectCsVserverTotalHits(csvservers)
+	e.CsVserversTotalHits.Collect(ch)
+
+	e.collectCsVserverTotalRequests(csvservers)
+	e.CsVserversTotalRequests.Collect(ch)
+
+	e.collectCsVserverTotalResponses(csvservers)
+	e.CsVserversTotalResponses.Collect(ch)
+
+	e.collectCsVserverTotalRequestBytes(csvservers)
+	e.CsVserversTotalRequestBytes.Collect(ch)
+
+	e.collectCsVserverTotalResponseBytes(csvservers)
+	e.CsVserversTotalResponseBytes.Collect(ch)
+
+	e.collectCsVserverCurrentClientConnections(csvservers)
+	e.CsVserversCurrentClientConnections.Collect(ch)
+
+	e.collectCsVserverCurrentServerConnections(csvservers)
+	e.CsVserversCurrentServerConnections.Collect(ch)
+
 
 	e.collectServicesThroughput(services)
 	e.servicesThroughput.Collect(ch)
