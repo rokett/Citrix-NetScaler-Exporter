@@ -73,10 +73,10 @@ For each interface, the following metrics are retrieved.
 | Jumbo packets retrieved              | Gauge       | None  |
 | Jumbo packets transmitted            | Gauge       | None  |
 | Error packets received               | Gauge       | None  |
-| Intrerface alias                     | N/A         | None  |
+| Interface alias                     | N/A         | None  |
 
-## Virtual Servers
-For each virtual server, the following metrics are retrieved.
+## Load Balancing Virtual Servers
+For each load balancing virtual server, the following metrics are retrieved.
 
 | Metric                     | Metric Type | Unit    |
 | ---------------------------| ----------- | ------- |
@@ -85,6 +85,21 @@ For each virtual server, the following metrics are retrieved.
 | Health                     | Gauge       | Percent |
 | Inactive services          | Gauge       | None    |
 | Active services            | Gauge       | None    |
+| Total hits                 | Gauge       | None    |
+| Total requests             | Gauge       | None    |
+| Total responses            | Gauge       | None    |
+| Total request bytes        | Gauge       | Bytes   |
+| Total response bytes       | Gauge       | Bytes   |
+| Current client connections | Gauge       | None    |
+| Current server connections | Gauge       | None    |
+
+## Content Switching Virtual Servers
+For each content switching virtual server, the following metrics are retrieved.
+
+| Metric                     | Metric Type | Unit    |
+| ---------------------------| ----------- | ------- |
+| Name                       | N/A         | None    |
+| State                      | Gauge       | None    |
 | Total hits                 | Gauge       | None    |
 | Total requests             | Gauge       | None    |
 | Total responses            | Gauge       | None    |
