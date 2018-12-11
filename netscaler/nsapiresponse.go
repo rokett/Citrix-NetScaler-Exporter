@@ -13,4 +13,5 @@ type NSAPIResponse struct {
 	ServiceGroups              []ServiceGroups              `json:"servicegroup"`
 	ServiceGroupMemberBindings []ServiceGroupMemberBindings `json:"servicegroup_servicegroupmember_binding"`
 	ServiceGroupMemberStats    []ServiceGroupMemberStats    `json:"servicegroupmember"`
+	GSLBServiceStats           []GSLBServiceStats           `json:"gslbservice"`
 }

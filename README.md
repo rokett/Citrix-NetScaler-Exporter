@@ -140,6 +140,23 @@ For each service group member, the following metrics are retrieved.
 | -------------------------------| ----------- | ------- |
 | Model ID                       | Gauge       | None    |
 
+## GSLB Services
+For each GSLB service, the following metrics are retrieved.
+
+| Metric                         | Metric Type | Unit    |
+| -------------------------------| ----------- | ------- |
+| Name                           | N/A         | None    |
+| State                          | Gauge       | None    |
+| Total requests                 | Gauge       | None    |
+| Total responses                | Gauge       | None    |
+| Total request bytes            | Gauge       | Bytes   |
+| Total response bytes           | Gauge       | Bytes   |
+| Current client connections     | Gauge       | None    |
+| Current server connections     | Gauge       | None    |
+| Established connections        | Gauge       | None    |
+| Current load                   | Gauge       | Percent |
+| Service hits                   | Counter     | None    |
+
 ## Downloading a release
 <https://github.com/rokett/Citrix-NetScaler-Exporter/releases>
 

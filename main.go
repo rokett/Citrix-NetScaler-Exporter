@@ -680,6 +680,116 @@ var (
 			"member",
 		},
 	)
+
+	gslbServicesState = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_service_state",
+			Help: "Current state of the service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	gslbServicesTotalRequests = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_service_total_requests",
+			Help: "Total number of requests received on this service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	gslbServicesTotalResponses = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_service_total_responses",
+			Help: "Total number of responses received on this service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	gslbServicesTotalRequestBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_service_total_request_bytes",
+			Help: "Total number of request bytes received on this service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	gslbServicesTotalResponseBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_service_total_response_bytes",
+			Help: "Total number of response bytes received on this service",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	gslbServicesCurrentClientConns = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_service_current_client_connections",
+			Help: "Number of current client connections",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	gslbServicesCurrentServerConns = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_service_current_server_connections",
+			Help: "Number of current connections to the actual servers",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	gslbServicesEstablishedConnections = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_service_established_connections",
+			Help: "Number of server connections in ESTABLISHED state",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	gslbServicesCurrentLoad = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_service_current_load",
+			Help: "Load on the service that is calculated from the bound load based monitor",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
+
+	gslbServicesVirtualServerServiceHits = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_service_virtual_server_service_hits",
+			Help: "Number of times that the service has been provided",
+		},
+		[]string{
+			"ns_instance",
+			"service",
+		},
+	)
 )
 
 // Exporter represents the metrics exported to Prometheus
