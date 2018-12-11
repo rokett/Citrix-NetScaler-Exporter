@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [unreleased]
 ### Added
  - Collection of GSLB Service metrics.
+ - Collection of GSLB Virtual Server metrics.
+
 ## [3.1.0] - 2018-05-02
 ### Added
  - Option to ignore certificate errors.  This can be useful when the NetScaler uses a self-signed certificate which will error without this flag.  It should be used sparingly, and only when you fully trust the endpoint.

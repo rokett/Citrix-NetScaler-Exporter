@@ -157,6 +157,23 @@ For each GSLB service, the following metrics are retrieved.
 | Current load                   | Gauge       | Percent |
 | Service hits                   | Counter     | None    |
 
+## GSLB Virtual Servers
+For each GSLB virtual server, the following metrics are retrieved.
+
+| Metric                     | Metric Type | Unit    |
+| ---------------------------| ----------- | ------- |
+| Name                       | N/A         | None    |
+| Health                     | Gauge       | Percent |
+| Inactive services          | Gauge       | None    |
+| Active services            | Gauge       | None    |
+| Total hits                 | Gauge       | None    |
+| Total requests             | Gauge       | None    |
+| Total responses            | Gauge       | None    |
+| Total request bytes        | Gauge       | Bytes   |
+| Total response bytes       | Gauge       | Bytes   |
+| Current client connections | Gauge       | None    |
+| Current server connections | Gauge       | None    |
+
 ## Downloading a release
 <https://github.com/rokett/Citrix-NetScaler-Exporter/releases>
 

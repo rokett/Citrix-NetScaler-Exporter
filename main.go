@@ -790,135 +790,284 @@ var (
 			"service",
 		},
 	)
+
+	gslbVirtualServersHealth = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_virtual_servers_health",
+			Help: "Percentage of UP services bound to a specific virtual server",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	gslbVirtualServersInactiveServices = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_virtual_servers_inactive_services",
+			Help: "Number of inactive services bound to a specific virtual server",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	gslbVirtualServersActiveServices = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_virtual_servers_active_services",
+			Help: "Number of active services bound to a specific virtual server",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	gslbVirtualServersTotalHits = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_virtual_servers_total_hits",
+			Help: "Total virtual server hits",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	gslbVirtualServersTotalRequests = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_virtual_servers_total_requests",
+			Help: "Total virtual server requests",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	gslbVirtualServersTotalResponses = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_virtual_servers_total_responses",
+			Help: "Total virtual server responses",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	gslbVirtualServersTotalRequestBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_virtual_servers_total_request_bytes",
+			Help: "Total virtual server request bytes",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+	gslbVirtualServersTotalResponseBytes = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "gslb_virtual_servers_total_response_bytes",
+			Help: "Total virtual server response bytes",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	gslbVirtualServersCurrentClientConnections = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_virtual_servers_current_client_connections",
+			Help: "Number of current client connections on a specific virtual server",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
+	gslbVirtualServersCurrentServerConnections = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_virtual_servers_current_server_connections",
+			Help: "Number of current connections to the actual servers behind the specific virtual server.",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
 )
 
 // Exporter represents the metrics exported to Prometheus
 type Exporter struct {
-	modelID                                   *prometheus.Desc
-	mgmtCPUUsage                              *prometheus.Desc
-	memUsage                                  *prometheus.Desc
-	pktCPUUsage                               *prometheus.Desc
-	flashPartitionUsage                       *prometheus.Desc
-	varPartitionUsage                         *prometheus.Desc
-	totRxMB									  *prometheus.Desc
-	totTxMB									  *prometheus.Desc
-	httpRequests									  *prometheus.Desc
-	httpResponses									  *prometheus.Desc
-	tcpCurrentClientConnections               *prometheus.Desc
-	tcpCurrentClientConnectionsEstablished    *prometheus.Desc
-	tcpCurrentServerConnections               *prometheus.Desc
-	tcpCurrentServerConnectionsEstablished    *prometheus.Desc
-	interfacesRxBytes                *prometheus.GaugeVec
-	interfacesTxBytes                *prometheus.GaugeVec
-	interfacesRxPackets              *prometheus.GaugeVec
-	interfacesTxPackets              *prometheus.GaugeVec
-	interfacesJumboPacketsRx         *prometheus.GaugeVec
-	interfacesJumboPacketsTx         *prometheus.GaugeVec
-	interfacesErrorPacketsRx         *prometheus.GaugeVec
-	virtualServersWaitingRequests             *prometheus.GaugeVec
-	virtualServersHealth                      *prometheus.GaugeVec
-	virtualServersInactiveServices            *prometheus.GaugeVec
-	virtualServersActiveServices              *prometheus.GaugeVec
-	virtualServersTotalHits                   *prometheus.CounterVec
-	virtualServersTotalRequests               *prometheus.CounterVec
-	virtualServersTotalResponses              *prometheus.CounterVec
-	virtualServersTotalRequestBytes           *prometheus.CounterVec
-	virtualServersTotalResponseBytes          *prometheus.CounterVec
-	virtualServersCurrentClientConnections    *prometheus.GaugeVec
-	virtualServersCurrentServerConnections    *prometheus.GaugeVec
-	servicesThroughput                        *prometheus.CounterVec
-	servicesAvgTTFB                           *prometheus.GaugeVec
-	servicesState                             *prometheus.GaugeVec
-	servicesTotalRequests                     *prometheus.CounterVec
-	servicesTotalResponses                    *prometheus.CounterVec
-	servicesTotalRequestBytes                 *prometheus.CounterVec
-	servicesTotalResponseBytes                *prometheus.CounterVec
-	servicesCurrentClientConns                *prometheus.GaugeVec
-	servicesSurgeCount                        *prometheus.GaugeVec
-	servicesCurrentServerConns                *prometheus.GaugeVec
-	servicesServerEstablishedConnections      *prometheus.GaugeVec
-	servicesCurrentReusePool                  *prometheus.GaugeVec
-	servicesMaxClients                        *prometheus.GaugeVec
-	servicesCurrentLoad                       *prometheus.GaugeVec
-	servicesVirtualServerServiceHits          *prometheus.CounterVec
-	servicesActiveTransactions                *prometheus.GaugeVec
-	serviceGroupsState                        *prometheus.GaugeVec
-	serviceGroupsAvgTTFB                      *prometheus.GaugeVec
-	serviceGroupsTotalRequests                *prometheus.CounterVec
-	serviceGroupsTotalResponses               *prometheus.CounterVec
-	serviceGroupsTotalRequestBytes            *prometheus.CounterVec
-	serviceGroupsTotalResponseBytes           *prometheus.CounterVec
-	serviceGroupsCurrentClientConnections     *prometheus.GaugeVec
-	serviceGroupsSurgeCount                   *prometheus.GaugeVec
-	serviceGroupsCurrentServerConnections     *prometheus.GaugeVec
-	serviceGroupsServerEstablishedConnections *prometheus.GaugeVec
-	serviceGroupsCurrentReusePool             *prometheus.GaugeVec
-	serviceGroupsMaxClients                   *prometheus.GaugeVec
+	modelID                                    *prometheus.Desc
+	mgmtCPUUsage                               *prometheus.Desc
+	memUsage                                   *prometheus.Desc
+	pktCPUUsage                                *prometheus.Desc
+	flashPartitionUsage                        *prometheus.Desc
+	varPartitionUsage                          *prometheus.Desc
+	totRxMB                                    *prometheus.Desc
+	totTxMB                                    *prometheus.Desc
+	httpRequests                               *prometheus.Desc
+	httpResponses                              *prometheus.Desc
+	tcpCurrentClientConnections                *prometheus.Desc
+	tcpCurrentClientConnectionsEstablished     *prometheus.Desc
+	tcpCurrentServerConnections                *prometheus.Desc
+	tcpCurrentServerConnectionsEstablished     *prometheus.Desc
+	interfacesRxBytes                          *prometheus.GaugeVec
+	interfacesTxBytes                          *prometheus.GaugeVec
+	interfacesRxPackets                        *prometheus.GaugeVec
+	interfacesTxPackets                        *prometheus.GaugeVec
+	interfacesJumboPacketsRx                   *prometheus.GaugeVec
+	interfacesJumboPacketsTx                   *prometheus.GaugeVec
+	interfacesErrorPacketsRx                   *prometheus.GaugeVec
+	virtualServersWaitingRequests              *prometheus.GaugeVec
+	virtualServersHealth                       *prometheus.GaugeVec
+	virtualServersInactiveServices             *prometheus.GaugeVec
+	virtualServersActiveServices               *prometheus.GaugeVec
+	virtualServersTotalHits                    *prometheus.CounterVec
+	virtualServersTotalRequests                *prometheus.CounterVec
+	virtualServersTotalResponses               *prometheus.CounterVec
+	virtualServersTotalRequestBytes            *prometheus.CounterVec
+	virtualServersTotalResponseBytes           *prometheus.CounterVec
+	virtualServersCurrentClientConnections     *prometheus.GaugeVec
+	virtualServersCurrentServerConnections     *prometheus.GaugeVec
+	servicesThroughput                         *prometheus.CounterVec
+	servicesAvgTTFB                            *prometheus.GaugeVec
+	servicesState                              *prometheus.GaugeVec
+	servicesTotalRequests                      *prometheus.CounterVec
+	servicesTotalResponses                     *prometheus.CounterVec
+	servicesTotalRequestBytes                  *prometheus.CounterVec
+	servicesTotalResponseBytes                 *prometheus.CounterVec
+	servicesCurrentClientConns                 *prometheus.GaugeVec
+	servicesSurgeCount                         *prometheus.GaugeVec
+	servicesCurrentServerConns                 *prometheus.GaugeVec
+	servicesServerEstablishedConnections       *prometheus.GaugeVec
+	servicesCurrentReusePool                   *prometheus.GaugeVec
+	servicesMaxClients                         *prometheus.GaugeVec
+	servicesCurrentLoad                        *prometheus.GaugeVec
+	servicesVirtualServerServiceHits           *prometheus.CounterVec
+	servicesActiveTransactions                 *prometheus.GaugeVec
+	serviceGroupsState                         *prometheus.GaugeVec
+	serviceGroupsAvgTTFB                       *prometheus.GaugeVec
+	serviceGroupsTotalRequests                 *prometheus.CounterVec
+	serviceGroupsTotalResponses                *prometheus.CounterVec
+	serviceGroupsTotalRequestBytes             *prometheus.CounterVec
+	serviceGroupsTotalResponseBytes            *prometheus.CounterVec
+	serviceGroupsCurrentClientConnections      *prometheus.GaugeVec
+	serviceGroupsSurgeCount                    *prometheus.GaugeVec
+	serviceGroupsCurrentServerConnections      *prometheus.GaugeVec
+	serviceGroupsServerEstablishedConnections  *prometheus.GaugeVec
+	serviceGroupsCurrentReusePool              *prometheus.GaugeVec
+	serviceGroupsMaxClients                    *prometheus.GaugeVec
+	gslbServicesState                          *prometheus.GaugeVec
+	gslbServicesTotalRequests                  *prometheus.CounterVec
+	gslbServicesTotalResponses                 *prometheus.CounterVec
+	gslbServicesTotalRequestBytes              *prometheus.CounterVec
+	gslbServicesTotalResponseBytes             *prometheus.CounterVec
+	gslbServicesCurrentClientConns             *prometheus.GaugeVec
+	gslbServicesCurrentServerConns             *prometheus.GaugeVec
+	gslbServicesCurrentLoad                    *prometheus.GaugeVec
+	gslbServicesVirtualServerServiceHits       *prometheus.CounterVec
+	gslbServicesEstablishedConnections         *prometheus.GaugeVec
+	gslbVirtualServersHealth                   *prometheus.GaugeVec
+	gslbVirtualServersInactiveServices         *prometheus.GaugeVec
+	gslbVirtualServersActiveServices           *prometheus.GaugeVec
+	gslbVirtualServersTotalHits                *prometheus.CounterVec
+	gslbVirtualServersTotalRequests            *prometheus.CounterVec
+	gslbVirtualServersTotalResponses           *prometheus.CounterVec
+	gslbVirtualServersTotalRequestBytes        *prometheus.CounterVec
+	gslbVirtualServersTotalResponseBytes       *prometheus.CounterVec
+	gslbVirtualServersCurrentClientConnections *prometheus.GaugeVec
+	gslbVirtualServersCurrentServerConnections *prometheus.GaugeVec
 }
 
 // NewExporter initialises the exporter
 func NewExporter() (*Exporter, error) {
 	return &Exporter{
-		modelID:                                   modelID,
-		mgmtCPUUsage:                              mgmtCPUUsage,
-		memUsage:                                  memUsage,
-		pktCPUUsage:                               pktCPUUsage,
-		flashPartitionUsage:                       flashPartitionUsage,
-		varPartitionUsage:                         varPartitionUsage,
-		totRxMB:								   totRxMB,
-		totTxMB:								   totTxMB,
-		httpRequests:							   httpRequests,
-		httpResponses:							   httpResponses,
-		tcpCurrentClientConnections:               tcpCurrentClientConnections,
-		tcpCurrentClientConnectionsEstablished:    tcpCurrentClientConnectionsEstablished,
-		tcpCurrentServerConnections:               tcpCurrentServerConnections,
-		tcpCurrentServerConnectionsEstablished:    tcpCurrentServerConnectionsEstablished,
-		interfacesRxBytes:                interfacesRxBytes,
-		interfacesTxBytes:                interfacesTxBytes,
-		interfacesRxPackets:              interfacesRxPackets,
-		interfacesTxPackets:              interfacesTxPackets,
-		interfacesJumboPacketsRx:         interfacesJumboPacketsRx,
-		interfacesJumboPacketsTx:         interfacesJumboPacketsTx,
-		interfacesErrorPacketsRx:         interfacesErrorPacketsRx,
-		virtualServersWaitingRequests:             virtualServersWaitingRequests,
-		virtualServersHealth:                      virtualServersHealth,
-		virtualServersInactiveServices:            virtualServersInactiveServices,
-		virtualServersActiveServices:              virtualServersActiveServices,
-		virtualServersTotalHits:                   virtualServersTotalHits,
-		virtualServersTotalRequests:               virtualServersTotalRequests,
-		virtualServersTotalResponses:              virtualServersTotalResponses,
-		virtualServersTotalRequestBytes:           virtualServersTotalRequestBytes,
-		virtualServersTotalResponseBytes:          virtualServersTotalResponseBytes,
-		virtualServersCurrentClientConnections:    virtualServersCurrentClientConnections,
-		virtualServersCurrentServerConnections:    virtualServersCurrentServerConnections,
-		servicesThroughput:                        servicesThroughput,
-		servicesAvgTTFB:                           servicesAvgTTFB,
-		servicesState:                             servicesState,
-		servicesTotalRequests:                     servicesTotalRequests,
-		servicesTotalResponses:                    servicesTotalResponses,
-		servicesTotalRequestBytes:                 servicesTotalRequestBytes,
-		servicesTotalResponseBytes:                servicesTotalResponseBytes,
-		servicesCurrentClientConns:                servicesCurrentClientConns,
-		servicesSurgeCount:                        servicesSurgeCount,
-		servicesCurrentServerConns:                servicesCurrentServerConns,
-		servicesServerEstablishedConnections:      servicesServerEstablishedConnections,
-		servicesCurrentReusePool:                  servicesCurrentReusePool,
-		servicesMaxClients:                        servicesMaxClients,
-		servicesCurrentLoad:                       servicesCurrentLoad,
-		servicesVirtualServerServiceHits:          servicesVirtualServerServiceHits,
-		servicesActiveTransactions:                servicesActiveTransactions,
-		serviceGroupsState:                        serviceGroupsState,
-		serviceGroupsAvgTTFB:                      serviceGroupsAvgTTFB,
-		serviceGroupsTotalRequests:                serviceGroupsTotalRequests,
-		serviceGroupsTotalResponses:               serviceGroupsTotalResponses,
-		serviceGroupsTotalRequestBytes:            serviceGroupsTotalRequestBytes,
-		serviceGroupsTotalResponseBytes:           serviceGroupsTotalResponseBytes,
-		serviceGroupsCurrentClientConnections:     serviceGroupsCurrentClientConnections,
-		serviceGroupsSurgeCount:                   serviceGroupsSurgeCount,
-		serviceGroupsCurrentServerConnections:     serviceGroupsCurrentServerConnections,
-		serviceGroupsServerEstablishedConnections: serviceGroupsServerEstablishedConnections,
-		serviceGroupsCurrentReusePool:             serviceGroupsCurrentReusePool,
-		serviceGroupsMaxClients:                   serviceGroupsMaxClients,
+		modelID:                                    modelID,
+		mgmtCPUUsage:                               mgmtCPUUsage,
+		memUsage:                                   memUsage,
+		pktCPUUsage:                                pktCPUUsage,
+		flashPartitionUsage:                        flashPartitionUsage,
+		varPartitionUsage:                          varPartitionUsage,
+		totRxMB:                                    totRxMB,
+		totTxMB:                                    totTxMB,
+		httpRequests:                               httpRequests,
+		httpResponses:                              httpResponses,
+		tcpCurrentClientConnections:                tcpCurrentClientConnections,
+		tcpCurrentClientConnectionsEstablished:     tcpCurrentClientConnectionsEstablished,
+		tcpCurrentServerConnections:                tcpCurrentServerConnections,
+		tcpCurrentServerConnectionsEstablished:     tcpCurrentServerConnectionsEstablished,
+		interfacesRxBytes:                          interfacesRxBytes,
+		interfacesTxBytes:                          interfacesTxBytes,
+		interfacesRxPackets:                        interfacesRxPackets,
+		interfacesTxPackets:                        interfacesTxPackets,
+		interfacesJumboPacketsRx:                   interfacesJumboPacketsRx,
+		interfacesJumboPacketsTx:                   interfacesJumboPacketsTx,
+		interfacesErrorPacketsRx:                   interfacesErrorPacketsRx,
+		virtualServersWaitingRequests:              virtualServersWaitingRequests,
+		virtualServersHealth:                       virtualServersHealth,
+		virtualServersInactiveServices:             virtualServersInactiveServices,
+		virtualServersActiveServices:               virtualServersActiveServices,
+		virtualServersTotalHits:                    virtualServersTotalHits,
+		virtualServersTotalRequests:                virtualServersTotalRequests,
+		virtualServersTotalResponses:               virtualServersTotalResponses,
+		virtualServersTotalRequestBytes:            virtualServersTotalRequestBytes,
+		virtualServersTotalResponseBytes:           virtualServersTotalResponseBytes,
+		virtualServersCurrentClientConnections:     virtualServersCurrentClientConnections,
+		virtualServersCurrentServerConnections:     virtualServersCurrentServerConnections,
+		servicesThroughput:                         servicesThroughput,
+		servicesAvgTTFB:                            servicesAvgTTFB,
+		servicesState:                              servicesState,
+		servicesTotalRequests:                      servicesTotalRequests,
+		servicesTotalResponses:                     servicesTotalResponses,
+		servicesTotalRequestBytes:                  servicesTotalRequestBytes,
+		servicesTotalResponseBytes:                 servicesTotalResponseBytes,
+		servicesCurrentClientConns:                 servicesCurrentClientConns,
+		servicesSurgeCount:                         servicesSurgeCount,
+		servicesCurrentServerConns:                 servicesCurrentServerConns,
+		servicesServerEstablishedConnections:       servicesServerEstablishedConnections,
+		servicesCurrentReusePool:                   servicesCurrentReusePool,
+		servicesMaxClients:                         servicesMaxClients,
+		servicesCurrentLoad:                        servicesCurrentLoad,
+		servicesVirtualServerServiceHits:           servicesVirtualServerServiceHits,
+		servicesActiveTransactions:                 servicesActiveTransactions,
+		serviceGroupsState:                         serviceGroupsState,
+		serviceGroupsAvgTTFB:                       serviceGroupsAvgTTFB,
+		serviceGroupsTotalRequests:                 serviceGroupsTotalRequests,
+		serviceGroupsTotalResponses:                serviceGroupsTotalResponses,
+		serviceGroupsTotalRequestBytes:             serviceGroupsTotalRequestBytes,
+		serviceGroupsTotalResponseBytes:            serviceGroupsTotalResponseBytes,
+		serviceGroupsCurrentClientConnections:      serviceGroupsCurrentClientConnections,
+		serviceGroupsSurgeCount:                    serviceGroupsSurgeCount,
+		serviceGroupsCurrentServerConnections:      serviceGroupsCurrentServerConnections,
+		serviceGroupsServerEstablishedConnections:  serviceGroupsServerEstablishedConnections,
+		serviceGroupsCurrentReusePool:              serviceGroupsCurrentReusePool,
+		serviceGroupsMaxClients:                    serviceGroupsMaxClients,
+		gslbServicesState:                          gslbServicesState,
+		gslbServicesTotalRequests:                  gslbServicesTotalRequests,
+		gslbServicesTotalResponses:                 gslbServicesTotalResponses,
+		gslbServicesTotalRequestBytes:              gslbServicesTotalRequestBytes,
+		gslbServicesTotalResponseBytes:             gslbServicesTotalResponseBytes,
+		gslbServicesCurrentClientConns:             gslbServicesCurrentClientConns,
+		gslbServicesCurrentServerConns:             gslbServicesCurrentServerConns,
+		gslbServicesCurrentLoad:                    gslbServicesCurrentLoad,
+		gslbServicesVirtualServerServiceHits:       gslbServicesVirtualServerServiceHits,
+		gslbServicesEstablishedConnections:         gslbServicesEstablishedConnections,
+		gslbVirtualServersHealth:                   gslbVirtualServersHealth,
+		gslbVirtualServersInactiveServices:         gslbVirtualServersInactiveServices,
+		gslbVirtualServersActiveServices:           gslbVirtualServersActiveServices,
+		gslbVirtualServersTotalHits:                gslbVirtualServersTotalHits,
+		gslbVirtualServersTotalRequests:            gslbVirtualServersTotalRequests,
+		gslbVirtualServersTotalResponses:           gslbVirtualServersTotalResponses,
+		gslbVirtualServersTotalRequestBytes:        gslbVirtualServersTotalRequestBytes,
+		gslbVirtualServersTotalResponseBytes:       gslbVirtualServersTotalResponseBytes,
+		gslbVirtualServersCurrentClientConnections: gslbVirtualServersCurrentClientConnections,
+		gslbVirtualServersCurrentServerConnections: gslbVirtualServersCurrentServerConnections,
 	}, nil
 }
 
@@ -988,13 +1137,35 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.serviceGroupsServerEstablishedConnections.Describe(ch)
 	e.serviceGroupsCurrentReusePool.Describe(ch)
 	e.serviceGroupsMaxClients.Describe(ch)
+
+	e.gslbServicesState.Describe(ch)
+	e.gslbServicesTotalRequests.Describe(ch)
+	e.gslbServicesTotalResponses.Describe(ch)
+	e.gslbServicesTotalRequestBytes.Describe(ch)
+	e.gslbServicesTotalResponseBytes.Describe(ch)
+	e.gslbServicesCurrentClientConns.Describe(ch)
+	e.gslbServicesCurrentServerConns.Describe(ch)
+	e.gslbServicesCurrentLoad.Describe(ch)
+	e.gslbServicesVirtualServerServiceHits.Describe(ch)
+	e.gslbServicesEstablishedConnections.Describe(ch)
+
+	e.gslbVirtualServersHealth.Describe(ch)
+	e.gslbVirtualServersInactiveServices.Describe(ch)
+	e.gslbVirtualServersActiveServices.Describe(ch)
+	e.gslbVirtualServersTotalHits.Describe(ch)
+	e.gslbVirtualServersTotalRequests.Describe(ch)
+	e.gslbVirtualServersTotalResponses.Describe(ch)
+	e.gslbVirtualServersTotalRequestBytes.Describe(ch)
+	e.gslbVirtualServersTotalResponseBytes.Describe(ch)
+	e.gslbVirtualServersCurrentClientConnections.Describe(ch)
+	e.gslbVirtualServersCurrentServerConnections.Describe(ch)
 }
 
 func (e *Exporter) collectInterfacesRxBytes(ns netscaler.NSAPIResponse) {
 	e.interfacesRxBytes.Reset()
 
 	for _, iface := range ns.InterfaceStats {
-        val, _ := strconv.ParseFloat(iface.TotalReceivedBytes, 64)
+		val, _ := strconv.ParseFloat(iface.TotalReceivedBytes, 64)
 		e.interfacesRxBytes.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(val)
 	}
 }
@@ -1003,7 +1174,7 @@ func (e *Exporter) collectInterfacesTxBytes(ns netscaler.NSAPIResponse) {
 	e.interfacesTxBytes.Reset()
 
 	for _, iface := range ns.InterfaceStats {
-        val, _ := strconv.ParseFloat(iface.TotalTransmitBytes, 64)
+		val, _ := strconv.ParseFloat(iface.TotalTransmitBytes, 64)
 		e.interfacesTxBytes.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(val)
 	}
 }
@@ -1012,7 +1183,7 @@ func (e *Exporter) collectInterfacesRxPackets(ns netscaler.NSAPIResponse) {
 	e.interfacesRxPackets.Reset()
 
 	for _, iface := range ns.InterfaceStats {
-        val, _ := strconv.ParseFloat(iface.TotalReceivedPackets, 64)
+		val, _ := strconv.ParseFloat(iface.TotalReceivedPackets, 64)
 		e.interfacesRxPackets.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(val)
 	}
 }
@@ -1021,7 +1192,7 @@ func (e *Exporter) collectInterfacesTxPackets(ns netscaler.NSAPIResponse) {
 	e.interfacesTxPackets.Reset()
 
 	for _, iface := range ns.InterfaceStats {
-        val, _ := strconv.ParseFloat(iface.TotalTransmitPackets, 64)
+		val, _ := strconv.ParseFloat(iface.TotalTransmitPackets, 64)
 		e.interfacesTxPackets.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(val)
 	}
 }
@@ -1030,7 +1201,7 @@ func (e *Exporter) collectInterfacesJumboPacketsRx(ns netscaler.NSAPIResponse) {
 	e.interfacesJumboPacketsRx.Reset()
 
 	for _, iface := range ns.InterfaceStats {
-        val, _ := strconv.ParseFloat(iface.JumboPacketsReceived, 64)
+		val, _ := strconv.ParseFloat(iface.JumboPacketsReceived, 64)
 		e.interfacesJumboPacketsRx.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(val)
 	}
 }
@@ -1039,7 +1210,7 @@ func (e *Exporter) collectInterfacesJumboPacketsTx(ns netscaler.NSAPIResponse) {
 	e.interfacesJumboPacketsTx.Reset()
 
 	for _, iface := range ns.InterfaceStats {
-        val, _ := strconv.ParseFloat(iface.JumboPacketsTransmitted, 64)
+		val, _ := strconv.ParseFloat(iface.JumboPacketsTransmitted, 64)
 		e.interfacesJumboPacketsTx.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(val)
 	}
 }
@@ -1048,7 +1219,7 @@ func (e *Exporter) collectInterfacesErrorPacketsRx(ns netscaler.NSAPIResponse) {
 	e.interfacesErrorPacketsRx.Reset()
 
 	for _, iface := range ns.InterfaceStats {
-        val, _ := strconv.ParseFloat(iface.ErrorPacketsReceived, 64)
+		val, _ := strconv.ParseFloat(iface.ErrorPacketsReceived, 64)
 		e.interfacesErrorPacketsRx.WithLabelValues(nsInstance, iface.ID, iface.Alias).Set(val)
 	}
 }
@@ -1414,6 +1585,191 @@ func (e *Exporter) collectServiceGroupsMaxClients(ns netscaler.NSAPIResponse, sg
 	}
 }
 
+func (e *Exporter) collectGSLBServicesState(ns netscaler.NSAPIResponse) {
+	e.gslbServicesState.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		state := 0.0
+
+		if service.State == "UP" {
+			state = 1.0
+		}
+
+		e.gslbServicesState.WithLabelValues(nsInstance, service.Name).Set(state)
+	}
+}
+
+func (e *Exporter) collectGSLBServicesTotalRequests(ns netscaler.NSAPIResponse) {
+	e.gslbServicesTotalRequests.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		val, _ := strconv.ParseFloat(service.TotalRequests, 64)
+		e.gslbServicesTotalRequests.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectGSLBServicesTotalResponses(ns netscaler.NSAPIResponse) {
+	e.gslbServicesTotalResponses.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		val, _ := strconv.ParseFloat(service.TotalResponses, 64)
+		e.gslbServicesTotalResponses.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectGSLBServicesTotalRequestBytes(ns netscaler.NSAPIResponse) {
+	e.gslbServicesTotalRequestBytes.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		val, _ := strconv.ParseFloat(service.TotalRequestBytes, 64)
+		e.gslbServicesTotalRequestBytes.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectGSLBServicesTotalResponseBytes(ns netscaler.NSAPIResponse) {
+	e.gslbServicesTotalResponseBytes.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		val, _ := strconv.ParseFloat(service.TotalResponseBytes, 64)
+		e.gslbServicesTotalResponseBytes.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectGSLBServicesCurrentClientConns(ns netscaler.NSAPIResponse) {
+	e.gslbServicesCurrentClientConns.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		val, _ := strconv.ParseFloat(service.CurrentClientConnections, 64)
+		e.gslbServicesCurrentClientConns.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectGSLBServicesCurrentServerConns(ns netscaler.NSAPIResponse) {
+	e.gslbServicesCurrentServerConns.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		val, _ := strconv.ParseFloat(service.CurrentServerConnections, 64)
+		e.gslbServicesCurrentServerConns.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectGSLBServicesEstablishedConnections(ns netscaler.NSAPIResponse) {
+	e.gslbServicesEstablishedConnections.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		val, _ := strconv.ParseFloat(service.EstablishedConnections, 64)
+		e.gslbServicesEstablishedConnections.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectGSLBServicesCurrentLoad(ns netscaler.NSAPIResponse) {
+	e.gslbServicesCurrentLoad.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		val, _ := strconv.ParseFloat(service.CurrentLoad, 64)
+		e.gslbServicesCurrentLoad.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectGSLBServicesVirtualServerServiceHits(ns netscaler.NSAPIResponse) {
+	e.gslbServicesVirtualServerServiceHits.Reset()
+
+	for _, service := range ns.GSLBServiceStats {
+		val, _ := strconv.ParseFloat(service.ServiceHits, 64)
+		e.gslbServicesVirtualServerServiceHits.WithLabelValues(nsInstance, service.Name).Set(val)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerHealth(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersHealth.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		health, _ := strconv.ParseFloat(vs.Health, 64)
+		e.gslbVirtualServersHealth.WithLabelValues(nsInstance, vs.Name).Set(health)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerInactiveServices(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersInactiveServices.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		inactiveServices, _ := strconv.ParseFloat(vs.InactiveServices, 64)
+		e.gslbVirtualServersInactiveServices.WithLabelValues(nsInstance, vs.Name).Set(inactiveServices)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerActiveServices(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersActiveServices.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		activeServices, _ := strconv.ParseFloat(vs.ActiveServices, 64)
+		e.gslbVirtualServersActiveServices.WithLabelValues(nsInstance, vs.Name).Set(activeServices)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerTotalHits(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersTotalHits.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		totalHits, _ := strconv.ParseFloat(vs.TotalHits, 64)
+		e.gslbVirtualServersTotalHits.WithLabelValues(nsInstance, vs.Name).Set(totalHits)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerTotalRequests(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersTotalRequests.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		totalRequests, _ := strconv.ParseFloat(vs.TotalRequests, 64)
+		e.gslbVirtualServersTotalRequests.WithLabelValues(nsInstance, vs.Name).Set(totalRequests)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerTotalResponses(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersTotalResponses.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		totalResponses, _ := strconv.ParseFloat(vs.TotalResponses, 64)
+		e.gslbVirtualServersTotalResponses.WithLabelValues(nsInstance, vs.Name).Set(totalResponses)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerTotalRequestBytes(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersTotalRequestBytes.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		totalRequestBytes, _ := strconv.ParseFloat(vs.TotalRequestBytes, 64)
+		e.gslbVirtualServersTotalRequestBytes.WithLabelValues(nsInstance, vs.Name).Set(totalRequestBytes)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerTotalResponseBytes(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersTotalResponseBytes.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		totalResponseBytes, _ := strconv.ParseFloat(vs.TotalResponseBytes, 64)
+		e.gslbVirtualServersTotalResponseBytes.WithLabelValues(nsInstance, vs.Name).Set(totalResponseBytes)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerCurrentClientConnections(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersCurrentClientConnections.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		currentClientConnections, _ := strconv.ParseFloat(vs.CurrentClientConnections, 64)
+		e.gslbVirtualServersCurrentClientConnections.WithLabelValues(nsInstance, vs.Name).Set(currentClientConnections)
+	}
+}
+
+func (e *Exporter) collectGSLBVirtualServerCurrentServerConnections(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersCurrentServerConnections.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		currentServerConnections, _ := strconv.ParseFloat(vs.CurrentServerConnections, 64)
+		e.gslbVirtualServersCurrentServerConnections.WithLabelValues(nsInstance, vs.Name).Set(currentServerConnections)
+	}
+}
+
 // Collect is initiated by the Prometheus handler and gathers the metrics
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	nsClient, err := netscaler.NewNitroClient(*url, *username, *password, *ignoreCert)
@@ -1449,6 +1805,16 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	services, err := netscaler.GetServiceStats(nsClient, "")
+	if err != nil {
+		level.Error(logger).Log("msg", err)
+	}
+
+	gslbServices, err := netscaler.GetGSLBServiceStats(nsClient, "")
+	if err != nil {
+		level.Error(logger).Log("msg", err)
+	}
+
+	gslbVirtualServers, err := netscaler.GetGSLBVirtualServerStats(nsClient, "")
 	if err != nil {
 		level.Error(logger).Log("msg", err)
 	}
@@ -1622,6 +1988,66 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectServicesActiveTransactions(services)
 	e.servicesActiveTransactions.Collect(ch)
+
+	e.collectGSLBServicesState(gslbServices)
+	e.gslbServicesState.Collect(ch)
+
+	e.collectGSLBServicesTotalRequests(gslbServices)
+	e.gslbServicesTotalRequests.Collect(ch)
+
+	e.collectGSLBServicesTotalResponses(gslbServices)
+	e.gslbServicesTotalResponses.Collect(ch)
+
+	e.collectGSLBServicesTotalRequestBytes(gslbServices)
+	e.gslbServicesTotalRequestBytes.Collect(ch)
+
+	e.collectGSLBServicesTotalResponseBytes(gslbServices)
+	e.gslbServicesTotalResponseBytes.Collect(ch)
+
+	e.collectGSLBServicesCurrentClientConns(gslbServices)
+	e.gslbServicesCurrentClientConns.Collect(ch)
+
+	e.collectGSLBServicesCurrentServerConns(gslbServices)
+	e.gslbServicesCurrentServerConns.Collect(ch)
+
+	e.collectGSLBServicesEstablishedConnections(gslbServices)
+	e.gslbServicesEstablishedConnections.Collect(ch)
+
+	e.collectGSLBServicesCurrentLoad(gslbServices)
+	e.gslbServicesCurrentLoad.Collect(ch)
+
+	e.collectGSLBServicesVirtualServerServiceHits(gslbServices)
+	e.gslbServicesVirtualServerServiceHits.Collect(ch)
+
+	e.collectGSLBVirtualServerHealth(gslbVirtualServers)
+	e.gslbVirtualServersHealth.Collect(ch)
+
+	e.collectGSLBVirtualServerInactiveServices(gslbVirtualServers)
+	e.gslbVirtualServersInactiveServices.Collect(ch)
+
+	e.collectGSLBVirtualServerActiveServices(gslbVirtualServers)
+	e.gslbVirtualServersActiveServices.Collect(ch)
+
+	e.collectGSLBVirtualServerTotalHits(gslbVirtualServers)
+	e.gslbVirtualServersTotalHits.Collect(ch)
+
+	e.collectGSLBVirtualServerTotalRequests(gslbVirtualServers)
+	e.gslbVirtualServersTotalRequests.Collect(ch)
+
+	e.collectGSLBVirtualServerTotalResponses(gslbVirtualServers)
+	e.gslbVirtualServersTotalResponses.Collect(ch)
+
+	e.collectGSLBVirtualServerTotalRequestBytes(gslbVirtualServers)
+	e.gslbVirtualServersTotalRequestBytes.Collect(ch)
+
+	e.collectGSLBVirtualServerTotalResponseBytes(gslbVirtualServers)
+	e.gslbVirtualServersTotalResponseBytes.Collect(ch)
+
+	e.collectGSLBVirtualServerCurrentClientConnections(gslbVirtualServers)
+	e.gslbVirtualServersCurrentClientConnections.Collect(ch)
+
+	e.collectGSLBVirtualServerCurrentServerConnections(gslbVirtualServers)
+	e.gslbVirtualServersCurrentServerConnections.Collect(ch)
 
 	servicegroups, err := netscaler.GetServiceGroups(nsClient, "attrs=servicegroupname")
 	if err != nil {
