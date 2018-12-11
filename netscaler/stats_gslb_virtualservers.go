@@ -15,7 +15,7 @@ type GSLBVirtualServerStats struct {
 	TotalHits                string `json:"tothits"`
 	TotalRequests            string `json:"totalrequests"`
 	TotalResponses           string `json:"totalresponses"`
-	TotalRequestBytes        string `json:"totalrequestsbytes"`
+	TotalRequestBytes        string `json:"totalrequestbytes"`
 	TotalResponseBytes       string `json:"totalresponsebytes"`
 	CurrentClientConnections string `json:"curclntconnections"`
 	CurrentServerConnections string `json:"cursrvrconnections"`
