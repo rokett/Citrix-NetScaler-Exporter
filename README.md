@@ -181,7 +181,7 @@ For each GSLB virtual server, the following metrics are retrieved.
 All dependencies are version controlled, so building the project is really easy.
 
 1. ``go get github.com/rokett/citrix-netscaler-exporter``.
-2. From within the repository directory run ``go build``.
+2. From within the repository directory run ``make``.
 3. Hey presto, you have an executable.
 
 ## Dockerfile
