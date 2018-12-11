@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Collection of GSLB Service metrics.
  - Collection of GSLB Virtual Server metrics.
+ - Collection of Content Switching Virtual Server metrics.
  - Make now also builds Linux x64 executables.
 
 ## [3.1.0] - 2018-05-02
