@@ -4,9 +4,9 @@ SETLOCAL
 set _TARGETS=build
 
 set APP=Citrix-NetScaler-Exporter
-set VERSION=3.1.0
-set BINARY-X86=%APP%_%VERSION%_Windows_32bit.exe
-set BINARY-X64=%APP%_%VERSION%_Windows_amd64.exe
+set VERSION=3.2.0
+set BINARY-WINDOWS-X86=%APP%_%VERSION%_Windows_32bit.exe
+set BINARY-WINDOWS-X64=%APP%_%VERSION%_Windows_amd64.exe
 set BINARY-LINUX=%APP%_%VERSION%_amd64
 
 REM Set build number from git commit hash
@@ -25,13 +25,13 @@ goto %1
     set GOOS=windows
     set GOARCH=386
 
-    go build -o %BINARY-X86% %LDFLAGS%
+    go build -o %BINARY-WINDOWS-X86% %LDFLAGS%
 
     echo "=== Building Windows x64 ==="
     set GOOS=windows
     set GOARCH=amd64
 
-    go build -o %BINARY-X64% %LDFLAGS%
+    go build -o %BINARY-WINDOWS-X64% %LDFLAGS%
 
     echo "=== Building Linux x64 ==="
     set GOOS=linux
