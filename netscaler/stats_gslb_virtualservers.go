@@ -6,10 +6,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// VirtualServerStats represents the data returned from the /stat/lbvserver Nitro API endpoint
-type VirtualServerStats struct {
+// GSLBVirtualServerStats represents the data returned from the /stat/gslbvserver Nitro API endpoint
+type GSLBVirtualServerStats struct {
 	Name                     string `json:"name"`
-	WaitingRequests          string `json:"vsvrsurgecount"`
 	Health                   string `json:"vslbhealth"`
 	InactiveServices         string `json:"inactsvcs"`
 	ActiveServices           string `json:"actsvcs"`
@@ -22,9 +21,9 @@ type VirtualServerStats struct {
 	CurrentServerConnections string `json:"cursrvrconnections"`
 }
 
-// GetVirtualServerStats queries the Nitro API for virtual server stats
-func GetVirtualServerStats(c *NitroClient, querystring string) (NSAPIResponse, error) {
-	stats, err := c.GetStats("lbvserver", querystring)
+// GetGSLBVirtualServerStats queries the Nitro API for virtual server stats
+func GetGSLBVirtualServerStats(c *NitroClient, querystring string) (NSAPIResponse, error) {
+	stats, err := c.GetStats("gslbvserver", querystring)
 	if err != nil {
 		return NSAPIResponse{}, err
 	}

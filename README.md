@@ -140,6 +140,40 @@ For each service group member, the following metrics are retrieved.
 | -------------------------------| ----------- | ------- |
 | Model ID                       | Gauge       | None    |
 
+## GSLB Services
+For each GSLB service, the following metrics are retrieved.
+
+| Metric                         | Metric Type | Unit    |
+| -------------------------------| ----------- | ------- |
+| Name                           | N/A         | None    |
+| State                          | Gauge       | None    |
+| Total requests                 | Gauge       | None    |
+| Total responses                | Gauge       | None    |
+| Total request bytes            | Gauge       | Bytes   |
+| Total response bytes           | Gauge       | Bytes   |
+| Current client connections     | Gauge       | None    |
+| Current server connections     | Gauge       | None    |
+| Established connections        | Gauge       | None    |
+| Current load                   | Gauge       | Percent |
+| Service hits                   | Counter     | None    |
+
+## GSLB Virtual Servers
+For each GSLB virtual server, the following metrics are retrieved.
+
+| Metric                     | Metric Type | Unit    |
+| ---------------------------| ----------- | ------- |
+| Name                       | N/A         | None    |
+| Health                     | Gauge       | Percent |
+| Inactive services          | Gauge       | None    |
+| Active services            | Gauge       | None    |
+| Total hits                 | Gauge       | None    |
+| Total requests             | Gauge       | None    |
+| Total responses            | Gauge       | None    |
+| Total request bytes        | Gauge       | Bytes   |
+| Total response bytes       | Gauge       | Bytes   |
+| Current client connections | Gauge       | None    |
+| Current server connections | Gauge       | None    |
+
 ## Downloading a release
 <https://github.com/rokett/Citrix-NetScaler-Exporter/releases>
 
@@ -147,7 +181,7 @@ For each service group member, the following metrics are retrieved.
 All dependencies are version controlled, so building the project is really easy.
 
 1. ``go get github.com/rokett/citrix-netscaler-exporter``.
-2. From within the repository directory run ``go build``.
+2. From within the repository directory run ``make``.
 3. Hey presto, you have an executable.
 
 ## Dockerfile

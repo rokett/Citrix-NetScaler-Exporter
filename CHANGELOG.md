@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2018/12/12
+### Added
+ - Collection of GSLB Service metrics.
+ - Collection of GSLB Virtual Server metrics.
+ - Collection of Content Switching Virtual Server metrics.
+ - Make now also builds Linux x64 executables.
+
 ## [3.1.0] - 2018-05-02
 ### Added
  - Option to ignore certificate errors.  This can be useful when the NetScaler uses a self-signed certificate which will error without this flag.  It should be used sparingly, and only when you fully trust the endpoint.
