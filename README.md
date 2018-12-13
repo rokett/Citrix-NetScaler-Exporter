@@ -51,8 +51,8 @@ Ideally you'll run the exporter as a service.  There are many ways to do that, s
 | Packet engine CPU usage                | Gauge       | Percent |
 | /flash partition usage                 | Gauge       | Percent |
 | /var partition usage                   | Gauge       | Percent |
-| Total received MB                      | Gauge       | MB      |
-| Total transmitted MB                   | Gauge       | MB      |
+| Total received MB                      | Counter     | MB      |
+| Total transmitted MB                   | Counter     | MB      |
 | HTTP requests                          | Gauge       | None    |
 | HTTP responses                         | Gauge       | None    |
 | Current client connections             | Gauge       | None    |
@@ -85,11 +85,11 @@ For each virtual server, the following metrics are retrieved.
 | Health                     | Gauge       | Percent |
 | Inactive services          | Gauge       | None    |
 | Active services            | Gauge       | None    |
-| Total hits                 | Gauge       | None    |
-| Total requests             | Gauge       | None    |
-| Total responses            | Gauge       | None    |
-| Total request bytes        | Gauge       | Bytes   |
-| Total response bytes       | Gauge       | Bytes   |
+| Total hits                 | Counter     | None    |
+| Total requests             | Counter     | None    |
+| Total responses            | Counter     | None    |
+| Total request bytes        | Counter     | Bytes   |
+| Total response bytes       | Counter     | Bytes   |
 | Current client connections | Gauge       | None    |
 | Current server connections | Gauge       | None    |
 
@@ -102,10 +102,10 @@ For each service, the following metrics are retrieved.
 | Throughput                     | Counter     | MB      |
 | Average time to first byte     | Gauge       | Seconds |
 | State                          | Gauge       | None    |
-| Total requests                 | Gauge       | None    |
-| Total responses                | Gauge       | None    |
-| Total request bytes            | Gauge       | Bytes   |
-| Total response bytes           | Gauge       | Bytes   |
+| Total requests                 | Counter     | None    |
+| Total responses                | Counter     | None    |
+| Total request bytes            | Counter     | Bytes   |
+| Total response bytes           | Counter     | Bytes   |
 | Current client connections     | Gauge       | None    |
 | Surge count                    | Gauge       | None    |
 | Current server connections     | Gauge       | None    |
@@ -123,10 +123,10 @@ For each service group member, the following metrics are retrieved.
 | -------------------------------| ----------- | ------- |
 | Average time to first byte     | Gauge       | Seconds |
 | State                          | Gauge       | None    |
-| Total requests                 | Gauge       | None    |
-| Total responses                | Gauge       | None    |
-| Total request bytes            | Gauge       | Bytes   |
-| Total response bytes           | Gauge       | Bytes   |
+| Total requests                 | Counter     | None    |
+| Total responses                | Counter     | None    |
+| Total request bytes            | Counter     | Bytes   |
+| Total response bytes           | Counter     | Bytes   |
 | Current client connections     | Gauge       | None    |
 | Surge count                    | Gauge       | None    |
 | Current server connections     | Gauge       | None    |
@@ -147,10 +147,10 @@ For each GSLB service, the following metrics are retrieved.
 | -------------------------------| ----------- | ------- |
 | Name                           | N/A         | None    |
 | State                          | Gauge       | None    |
-| Total requests                 | Gauge       | None    |
-| Total responses                | Gauge       | None    |
-| Total request bytes            | Gauge       | Bytes   |
-| Total response bytes           | Gauge       | Bytes   |
+| Total requests                 | Counter     | None    |
+| Total responses                | Counter     | None    |
+| Total request bytes            | Counter     | Bytes   |
+| Total response bytes           | Counter     | Bytes   |
 | Current client connections     | Gauge       | None    |
 | Current server connections     | Gauge       | None    |
 | Established connections        | Gauge       | None    |
@@ -166,13 +166,38 @@ For each GSLB virtual server, the following metrics are retrieved.
 | Health                     | Gauge       | Percent |
 | Inactive services          | Gauge       | None    |
 | Active services            | Gauge       | None    |
-| Total hits                 | Gauge       | None    |
-| Total requests             | Gauge       | None    |
-| Total responses            | Gauge       | None    |
-| Total request bytes        | Gauge       | Bytes   |
-| Total response bytes       | Gauge       | Bytes   |
+| Total hits                 | Counter     | None    |
+| Total requests             | Counter     | None    |
+| Total responses            | Counter     | None    |
+| Total request bytes        | Counter     | Bytes   |
+| Total response bytes       | Counter     | Bytes   |
 | Current client connections | Gauge       | None    |
 | Current server connections | Gauge       | None    |
+
+## Content Switching Virtual Servers
+For each Content Switching virtual server, the following metrics are retrieved.
+
+| Metric                                       | Metric Type | Unit    |
+| ---------------------------------------------| ----------- | ------- |
+| Name                                         | N/A         | None    |
+| State                                        | Gauge       | None    |
+| Total hits                                   | Counter     | None    |
+| Total requests                               | Counter     | None    |
+| Total responses                              | Counter     | None    |
+| Total request bytes                          | Counter     | Bytes   |
+| Total response bytes                         | Counter     | Bytes   |
+| Current client connections                   | Gauge       | None    |
+| Current server connections                   | Gauge       | None    |
+| Established Connections                      | Gauge       | None    |
+| Total Packets Received                       | Counter     | None    |
+| Total Packets Sent                           | Counter     | None    |
+| Total Spillovers                             | Counter     | None    |
+| Deferred Requests                            | Counter     | None    |
+| Invalid Requests/Responses                   | Counter     | None    |
+| Number of Invalid Requests/Responses dropped | Counter     | None    |
+| Total virtual server down backup hits        | Counter     | None    |
+| Current multipath sessions                   | Gauge       | None    |
+| Current multipath subflow connections        | Gauge       | None    |
 
 ## Downloading a release
 <https://github.com/rokett/Citrix-NetScaler-Exporter/releases>
