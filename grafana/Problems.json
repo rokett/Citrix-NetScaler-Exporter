@@ -1,0 +1,1220 @@
+{
+    "__inputs": [
+      {
+        "name": "DS_PROMETHEUS",
+        "label": "Prometheus",
+        "description": "",
+        "type": "datasource",
+        "pluginId": "prometheus",
+        "pluginName": "Prometheus"
+      }
+    ],
+    "__requires": [
+      {
+        "type": "grafana",
+        "id": "grafana",
+        "name": "Grafana",
+        "version": "5.4.2"
+      },
+      {
+        "type": "datasource",
+        "id": "prometheus",
+        "name": "Prometheus",
+        "version": "5.0.0"
+      },
+      {
+        "type": "panel",
+        "id": "singlestat",
+        "name": "Singlestat",
+        "version": "5.0.0"
+      }
+    ],
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "description": "",
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "iteration": 1546608669935,
+    "links": [],
+    "panels": [
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 246,
+        "panels": [],
+        "title": "CS Virtual Server",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "${DS_PROMETHEUS}",
+        "decimals": null,
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 0,
+          "y": 1
+        },
+        "height": "",
+        "id": 248,
+        "interval": null,
+        "links": [
+          {
+            "dashUri": "db/netscaler-virtual-server-detail",
+            "dashboard": "Content Switching Virtual Server Overview",
+            "includeVars": true,
+            "keepTime": true,
+            "params": "",
+            "targetBlank": true,
+            "title": "Content Switching Virtual Server Overview",
+            "type": "dashboard",
+            "url": "/d/veBsHVsmz/content-switching-virtual-server-overview"
+          }
+        ],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "minSpan": 4,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          },
+          {
+            "from": "1",
+            "text": "Degraded",
+            "to": "99"
+          },
+          {
+            "from": "100",
+            "text": "Up",
+            "to": "100"
+          }
+        ],
+        "repeat": "cs_virtual_server",
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "cs_virtual_servers_state{ns_instance=~\"$ns_instance\", virtual_server=~\"$cs_virtual_server\"}",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 4
+          }
+        ],
+        "thresholds": "1,1",
+        "title": "$cs_virtual_server",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          },
+          {
+            "op": "=",
+            "text": "Down",
+            "value": "0"
+          },
+          {
+            "op": "=",
+            "text": "Up",
+            "value": "1"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 4
+        },
+        "id": 244,
+        "title": "GSLB Service",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "${DS_PROMETHEUS}",
+        "decimals": null,
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 0,
+          "y": 5
+        },
+        "height": "",
+        "id": 247,
+        "interval": null,
+        "links": [
+          {
+            "dashUri": "db/netscaler-virtual-server-detail",
+            "dashboard": "GSLB Service Overview",
+            "includeVars": true,
+            "keepTime": true,
+            "params": "",
+            "targetBlank": true,
+            "title": "GSLB Service Overview",
+            "type": "dashboard",
+            "url": "/d/w-e4dHsiz/gslb-service-overview"
+          }
+        ],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "minSpan": 4,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          },
+          {
+            "from": "1",
+            "text": "Degraded",
+            "to": "99"
+          },
+          {
+            "from": "100",
+            "text": "Up",
+            "to": "100"
+          }
+        ],
+        "repeat": "gslb_service",
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "gslb_service_state{ns_instance=~\"$ns_instance\", service=~\"$gslb_service\"}",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 4
+          }
+        ],
+        "thresholds": "1,1",
+        "title": "$gslb_service",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          },
+          {
+            "op": "=",
+            "text": "Down",
+            "value": "0"
+          },
+          {
+            "op": "=",
+            "text": "Up",
+            "value": "1"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        },
+        "id": 241,
+        "panels": [],
+        "title": "GSLB Virtual Servers",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "${DS_PROMETHEUS}",
+        "decimals": null,
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 0,
+          "y": 9
+        },
+        "height": "",
+        "id": 242,
+        "interval": null,
+        "links": [
+          {
+            "dashUri": "db/netscaler-virtual-server-detail",
+            "dashboard": "GSLB Virtual Server Overview",
+            "includeVars": true,
+            "keepTime": true,
+            "params": "",
+            "targetBlank": true,
+            "title": "GSLB Virtual Server Overview",
+            "type": "dashboard",
+            "url": "/d/koDtJVsmz/gslb-virtual-server-overview"
+          }
+        ],
+        "mappingType": 2,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "minSpan": 4,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          },
+          {
+            "from": "1",
+            "text": "Degraded",
+            "to": "99"
+          },
+          {
+            "from": "0",
+            "text": "Down",
+            "to": "0"
+          },
+          {
+            "from": "100",
+            "text": "Up",
+            "to": "100"
+          }
+        ],
+        "repeat": "gslb_virtual_server",
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "gslb_virtual_servers_health{ns_instance=~\"$ns_instance\", virtual_server=~\"$gslb_virtual_server\"}",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 4
+          }
+        ],
+        "thresholds": "10,99",
+        "title": "$gslb_virtual_server",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          },
+          {
+            "op": "=",
+            "text": "",
+            "value": ""
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 12
+        },
+        "id": 236,
+        "panels": [],
+        "repeat": null,
+        "title": "Virtual Servers",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "${DS_PROMETHEUS}",
+        "decimals": null,
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 0,
+          "y": 13
+        },
+        "height": "",
+        "id": 1,
+        "interval": null,
+        "links": [
+          {
+            "dashUri": "db/netscaler-virtual-server-detail",
+            "dashboard": "NetScaler - Virtual Server Detail",
+            "includeVars": true,
+            "keepTime": true,
+            "params": "",
+            "targetBlank": true,
+            "title": "NetScaler - Virtual Server Detail",
+            "type": "dashboard"
+          }
+        ],
+        "mappingType": 2,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "minSpan": 4,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          },
+          {
+            "from": "1",
+            "text": "Degraded",
+            "to": "99"
+          },
+          {
+            "from": "0",
+            "text": "Down",
+            "to": "0"
+          },
+          {
+            "from": "100",
+            "text": "Up",
+            "to": "100"
+          }
+        ],
+        "repeat": "virtual_server",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "virtual_servers_health{ ns_instance=~\"$ns_instance\", virtual_server=~\"$virtual_server\"}",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 4
+          }
+        ],
+        "thresholds": "10,99",
+        "title": "$virtual_server",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          },
+          {
+            "op": "=",
+            "text": "",
+            "value": ""
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 16
+        },
+        "id": 237,
+        "panels": [],
+        "repeat": null,
+        "title": "Active/Passive Virtual Servers",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "${DS_PROMETHEUS}",
+        "decimals": null,
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 12,
+          "x": 0,
+          "y": 17
+        },
+        "height": "",
+        "id": 199,
+        "interval": null,
+        "links": [
+          {
+            "dashUri": "db/netscaler-virtual-server-detail",
+            "dashboard": "NetScaler - Virtual Server Detail",
+            "includeVars": true,
+            "keepTime": true,
+            "params": "",
+            "targetBlank": true,
+            "title": "NetScaler - Virtual Server Detail",
+            "type": "dashboard"
+          }
+        ],
+        "mappingType": 2,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "minSpan": 4,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          },
+          {
+            "from": "1",
+            "text": "Degraded",
+            "to": "99"
+          },
+          {
+            "from": "0",
+            "text": "Down",
+            "to": "0"
+          },
+          {
+            "from": "100",
+            "text": "Up",
+            "to": "100"
+          }
+        ],
+        "repeat": "ap_virtual_server",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "virtual_servers_health{ ns_instance=~\"$ns_instance\", virtual_server=~\"$ap_virtual_server\"}",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 4
+          }
+        ],
+        "thresholds": "10,99",
+        "title": "$ap_virtual_server",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          },
+          {
+            "op": "=",
+            "text": "",
+            "value": ""
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 20
+        },
+        "id": 238,
+        "panels": [],
+        "repeat": null,
+        "title": "Service Groups",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "${DS_PROMETHEUS}",
+        "decimals": null,
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 0,
+          "y": 21
+        },
+        "height": "",
+        "id": 26,
+        "interval": null,
+        "links": [
+          {
+            "dashUri": "db/netscaler-service-group-detail",
+            "dashboard": "NetScaler - Service Group Detail",
+            "includeVars": true,
+            "keepTime": true,
+            "params": "",
+            "targetBlank": true,
+            "title": "NetScaler - Service Group Detail",
+            "type": "dashboard"
+          }
+        ],
+        "mappingType": 2,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "minSpan": 4,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          },
+          {
+            "from": "100",
+            "text": "Up",
+            "to": "100"
+          },
+          {
+            "from": "1",
+            "text": "Degraded",
+            "to": "99"
+          },
+          {
+            "from": "0",
+            "text": "Down",
+            "to": "0"
+          }
+        ],
+        "repeat": "service_group",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum(servicegroup_state{ns_instance=~\"$ns_instance\",servicegroup=~\"$service_group\"}) / count(servicegroup_state{ns_instance=~\"$ns_instance\",servicegroup=~\"$service_group\"}) * 100",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 4
+          }
+        ],
+        "thresholds": "1,99",
+        "title": "$service_group",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          },
+          {
+            "op": "=",
+            "text": "Up",
+            "value": "1"
+          },
+          {
+            "op": "=",
+            "text": "Degraded",
+            "value": "0"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 24
+        },
+        "id": 239,
+        "panels": [],
+        "repeat": null,
+        "title": "Services",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "${DS_PROMETHEUS}",
+        "decimals": null,
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4.8,
+          "x": 0,
+          "y": 25
+        },
+        "height": "",
+        "id": 101,
+        "interval": null,
+        "links": [
+          {
+            "dashUri": "db/netscaler-virtual-servers",
+            "dashboard": "NetScaler - Virtual Servers",
+            "includeVars": true,
+            "keepTime": true,
+            "params": "",
+            "targetBlank": true,
+            "title": "More Virtual Server information",
+            "type": "dashboard"
+          }
+        ],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "minSpan": 4,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeat": "service",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "service_state{ns_instance=~\"$ns_instance\", service=~\"$service\"}",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 4
+          }
+        ],
+        "thresholds": "",
+        "title": "$service",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          },
+          {
+            "op": "=",
+            "text": "Up",
+            "value": "1"
+          },
+          {
+            "op": "=",
+            "text": "Problem",
+            "value": "0"
+          }
+        ],
+        "valueName": "current"
+      }
+    ],
+    "refresh": "1m",
+    "schemaVersion": 16,
+    "style": "dark",
+    "tags": [
+      "netscaler"
+    ],
+    "templating": {
+      "list": [
+        {
+          "allValue": null,
+          "current": {},
+          "datasource": "${DS_PROMETHEUS}",
+          "definition": "",
+          "hide": 0,
+          "includeAll": true,
+          "label": "NetScaler Instance",
+          "multi": false,
+          "name": "ns_instance",
+          "options": [],
+          "query": "virtual_servers_active_services{}",
+          "refresh": 1,
+          "regex": "/.*ns_instance=\"([^\"]*).*/",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {},
+          "datasource": "${DS_PROMETHEUS}",
+          "definition": "",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Virtual Servers",
+          "multi": false,
+          "name": "virtual_server",
+          "options": [],
+          "query": "query_result(virtual_servers_health{ns_instance=~\"$ns_instance\"} != 100 and virtual_servers_health{virtual_server!~\".*httpredir.*$\"} and virtual_servers_health{virtual_server!~\".*_AP.*$\"} and virtual_servers_health{virtual_server!~\"$exclude\"})",
+          "refresh": 1,
+          "regex": "/.*virtual_server=\"(.*)\".*/",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {},
+          "datasource": "${DS_PROMETHEUS}",
+          "definition": "",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Service Group",
+          "multi": false,
+          "name": "service_group",
+          "options": [],
+          "query": "query_result(servicegroup_state{ns_instance=~\"$ns_instance\"} != 1 and servicegroup_state{servicegroup!~\".*_AP.*$\"})",
+          "refresh": 1,
+          "regex": ".*servicegroup=\"(.*)\".*",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {},
+          "datasource": "${DS_PROMETHEUS}",
+          "definition": "",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Service",
+          "multi": false,
+          "name": "service",
+          "options": [],
+          "query": "query_result(service_state{ns_instance=~\"$ns_instance\"} != 1)",
+          "refresh": 1,
+          "regex": "/.*service=\"(.*)\".*/",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {},
+          "datasource": "${DS_PROMETHEUS}",
+          "definition": "",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Virtual Servers",
+          "multi": false,
+          "name": "ap_virtual_server",
+          "options": [],
+          "query": "query_result(virtual_servers_health{ns_instance=~\"$ns_instance\"} == 0 and virtual_servers_health{virtual_server!~\".*httpredir.*$\"} and virtual_servers_health{virtual_server=~\".*_AP$\"})",
+          "refresh": 1,
+          "regex": "/.*virtual_server=\"(.*)\".*/",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {
+            "text": "All",
+            "value": "$__all"
+          },
+          "hide": 0,
+          "includeAll": true,
+          "label": "Exclude",
+          "multi": false,
+          "name": "exclude",
+          "options": [
+            {
+              "selected": true,
+              "text": "All",
+              "value": "$__all"
+            },
+            {
+              "selected": false,
+              "text": "/.*-dev.*/",
+              "value": "/.*-dev.*/"
+            }
+          ],
+          "query": "/.*-dev.*/",
+          "skipUrlSync": false,
+          "type": "custom"
+        },
+        {
+          "allValue": null,
+          "current": {},
+          "datasource": "${DS_PROMETHEUS}",
+          "definition": "query_result(gslb_virtual_servers_health{ns_instance=~\"$ns_instance\"}  != 100 and gslb_virtual_servers_health{virtual_server!~\"$exclude\"})",
+          "hide": 0,
+          "includeAll": true,
+          "label": "GSLB Virtual Servers",
+          "multi": false,
+          "name": "gslb_virtual_server",
+          "options": [],
+          "query": "query_result(gslb_virtual_servers_health{ns_instance=~\"$ns_instance\"}  != 100 and gslb_virtual_servers_health{virtual_server!~\"$exclude\"})",
+          "refresh": 1,
+          "regex": "/.*virtual_server=\"(.*)\".*/",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {},
+          "datasource": "${DS_PROMETHEUS}",
+          "definition": "query_result(gslb_service_state{ns_instance=~\"$ns_instance\"}  != 1)",
+          "hide": 0,
+          "includeAll": true,
+          "label": "GSLB Service",
+          "multi": false,
+          "name": "gslb_service",
+          "options": [],
+          "query": "query_result(gslb_service_state{ns_instance=~\"$ns_instance\"}  != 1)",
+          "refresh": 1,
+          "regex": "/.*service=\"(.*)\".*/",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {},
+          "datasource": "${DS_PROMETHEUS}",
+          "definition": "query_result(cs_virtual_servers_state{ns_instance=~\"$ns_instance\"}  != 1)",
+          "hide": 0,
+          "includeAll": true,
+          "label": "CS Virtual Server",
+          "multi": false,
+          "name": "cs_virtual_server",
+          "options": [],
+          "query": "query_result(cs_virtual_servers_state{ns_instance=~\"$ns_instance\"}  != 1)",
+          "refresh": 1,
+          "regex": "/.*virtual_server=\"(.*)\".*/",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-5m",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "browser",
+    "title": "Problems",
+    "uid": "000000015",
+    "version": 17
+  }
