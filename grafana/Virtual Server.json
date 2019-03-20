@@ -133,7 +133,7 @@
         "tableColumn": "",
         "targets": [
           {
-            "expr": "avg(virtual_servers_health{job=\"netscaler\",ns_instance=~\"$ns_instance\",virtual_server=~\"$virtual_server\"})",
+            "expr": "avg(virtual_servers_health{ns_instance=~\"$ns_instance\",virtual_server=~\"$virtual_server\"})",
             "format": "time_series",
             "hide": false,
             "intervalFactor": 2,
@@ -218,7 +218,7 @@
         "tableColumn": "",
         "targets": [
           {
-            "expr": "sum(virtual_servers_waiting_requests{job=\"netscaler\",ns_instance=~\"$ns_instance\",virtual_server=~\"$virtual_server\"})",
+            "expr": "sum(virtual_servers_waiting_requests{ns_instance=~\"$ns_instance\",virtual_server=~\"$virtual_server\"})",
             "format": "time_series",
             "hide": false,
             "intervalFactor": 2,
@@ -303,7 +303,7 @@
         "tableColumn": "",
         "targets": [
           {
-            "expr": "sum(virtual_servers_inactive_services{job=\"netscaler\",ns_instance=~\"$ns_instance\",virtual_server=~\"$virtual_server\"})",
+            "expr": "sum(virtual_servers_inactive_services{ns_instance=~\"$ns_instance\",virtual_server=~\"$virtual_server\"})",
             "format": "time_series",
             "hide": false,
             "intervalFactor": 2,
@@ -388,7 +388,7 @@
         "tableColumn": "",
         "targets": [
           {
-            "expr": "sum(virtual_servers_active_services{job=\"netscaler\",ns_instance=~\"$ns_instance\",virtual_server=~\"$virtual_server\"})",
+            "expr": "sum(virtual_servers_active_services{ns_instance=~\"$ns_instance\",virtual_server=~\"$virtual_server\"})",
             "format": "time_series",
             "hide": false,
             "intervalFactor": 2,
