@@ -9,4 +9,4 @@ BUILD_VER = $(shell git rev-parse HEAD)
 LDFLAGS = -ldflags "-X main.version=${VERSION} -X main.build=${BUILD_VER}"
 
 build:
-	GOOS=linux GOOS=amd64 go build -o ${BINARY-LINUX} ${LDFLAGS}
+	GOOS=linux GOARCH=amd64 go build -o ${BINARY-LINUX} ${LDFLAGS}
