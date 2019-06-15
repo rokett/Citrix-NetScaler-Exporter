@@ -5,7 +5,6 @@ set _TARGETS=build
 
 set APP=Citrix-NetScaler-Exporter
 set VERSION=3.2.0
-set BINARY-WINDOWS-X86=%APP%_%VERSION%_Windows_32bit.exe
 set BINARY-WINDOWS-X64=%APP%_%VERSION%_Windows_amd64.exe
 set BINARY-LINUX=%APP%_%VERSION%_amd64
 
@@ -21,12 +20,6 @@ set LDFLAGS=-ldflags "-X main.version=%VERSION% -X main.build=%BUILD%"
 goto %1
 
 :build
-    echo "=== Building Windows x86 ==="
-    set GOOS=windows
-    set GOARCH=386
-
-    go build -o %BINARY-WINDOWS-X86% %LDFLAGS%
-
     echo "=== Building Windows x64 ==="
     set GOOS=windows
     set GOARCH=amd64
