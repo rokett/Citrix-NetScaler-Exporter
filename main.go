@@ -18,17 +18,17 @@ import (
 )
 
 var (
-	app        = "Citrix-NetScaler-Exporter"
-	version    string
-	build      string
-	url        = flag.String("url", "", "Base URL of the NetScaler management interface.  Normally something like https://my-netscaler.something.x")
+	app     = "Citrix-NetScaler-Exporter"
+	version string
+	build   string
+	//url        = flag.String("url", "", "Base URL of the NetScaler management interface.  Normally something like https://my-netscaler.something.x")
 	username   = flag.String("username", "", "Username with which to connect to the NetScaler API")
 	password   = flag.String("password", "", "Password with which to connect to the NetScaler API")
 	bindPort   = flag.Int("bind_port", 9280, "Port to bind the exporter endpoint to")
 	versionFlg = flag.Bool("version", false, "Display application version")
-	ignoreCert = flag.Bool("ignore-cert", false, "Ignore certificate errors; use with caution")
-	multiQuery = flag.Bool("multi", false, "Enable query endpoint")
-	logger     log.Logger
+	//ignoreCert = flag.Bool("ignore-cert", false, "Ignore certificate errors; use with caution")
+	//multiQuery = flag.Bool("multi", false, "Enable query endpoint")
+	logger log.Logger
 
 	nsInstance string
 )
@@ -51,15 +51,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	if *url == "" && !*multiQuery {
+	/*if *url == "" && !*multiQuery {
 		fmt.Println("missing URL or multiquery flag")
 		flag.PrintDefaults()
 		os.Exit(1)
-	}
+	}*/
 
-	if *multiQuery {
-		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte(`<html>
+	//if *multiQuery {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`<html>
 				<head><title>Citrix NetScaler Exporter</title></head>
 				<style>
 				label{
@@ -76,17 +76,21 @@ func main() {
 				<body>
 				<h1>Citrix NetScaler Exporter</h1>
 				<form action="/netscaler">
-				<label>Target:</label>
-				<input type="text" name="target" placeholder="https://mynetscaler.com">
+				<label>Target:</label> <input type="text" name="target" placeholder="https://mynetscaler.com"> <br>
+				<p>Ignore certificate check?</p>
+				<input type="radio" id="yes" name="ignore-cert" value="yes">
+				<label for="yes">Yes</label>
+				<input type="radio" id="no" name="ignore-cert" value="no" checked>
+  				<label for="no">No</label>
 				<br>
 				<input type="submit" value="Submit">
 				</form>
 				</body>
 				</html>`))
-		})
+	})
 
-		http.HandleFunc("/netscaler", handler)
-	} else {
+	http.HandleFunc("/netscaler", handler)
+	/*} else {
 		nsInstance = strings.TrimLeft(*url, "https://")
 		nsInstance = strings.Trim(nsInstance, " /")
 
@@ -106,7 +110,7 @@ func main() {
 				</body>
 				</html>`))
 		})
-	}
+	}*/
 
 	http.Handle("/metrics", promhttp.Handler())
 
@@ -127,12 +131,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ignoreCertCheck := false
+	if strings.ToLower(r.URL.Query().Get("ignore-cert")) == "yes" {
+		ignoreCertCheck = true
+	}
+
 	nsInstance = strings.TrimLeft(target, "https://")
 	nsInstance = strings.Trim(nsInstance, " /")
 
 	level.Debug(logger).Log("msg", "scraping target", "target", target)
 
-	exporter, err := collector.NewExporter(target, *username, *password, *ignoreCert, logger, nsInstance)
+	exporter, err := collector.NewExporter(target, *username, *password, ignoreCertCheck, logger, nsInstance)
 	if err != nil {
 		http.Error(w, "Error creating exporter"+err.Error(), 400)
 		level.Error(logger).Log("msg", err)

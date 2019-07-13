@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - Unreleased
+### Added
+ - Multi query endpoint.  You no longer need to run a single instance per NetScaler you want to monitor.  The exporter now supports Prometheus targets so only one instance is required.
+
+### Changed
+ - Refactored exporter code into separate package for maintainability reasons.
+
+### Removed
+ - Option to specify a NetScaler to scrape from the command line.  Using Prometheus scrape targets is now the only way.
+
 ## [3.2.0] - 2018/12/12
 ### Added
  - Collection of GSLB Service metrics.

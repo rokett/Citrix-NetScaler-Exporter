@@ -1,7 +1,7 @@
 .PHONY: build
 
 APP = Citrix-NetScaler-Exporter
-VERSION = 3.2.0
+VERSION = 4.0.0
 BINARY-LINUX = ${APP}_${VERSION}_Linux_amd64
 
 BUILD_VER = $(shell git rev-parse HEAD)
