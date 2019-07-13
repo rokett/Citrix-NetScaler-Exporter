@@ -27,10 +27,16 @@ var (
 	bindPort   = flag.Int("bind_port", 9280, "Port to bind the exporter endpoint to")
 	versionFlg = flag.Bool("version", false, "Display application version")
 	ignoreCert = flag.Bool("ignore-cert", false, "Ignore certificate errors; use with caution")
+	multiQuery = flag.Bool("multi", false, "Enable query endpoint")
 	logger     log.Logger
 
 	nsInstance string
 )
+
+func init() {
+	logger = log.NewLogfmtLogger(os.Stdout)
+	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller, "app", app, "bind_port", *bindPort, "url", *url, "version", "v"+version, "build", build)
+}
 
 func main() {
 	flag.Parse()
@@ -40,29 +46,67 @@ func main() {
 		os.Exit(0)
 	}
 
-	if *url == "" || *username == "" || *password == "" {
+	if *username == "" || *password == "" {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
 
-	nsInstance = strings.TrimLeft(*url, "https://")
-	nsInstance = strings.Trim(nsInstance, " /")
+	if *url == "" && !*multiQuery {
+		fmt.Println("missing URL or multiquery flag")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
 
-	logger = log.NewLogfmtLogger(os.Stdout)
-	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller, "app", app, "bind_port", *bindPort, "url", *url, "version", "v"+version, "build", build)
+	if *multiQuery {
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte(`<html>
+				<head><title>Citrix NetScaler Exporter</title></head>
+				<style>
+				label{
+				display:inline-block;
+				width:75px;
+				}
+				form label {
+				margin: 10px;
+				}
+				form input {
+				margin: 10px;
+				}
+				</style>
+				<body>
+				<h1>Citrix NetScaler Exporter</h1>
+				<form action="/netscaler">
+				<label>Target:</label>
+				<input type="text" name="target" placeholder="https://mynetscaler.com">
+				<br>
+				<input type="submit" value="Submit">
+				</form>
+				</body>
+				</html>`))
+		})
 
-	exporter, _ := collector.NewExporter(*url, *username, *password, *ignoreCert, logger, nsInstance)
-	prometheus.MustRegister(exporter)
+		http.HandleFunc("/netscaler", handler)
+	} else {
+		nsInstance = strings.TrimLeft(*url, "https://")
+		nsInstance = strings.Trim(nsInstance, " /")
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`<html>
-			<head><title>Citrix NetScaler Exporter</title></head>
-			<body>
-			<h1>Citrix NetScaler Exporter</h1>
-			<p><a href="/metrics">Metrics</a></p>
-			</body>
-			</html>`))
-	})
+		exporter, err := collector.NewExporter(*url, *username, *password, *ignoreCert, logger, nsInstance)
+		if err != nil {
+			level.Error(logger).Log("msg", err)
+			return
+		}
+		prometheus.MustRegister(exporter)
+
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte(`<html>
+				<head><title>Citrix NetScaler Exporter</title></head>
+				<body>
+				<h1>Citrix NetScaler Exporter</h1>
+				<p><a href="/metrics">Metrics</a></p>
+				</body>
+				</html>`))
+		})
+	}
 
 	http.Handle("/metrics", promhttp.Handler())
 
@@ -74,4 +118,31 @@ func main() {
 		level.Error(logger).Log("msg", err)
 		os.Exit(1)
 	}
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	target := r.URL.Query().Get("target")
+	if target == "" {
+		http.Error(w, "'target' parameter must be specified", 400)
+		return
+	}
+
+	nsInstance = strings.TrimLeft(target, "https://")
+	nsInstance = strings.Trim(nsInstance, " /")
+
+	level.Debug(logger).Log("msg", "scraping target", "target", target)
+
+	exporter, err := collector.NewExporter(target, *username, *password, *ignoreCert, logger, nsInstance)
+	if err != nil {
+		http.Error(w, "Error creating exporter"+err.Error(), 400)
+		level.Error(logger).Log("msg", err)
+		return
+	}
+
+	registry := prometheus.NewRegistry()
+	registry.MustRegister(exporter)
+
+	// Delegate http serving to Prometheus client library, which will call collector.Collect.
+	h := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
+	h.ServeHTTP(w, r)
 }
