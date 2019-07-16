@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [4.0.0] - Unreleased
 ### Added
  - Multi query endpoint.  You no longer need to run a single instance per NetScaler you want to monitor.  The exporter now supports Prometheus targets so only one instance is required.
+ - Up gauge.  This will be either 1 or 0 depending on whether the NetScaler responds or not.
 
 ### Changed
  - Refactored exporter code into separate package for maintainability reasons.
