@@ -76,7 +76,7 @@ func main() {
 				<body>
 				<h1>Citrix NetScaler Exporter</h1>
 				<form action="/netscaler">
-				<label>Target:</label> <input type="text" name="target" placeholder="https://mynetscaler.com"> <br>
+				<label>Target:</label> <input type="text" name="target" placeholder="https://netscaler.domain.tld"> <br>
 				<p>Ignore certificate check?</p>
 				<input type="radio" id="yes" name="ignore-cert" value="yes">
 				<label for="yes">Yes</label>
