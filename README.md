@@ -70,6 +70,7 @@ Ideally you'll run the exporter as a service.  There are many ways to do that, s
 
 | Metric                                 | Metric Type | Unit    |
 | -------------------------------------- | ----------- | ------- |
+| Up                                     | Gauge       | None    |
 | CPU usage                              | Gauge       | Percent |
 | Memory usage                           | Gauge       | Percent |
 | Management CPU usage                   | Gauge       | Percent |
@@ -84,6 +85,8 @@ Ideally you'll run the exporter as a service.  There are many ways to do that, s
 | Current established client connections | Gauge       | None    |
 | Current server connections             | Gauge       | None    |
 | Current established server connections | Gauge       | None    |
+
+`Up` will be either 1 or 0 depending on whether or not the target NetScaler responds or not.
 
 ### Interfaces
 For each interface, the following metrics are retrieved.
@@ -230,12 +233,11 @@ For each Content Switching virtual server, the following metrics are retrieved.
 ## Building the executable
 All dependencies are version controlled, so building the project is really easy.
 
-1. ``go get github.com/rokett/citrix-netscaler-exporter``.
-2. From within the repository directory run ``make``.
+1. `go get github.com/rokett/citrix-netscaler-exporter`.
+2. From within the repository directory run `make`.
 3. Hey presto, you have an executable.
 
 ## Dockerfile
 A Dockerfile has been setup to create the exporter using golang:alpine3.6
 
-This Dockerfile will create a container that will set the entrypoint as /Citrix-Netscaler-Exporter so you can just pass in the command line options
-mentioned about to the container without needing to call the executable
+This Dockerfile will create a container that will set the entrypoint as /Citrix-Netscaler-Exporter so you can just pass in the command line options mentioned above to the container without needing to call the executable
