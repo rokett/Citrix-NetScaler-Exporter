@@ -34,9 +34,9 @@ Citrix-NetScaler-Exporter.exe --username stats --password "my really strong pass
 
 This will run the exporter using the default bind port.  If you need to change the port, append the `-bind_port` flag to the command.
 
-Browse to http://localhost:9280/target=http://mynetscaler.internal.com where `http://mynetscaler.internal.com` is the URL of the NetScaler to get metrics from.
+Browse to http://localhost:9280/target=https://netscaler.domain.tld where `https://netscaler.domain.tld` is the URL of the NetScaler to get metrics from.
 
-You can also specify the `ignore-certs=yes` parameter in order to skip the certificate check.  This option should be used sparingly, and only when you fully trust the endpoint.
+You can also specify the `ignore-cert=yes` querystring parameter in order to skip the certificate check.  This option should be used sparingly, and only when you fully trust the endpoint.
 
 ### Prometheus Configuration
 
@@ -45,14 +45,14 @@ The exporter needs to be passed the address of the NetScaler to get metrics from
 Example config:
 ```YAML
 scrape_configs:
-  - job_name: 'snmp'
+  - job_name: 'netscaler'
+    metrics_path: /netscaler
     static_configs:
       - targets:
-        - 'https://mynetscaler.internal.com'
-        - 'https://myothernetscaler.internal.com'
-    metrics_path: /netscaler
+        - 'https://netscaler.domain.tld'
+        - 'https://netscaler-2.domain.tld'
     params:
-      ignore-certs: 'yes'
+      ignore-cert: ["yes"] # Generally this option should not be used.  Only use it if you truly trust the endpoint and know it is secure.  You may need a different job block for where you want to ignore certs.
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target

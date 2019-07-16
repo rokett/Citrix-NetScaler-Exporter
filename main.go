@@ -137,6 +137,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	nsInstance = strings.TrimLeft(target, "https://")
+	nsInstance = strings.TrimLeft(target, "http://")
 	nsInstance = strings.Trim(nsInstance, " /")
 
 	level.Debug(logger).Log("msg", "scraping target", "target", target)
