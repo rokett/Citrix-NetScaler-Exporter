@@ -10,7 +10,7 @@ import (
 
 // Exporter represents the metrics exported to Prometheus
 type Exporter struct {
-	up                                                  prometheus.Gauge
+	up                                                  *prometheus.GaugeVec
 	modelID                                             *prometheus.Desc
 	mgmtCPUUsage                                        *prometheus.Desc
 	memUsage                                            *prometheus.Desc
@@ -242,7 +242,8 @@ func NewExporter(url string, username string, password string, ignoreCert bool, 
 
 // Describe implements Collector
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
-	ch <- up.Desc()
+	e.up.Describe(ch)
+
 	ch <- modelID
 	ch <- mgmtCPUUsage
 	ch <- memUsage

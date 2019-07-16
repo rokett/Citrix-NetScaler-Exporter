@@ -16,15 +16,17 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		return
 	}
 
+	e.up.Reset()
+
 	err = netscaler.Connect(nsClient)
 	if err != nil {
 		level.Error(e.logger).Log("msg", err)
-		e.up.Set(0)
-		ch <- e.up
+		e.up.WithLabelValues(e.nsInstance).Set(0)
+		e.up.Collect(ch)
 		return
 	}
-	e.up.Set(1)
-	ch <- e.up
+	e.up.WithLabelValues(e.nsInstance).Set(1)
+	e.up.Collect(ch)
 
 	nslicense, err := netscaler.GetNSLicense(nsClient, "")
 	if err != nil {
