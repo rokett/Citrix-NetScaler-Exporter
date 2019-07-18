@@ -70,7 +70,6 @@ Ideally you'll run the exporter as a service.  There are many ways to do that, s
 
 | Metric                                 | Metric Type | Unit    |
 | -------------------------------------- | ----------- | ------- |
-| Up                                     | Gauge       | None    |
 | CPU usage                              | Gauge       | Percent |
 | Memory usage                           | Gauge       | Percent |
 | Management CPU usage                   | Gauge       | Percent |
@@ -85,8 +84,6 @@ Ideally you'll run the exporter as a service.  There are many ways to do that, s
 | Current established client connections | Gauge       | None    |
 | Current server connections             | Gauge       | None    |
 | Current established server connections | Gauge       | None    |
-
-`Up` will be either 1 or 0 depending on whether or not the target NetScaler responds or not.
 
 ### Interfaces
 For each interface, the following metrics are retrieved.
