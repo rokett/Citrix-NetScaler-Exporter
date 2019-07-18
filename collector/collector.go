@@ -16,17 +16,18 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		return
 	}
 
-	e.up.Reset()
+	//e.up.Reset()
 
 	err = netscaler.Connect(nsClient)
 	if err != nil {
 		level.Error(e.logger).Log("msg", err)
-		e.up.WithLabelValues(e.nsInstance).Set(0)
-		e.up.Collect(ch)
+		ch <- prometheus.NewInvalidMetric(prometheus.NewDesc("citrix_netscaler_exporter_error", "Error scraping target", nil, nil), err)
+		//e.up.WithLabelValues(e.nsInstance).Set(0)
+		//e.up.Collect(ch)
 		return
 	}
-	e.up.WithLabelValues(e.nsInstance).Set(1)
-	e.up.Collect(ch)
+	//e.up.WithLabelValues(e.nsInstance).Set(1)
+	//e.up.Collect(ch)
 
 	nslicense, err := netscaler.GetNSLicense(nsClient, "")
 	if err != nil {

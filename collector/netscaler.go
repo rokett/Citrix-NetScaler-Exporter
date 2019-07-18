@@ -3,7 +3,7 @@ package collector
 import "github.com/prometheus/client_golang/prometheus"
 
 var (
-	up = prometheus.NewGaugeVec(
+	/*up = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "up",
 			Help: "Is the NetScaler appliance up?",
@@ -11,7 +11,7 @@ var (
 		[]string{
 			"ns_instance",
 		},
-	)
+	)*/
 
 	modelID = prometheus.NewDesc(
 		"model_id",
