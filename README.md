@@ -22,20 +22,45 @@ You can monitor multiple NetScaler instances by passing in the URL, username, an
 
 | Flag        | Description                                                                                               | Default Value |
 | ----------- | --------------------------------------------------------------------------------------------------------- | ------------- |
-| url         | Base URL of the NetScaler management interface.  Normally something like https://mynetscaler.internal.com | none          |
 | username    | Username with which to connect to the NetScaler API                                                       | none          |
 | password    | Password with which to connect to the NetScaler API                                                       | none          |
 | bind_port   | Port to bind the exporter endpoint to                                                                     | 9280          |
-| ignore-cert | Ignore certificate errors.  Should be used sparingly and only when you fully trust the endpoint           | false         |
-
 
 Run the exporter manually using the following command:
 
 ````
-Citrix-NetScaler-Exporter.exe -url https://mynetscaler.internal.com -username stats -password "my really strong password"
+Citrix-NetScaler-Exporter.exe --username stats --password "my really strong password"
 ````
 
-This will run the exporter using the default bind port.  If you need to change the port, append the ``-bind_port`` flag to the command.
+This will run the exporter using the default bind port.  If you need to change the port, append the `-bind_port` flag to the command.
+
+Browse to http://localhost:9280/target=https://netscaler.domain.tld where `https://netscaler.domain.tld` is the URL of the NetScaler to get metrics from.
+
+You can also specify the `ignore-cert=yes` querystring parameter in order to skip the certificate check.  This option should be used sparingly, and only when you fully trust the endpoint.
+
+### Prometheus Configuration
+
+The exporter needs to be passed the address of the NetScaler to get metrics from as a parameter, this can be done with relabelling.
+
+Example config:
+```YAML
+scrape_configs:
+  - job_name: 'netscaler'
+    metrics_path: /netscaler
+    static_configs:
+      - targets:
+        - 'https://netscaler.domain.tld'
+        - 'https://netscaler-2.domain.tld'
+    params:
+      ignore-cert: ["yes"] # Generally this option should not be used.  Only use it if you truly trust the endpoint and know it is secure.  You may need a different job block for where you want to ignore certs.
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9280  # The exporter's real hostname:port.
+```
 
 ### Running as a service
 Ideally you'll run the exporter as a service.  There are many ways to do that, so it's really up to you.  If you're running it on Windows I would recommend [NSSM](https://nssm.cc/).
@@ -205,12 +230,11 @@ For each Content Switching virtual server, the following metrics are retrieved.
 ## Building the executable
 All dependencies are version controlled, so building the project is really easy.
 
-1. ``go get github.com/rokett/citrix-netscaler-exporter``.
-2. From within the repository directory run ``make``.
+1. `go get github.com/rokett/citrix-netscaler-exporter`.
+2. From within the repository directory run `make`.
 3. Hey presto, you have an executable.
 
 ## Dockerfile
 A Dockerfile has been setup to create the exporter using golang:alpine3.6
 
-This Dockerfile will create a container that will set the entrypoint as /Citrix-Netscaler-Exporter so you can just pass in the command line options
-mentioned about to the container without needing to call the executable
+This Dockerfile will create a container that will set the entrypoint as /Citrix-Netscaler-Exporter so you can just pass in the command line options mentioned above to the container without needing to call the executable
