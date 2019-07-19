@@ -3,16 +3,6 @@ package collector
 import "github.com/prometheus/client_golang/prometheus"
 
 var (
-	/*up = prometheus.NewGaugeVec(
-		prometheus.GaugeOpts{
-			Name: "up",
-			Help: "Is the NetScaler appliance up?",
-		},
-		[]string{
-			"ns_instance",
-		},
-	)*/
-
 	modelID = prometheus.NewDesc(
 		"model_id",
 		"NetScaler model - reflects the bandwidth available; for example VPX 10 would report as 10.",

@@ -21,13 +21,10 @@ var (
 	app     = "Citrix-NetScaler-Exporter"
 	version string
 	build   string
-	//url        = flag.String("url", "", "Base URL of the NetScaler management interface.  Normally something like https://my-netscaler.something.x")
 	username   = flag.String("username", "", "Username with which to connect to the NetScaler API")
 	password   = flag.String("password", "", "Password with which to connect to the NetScaler API")
 	bindPort   = flag.Int("bind_port", 9280, "Port to bind the exporter endpoint to")
 	versionFlg = flag.Bool("version", false, "Display application version")
-	//ignoreCert = flag.Bool("ignore-cert", false, "Ignore certificate errors; use with caution")
-	//multiQuery = flag.Bool("multi", false, "Enable query endpoint")
 	logger log.Logger
 
 	nsInstance string
@@ -51,13 +48,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	/*if *url == "" && !*multiQuery {
-		fmt.Println("missing URL or multiquery flag")
-		flag.PrintDefaults()
-		os.Exit(1)
-	}*/
-
-	//if *multiQuery {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`<html>
 				<head><title>Citrix NetScaler Exporter</title></head>
@@ -90,28 +80,6 @@ func main() {
 	})
 
 	http.HandleFunc("/netscaler", handler)
-	/*} else {
-		nsInstance = strings.TrimLeft(*url, "https://")
-		nsInstance = strings.Trim(nsInstance, " /")
-
-		exporter, err := collector.NewExporter(*url, *username, *password, *ignoreCert, logger, nsInstance)
-		if err != nil {
-			level.Error(logger).Log("msg", err)
-			return
-		}
-		prometheus.MustRegister(exporter)
-
-		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte(`<html>
-				<head><title>Citrix NetScaler Exporter</title></head>
-				<body>
-				<h1>Citrix NetScaler Exporter</h1>
-				<p><a href="/metrics">Metrics</a></p>
-				</body>
-				</html>`))
-		})
-	}*/
-
 	http.Handle("/metrics", promhttp.Handler())
 
 	listeningPort := ":" + strconv.Itoa(*bindPort)
