@@ -9,7 +9,7 @@ set BINARY-LINUX=%APP%_%VERSION%_Linux_amd64
 REM Set build number from git commit hash
 for /f %%i in ('git rev-parse HEAD') do set BUILD=%%i
 
-set LDFLAGS=-ldflags "-X main.version=%VERSION% -X main.build=%BUILD% -s -w"
+set LDFLAGS=-ldflags "-X main.version=%VERSION% -X main.build=%BUILD% -s -w -extldflags '-static'"
 
 goto build
 
