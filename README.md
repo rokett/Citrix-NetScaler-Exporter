@@ -227,6 +227,8 @@ For each Content Switching virtual server, the following metrics are retrieved.
 ## Downloading a release
 <https://github.com/rokett/Citrix-NetScaler-Exporter/releases>
 
+You can also download a Docker image from https://hub.docker.com/r/rokett/citrix-netscaler-exporter.
+
 ## Building the executable
 All dependencies are version controlled, so building the project is really easy.
 
@@ -235,4 +237,4 @@ All dependencies are version controlled, so building the project is really easy.
 3. Hey presto, you have an executable.
 
 ## Dockerfile
-This Dockerfile will create a container that will set the entrypoint as /Citrix-Netscaler-Exporter so you can just pass in the command line options mentioned above to the container without needing to call the executable
+This Dockerfile will create a container that will set the entrypoint as `/Citrix-Netscaler-Exporter` so you can just pass in the command line options mentioned above to the container without needing to call the executable
