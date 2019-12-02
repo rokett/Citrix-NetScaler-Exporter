@@ -18,14 +18,14 @@ import (
 )
 
 var (
-	app     = "Citrix-NetScaler-Exporter"
-	version string
-	build   string
+	app        = "Citrix-NetScaler-Exporter"
+	version    string
+	build      string
 	username   = flag.String("username", "", "Username with which to connect to the NetScaler API")
 	password   = flag.String("password", "", "Password with which to connect to the NetScaler API")
 	bindPort   = flag.Int("bind_port", 9280, "Port to bind the exporter endpoint to")
 	versionFlg = flag.Bool("version", false, "Display application version")
-	logger log.Logger
+	logger     log.Logger
 
 	nsInstance string
 )

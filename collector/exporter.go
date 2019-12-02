@@ -108,6 +108,20 @@ type Exporter struct {
 	csVirtualServersTotalVServerDownBackupHits          *prometheus.CounterVec
 	csVirtualServersCurrentMultipathSessions            *prometheus.GaugeVec
 	csVirtualServersCurrentMultipathSubflows            *prometheus.GaugeVec
+	aaaauthsuccess                                      *prometheus.Desc
+	aaaauthfail                                         *prometheus.Desc
+	aaaauthonlyhttpsuccess                              *prometheus.Desc
+	aaaauthonlyhttpfail                                 *prometheus.Desc
+	aaaauthnonhttpsuccess                               *prometheus.Desc
+	aaaauthnonhttpfail                                  *prometheus.Desc
+	aaacursessions                                      *prometheus.Desc
+	aaatotsessions                                      *prometheus.Desc
+	aaatotsessiontimeout                                *prometheus.Desc
+	aaacuricasessions                                   *prometheus.Desc
+	aaacuricaonlyconn                                   *prometheus.Desc
+	aaacuricaconn                                       *prometheus.Desc
+	aaacurtmsessions                                    *prometheus.Desc
+	aaatottmsessions                                    *prometheus.Desc
 	username                                            string
 	password                                            string
 	url                                                 string
@@ -229,6 +243,20 @@ func NewExporter(url string, username string, password string, ignoreCert bool, 
 		csVirtualServersTotalVServerDownBackupHits:          csVirtualServersTotalVServerDownBackupHits,
 		csVirtualServersCurrentMultipathSessions:            csVirtualServersCurrentMultipathSessions,
 		csVirtualServersCurrentMultipathSubflows:            csVirtualServersCurrentMultipathSubflows,
+		aaaauthsuccess:                                      aaaauthsuccess,
+		aaaauthfail:                                         aaaauthfail,
+		aaaauthonlyhttpsuccess:                              aaaauthonlyhttpsuccess,
+		aaaauthonlyhttpfail:                                 aaaauthonlyhttpfail,
+		aaaauthnonhttpsuccess:                               aaaauthnonhttpsuccess,
+		aaaauthnonhttpfail:                                  aaaauthnonhttpfail,
+		aaacursessions:                                      aaacursessions,
+		aaatotsessions:                                      aaatotsessions,
+		aaatotsessiontimeout:                                aaatotsessiontimeout,
+		aaacuricasessions:                                   aaacuricasessions,
+		aaacuricaonlyconn:                                   aaacuricaonlyconn,
+		aaacuricaconn:                                       aaacuricaconn,
+		aaacurtmsessions:                                    aaacurtmsessions,
+		aaatottmsessions:                                    aaatottmsessions,
 		username:                                            username,
 		password:                                            password,
 		url:                                                 url,
@@ -345,4 +373,19 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.csVirtualServersTotalVServerDownBackupHits.Describe(ch)
 	e.csVirtualServersCurrentMultipathSessions.Describe(ch)
 	e.csVirtualServersCurrentMultipathSubflows.Describe(ch)
+
+	ch <- aaaauthsuccess
+	ch <- aaaauthfail
+	ch <- aaaauthonlyhttpsuccess
+	ch <- aaaauthonlyhttpfail
+	ch <- aaaauthnonhttpsuccess
+	ch <- aaaauthnonhttpfail
+	ch <- aaacursessions
+	ch <- aaatotsessions
+	ch <- aaatotsessiontimeout
+	ch <- aaacuricasessions
+	ch <- aaacuricaonlyconn
+	ch <- aaacuricaconn
+	ch <- aaacurtmsessions
+	ch <- aaatottmsessions
 }

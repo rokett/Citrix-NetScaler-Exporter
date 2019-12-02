@@ -63,6 +63,11 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		level.Error(e.logger).Log("msg", err)
 	}
 
+	aaaStats, err := netscaler.GetAAAStats(nsClient, "")
+	if err != nil {
+		level.Error(e.logger).Log("msg", err)
+	}
+
 	fltModelID, _ := strconv.ParseFloat(nslicense.NSLicense.ModelID, 64)
 
 	fltTotRxMB, _ := strconv.ParseFloat(ns.NSStats.TotalReceivedMB, 64)
@@ -74,6 +79,20 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	fltTCPCurrentClientConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentClientConnectionsEstablished, 64)
 	fltTCPCurrentServerConnections, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnections, 64)
 	fltTCPCurrentServerConnectionsEstablished, _ := strconv.ParseFloat(ns.NSStats.TCPCurrentServerConnectionsEstablished, 64)
+
+	fltAAAauthsuccess, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAauthsuccess, 64)
+	fltAAAauthonlyhttpsuccess, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAauthonlyhttpsuccess, 64)
+	fltAAAauthfail, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAauthfail, 64)
+	fltAAAauthonlyhttpfail, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAauthonlyhttpfail, 64)
+	fltAAAauthnonhttpsuccess, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAauthnonhttpsuccess, 64)
+	fltAAAauthnonhttpfail, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAauthnonhttpfail, 64)
+	fltAAAcursessions, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAcursessions, 64)
+	fltAAAtotsessions, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAtotsessions, 64)
+	fltAAAcuricasessions, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAcuricasessions, 64)
+	fltAAAcuricaonlyconn, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAcuricaonlyconn, 64)
+	fltAAAcuricaconn, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAcuricaconn, 64)
+	fltAAAcurtmsessions, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAcurtmsessions, 64)
+	fltAAAtottmsessions, _ := strconv.ParseFloat(aaaStats.AAAStats.AAAtottmsessions, 64)
 
 	ch <- prometheus.MustNewConstMetric(
 		modelID, prometheus.GaugeValue, fltModelID, e.nsInstance,
@@ -346,6 +365,48 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectCSVirtualServerCurrentMultipathSubflows(csVirtualServers)
 	e.csVirtualServersCurrentMultipathSubflows.Collect(ch)
+
+	// AAA stats
+	ch <- prometheus.MustNewConstMetric(
+		aaaauthsuccess, prometheus.GaugeValue, fltAAAauthsuccess, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaaauthfail, prometheus.GaugeValue, fltAAAauthfail, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaaauthonlyhttpsuccess, prometheus.GaugeValue, fltAAAauthonlyhttpsuccess, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaaauthonlyhttpfail, prometheus.GaugeValue, fltAAAauthonlyhttpfail, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaaauthnonhttpsuccess, prometheus.GaugeValue, fltAAAauthnonhttpsuccess, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaaauthnonhttpfail, prometheus.GaugeValue, fltAAAauthnonhttpfail, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaacursessions, prometheus.GaugeValue, fltAAAcursessions, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaatotsessions, prometheus.GaugeValue, fltAAAtotsessions, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaacuricasessions, prometheus.GaugeValue, fltAAAcuricasessions, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaacuricaonlyconn, prometheus.GaugeValue, fltAAAcuricaonlyconn, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaacuricaconn, prometheus.GaugeValue, fltAAAcuricaconn, e.nsInstance,
+	)
+
+	ch <- prometheus.MustNewConstMetric(
+		aaacurtmsessions, prometheus.GaugeValue, fltAAAcurtmsessions, e.nsInstance,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		aaatottmsessions, prometheus.GaugeValue, fltAAAtottmsessions, e.nsInstance,
+	)
 
 	servicegroups, err := netscaler.GetServiceGroups(nsClient, "attrs=servicegroupname")
 	if err != nil {
