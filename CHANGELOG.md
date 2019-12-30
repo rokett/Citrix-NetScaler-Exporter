@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2019-12-30
+### Changed
+ - Debug logging is now hidden behind the `--debug` flag.
+
 ## [4.0.0] - 2019-07-19
 ### Added
  - Multi query endpoint.  You no longer need to run a single instance per NetScaler you want to monitor.  The exporter now supports Prometheus targets so only one instance is required.
