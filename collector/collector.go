@@ -2,6 +2,7 @@ package collector
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
@@ -353,59 +354,49 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	for _, sg := range servicegroups.ServiceGroups {
-		bindings, err2 := netscaler.GetServiceGroupMemberBindings(nsClient, sg.Name)
+		stats, err2 := netscaler.GetServiceGroupMemberStats(nsClient, sg.Name)
 		if err2 != nil {
 			level.Error(e.logger).Log("msg", err2)
 		}
 
-		for _, member := range bindings.ServiceGroupMemberBindings {
-			// NetScaler API has a bug which means it throws errors if you try to retrieve stats for a wildcard port (* in GUI, 65535 in API and CLI).
-			// Until Citrix resolve the issue we skip attempting to retrieve stats for those service groups.
-			if member.Port != 65535 {
-				port := strconv.FormatInt(member.Port, 10)
+		for _, s := range stats.ServiceGroups[0].ServiceGroupMembers {
+			servicegroupnameParts := strings.Split(s.ServiceGroupName, "?")
 
-				qs := "args=servicegroupname:" + sg.Name + ",servername:" + member.ServerName + ",port:" + port
-				stats, err2 := netscaler.GetServiceGroupMemberStats(nsClient, qs)
-				if err2 != nil {
-					level.Error(e.logger).Log("msg", err2)
-				}
+			e.collectServiceGroupsState(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsState.Collect(ch)
 
-				e.collectServiceGroupsState(stats, sg.Name, member.ServerName)
-				e.serviceGroupsState.Collect(ch)
+			e.collectServiceGroupsAvgTTFB(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsAvgTTFB.Collect(ch)
 
-				e.collectServiceGroupsAvgTTFB(stats, sg.Name, member.ServerName)
-				e.serviceGroupsAvgTTFB.Collect(ch)
+			e.collectServiceGroupsTotalRequests(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsTotalRequests.Collect(ch)
 
-				e.collectServiceGroupsTotalRequests(stats, sg.Name, member.ServerName)
-				e.serviceGroupsTotalRequests.Collect(ch)
+			e.collectServiceGroupsTotalResponses(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsTotalResponses.Collect(ch)
 
-				e.collectServiceGroupsTotalResponses(stats, sg.Name, member.ServerName)
-				e.serviceGroupsTotalResponses.Collect(ch)
+			e.collectServiceGroupsTotalRequestBytes(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsTotalRequestBytes.Collect(ch)
 
-				e.collectServiceGroupsTotalRequestBytes(stats, sg.Name, member.ServerName)
-				e.serviceGroupsTotalRequestBytes.Collect(ch)
+			e.collectServiceGroupsTotalResponseBytes(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsTotalResponseBytes.Collect(ch)
 
-				e.collectServiceGroupsTotalResponseBytes(stats, sg.Name, member.ServerName)
-				e.serviceGroupsTotalResponseBytes.Collect(ch)
+			e.collectServiceGroupsCurrentClientConnections(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsCurrentClientConnections.Collect(ch)
 
-				e.collectServiceGroupsCurrentClientConnections(stats, sg.Name, member.ServerName)
-				e.serviceGroupsCurrentClientConnections.Collect(ch)
+			e.collectServiceGroupsSurgeCount(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsSurgeCount.Collect(ch)
 
-				e.collectServiceGroupsSurgeCount(stats, sg.Name, member.ServerName)
-				e.serviceGroupsSurgeCount.Collect(ch)
+			e.collectServiceGroupsCurrentServerConnections(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsCurrentServerConnections.Collect(ch)
 
-				e.collectServiceGroupsCurrentServerConnections(stats, sg.Name, member.ServerName)
-				e.serviceGroupsCurrentServerConnections.Collect(ch)
+			e.collectServiceGroupsServerEstablishedConnections(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsServerEstablishedConnections.Collect(ch)
 
-				e.collectServiceGroupsServerEstablishedConnections(stats, sg.Name, member.ServerName)
-				e.serviceGroupsServerEstablishedConnections.Collect(ch)
+			e.collectServiceGroupsCurrentReusePool(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsCurrentReusePool.Collect(ch)
 
-				e.collectServiceGroupsCurrentReusePool(stats, sg.Name, member.ServerName)
-				e.serviceGroupsCurrentReusePool.Collect(ch)
-
-				e.collectServiceGroupsMaxClients(stats, sg.Name, member.ServerName)
-				e.serviceGroupsMaxClients.Collect(ch)
-			}
+			e.collectServiceGroupsMaxClients(s, sg.Name, servicegroupnameParts[1])
+			e.serviceGroupsMaxClients.Collect(ch)
 		}
 	}
 

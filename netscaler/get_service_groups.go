@@ -8,7 +8,8 @@ import (
 
 // ServiceGroups represents the data returned from the /config/servicegroup Nitro API endpoint
 type ServiceGroups struct {
-	Name string `json:"servicegroupname"`
+	Name                string                    `json:"servicegroupname"`
+	ServiceGroupMembers []ServiceGroupMemberStats `json:"servicegroupmember"`
 }
 
 // GetServiceGroups queries the Nitro API for service group config
