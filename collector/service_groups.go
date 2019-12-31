@@ -153,115 +153,91 @@ var (
 	)
 )
 
-func (e *Exporter) collectServiceGroupsState(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsState(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsState.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		state := 0.0
+	state := 0.0
 
-		if sg.State == "UP" {
-			state = 1.0
-		}
-
-		e.serviceGroupsState.WithLabelValues(e.nsInstance, sgName, servername).Set(state)
+	if sg.State == "UP" {
+		state = 1.0
 	}
+
+	e.serviceGroupsState.WithLabelValues(e.nsInstance, sgName, servername).Set(state)
 }
 
-func (e *Exporter) collectServiceGroupsAvgTTFB(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsAvgTTFB(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsAvgTTFB.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.AvgTimeToFirstByte, 64)
-		e.serviceGroupsAvgTTFB.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.AvgTimeToFirstByte, 64)
+	e.serviceGroupsAvgTTFB.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsTotalRequests(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsTotalRequests(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsTotalRequests.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.TotalRequests, 64)
-		e.serviceGroupsTotalRequests.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.TotalRequests, 64)
+	e.serviceGroupsTotalRequests.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsTotalResponses(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsTotalResponses(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsTotalResponses.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.TotalResponses, 64)
-		e.serviceGroupsTotalResponses.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.TotalResponses, 64)
+	e.serviceGroupsTotalResponses.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsTotalRequestBytes(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsTotalRequestBytes(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsTotalRequestBytes.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.TotalRequestBytes, 64)
-		e.serviceGroupsTotalRequestBytes.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.TotalRequestBytes, 64)
+	e.serviceGroupsTotalRequestBytes.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsTotalResponseBytes(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsTotalResponseBytes(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsTotalResponseBytes.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.TotalResponseBytes, 64)
-		e.serviceGroupsTotalResponseBytes.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.TotalResponseBytes, 64)
+	e.serviceGroupsTotalResponseBytes.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsCurrentClientConnections(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsCurrentClientConnections(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsCurrentClientConnections.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.CurrentClientConnections, 64)
-		e.serviceGroupsCurrentClientConnections.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.CurrentClientConnections, 64)
+	e.serviceGroupsCurrentClientConnections.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsSurgeCount(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsSurgeCount(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsSurgeCount.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.SurgeCount, 64)
-		e.serviceGroupsSurgeCount.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.SurgeCount, 64)
+	e.serviceGroupsSurgeCount.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsCurrentServerConnections(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsCurrentServerConnections(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsCurrentServerConnections.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.CurrentServerConnections, 64)
-		e.serviceGroupsCurrentServerConnections.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.CurrentServerConnections, 64)
+	e.serviceGroupsCurrentServerConnections.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsServerEstablishedConnections(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsServerEstablishedConnections(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsServerEstablishedConnections.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.ServerEstablishedConnections, 64)
-		e.serviceGroupsServerEstablishedConnections.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.ServerEstablishedConnections, 64)
+	e.serviceGroupsServerEstablishedConnections.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsCurrentReusePool(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsCurrentReusePool(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsCurrentReusePool.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.CurrentReusePool, 64)
-		e.serviceGroupsCurrentReusePool.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.CurrentReusePool, 64)
+	e.serviceGroupsCurrentReusePool.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }
 
-func (e *Exporter) collectServiceGroupsMaxClients(ns netscaler.NSAPIResponse, sgName string, servername string) {
+func (e *Exporter) collectServiceGroupsMaxClients(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsMaxClients.Reset()
 
-	for _, sg := range ns.ServiceGroupMemberStats {
-		val, _ := strconv.ParseFloat(sg.MaxClients, 64)
-		e.serviceGroupsMaxClients.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
-	}
+	val, _ := strconv.ParseFloat(sg.MaxClients, 64)
+	e.serviceGroupsMaxClients.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
 }

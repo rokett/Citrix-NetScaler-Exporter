@@ -25,6 +25,7 @@ You can monitor multiple NetScaler instances by passing in the URL, username, an
 | username    | Username with which to connect to the NetScaler API                                                       | none          |
 | password    | Password with which to connect to the NetScaler API                                                       | none          |
 | bind_port   | Port to bind the exporter endpoint to                                                                     | 9280          |
+| debug       | Enable debug logging                                                                                      | false         |
 
 Run the exporter manually using the following command:
 
