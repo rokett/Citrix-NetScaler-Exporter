@@ -108,6 +108,11 @@ type Exporter struct {
 	csVirtualServersTotalVServerDownBackupHits          *prometheus.CounterVec
 	csVirtualServersCurrentMultipathSessions            *prometheus.GaugeVec
 	csVirtualServersCurrentMultipathSubflows            *prometheus.GaugeVec
+	vpnVirtualServersTotalRequests                      *prometheus.CounterVec
+	vpnVirtualServersTotalResponses                     *prometheus.CounterVec
+	vpnVirtualServersTotalRequestBytes                  *prometheus.CounterVec
+	vpnVirtualServersTotalResponseBytes                 *prometheus.CounterVec
+	vpnVirtualServersState                              *prometheus.GaugeVec
 	username                                            string
 	password                                            string
 	url                                                 string
@@ -229,6 +234,11 @@ func NewExporter(url string, username string, password string, ignoreCert bool, 
 		csVirtualServersTotalVServerDownBackupHits:          csVirtualServersTotalVServerDownBackupHits,
 		csVirtualServersCurrentMultipathSessions:            csVirtualServersCurrentMultipathSessions,
 		csVirtualServersCurrentMultipathSubflows:            csVirtualServersCurrentMultipathSubflows,
+		vpnVirtualServersTotalRequests:                      vpnVirtualServersTotalRequests,
+		vpnVirtualServersTotalResponses:                     vpnVirtualServersTotalResponses,
+		vpnVirtualServersTotalRequestBytes:                  vpnVirtualServersTotalRequestBytes,
+		vpnVirtualServersTotalResponseBytes:                 vpnVirtualServersTotalResponseBytes,
+		vpnVirtualServersState:                              vpnVirtualServersState,
 		username:                                            username,
 		password:                                            password,
 		url:                                                 url,
@@ -345,4 +355,10 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.csVirtualServersTotalVServerDownBackupHits.Describe(ch)
 	e.csVirtualServersCurrentMultipathSessions.Describe(ch)
 	e.csVirtualServersCurrentMultipathSubflows.Describe(ch)
+
+	e.vpnVirtualServersTotalRequests.Describe(ch)
+	e.vpnVirtualServersTotalResponses.Describe(ch)
+	e.vpnVirtualServersTotalRequestBytes.Describe(ch)
+	e.vpnVirtualServersTotalResponseBytes.Describe(ch)
+	e.vpnVirtualServersState.Describe(ch)
 }
