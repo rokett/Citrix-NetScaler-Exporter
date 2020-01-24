@@ -119,6 +119,18 @@ For each virtual server, the following metrics are retrieved.
 | Current client connections | Gauge       | None    |
 | Current server connections | Gauge       | None    |
 
+## VPN Virtual Servers (NetScaler Gateway)
+For each virtual server, the following metrics are retrieved.
+
+| Metric                     | Metric Type | Unit    |
+| ---------------------------| ----------- | ------- |
+| Name                       | N/A         | None    |
+| Total requests             | Counter     | None    |
+| Total responses            | Counter     | None    |
+| Total request bytes        | Counter     | Bytes   |
+| Total response bytes       | Counter     | Bytes   |
+| State                          | Gauge       | None    |
+
 ## Services
 For each service, the following metrics are retrieved.
 
