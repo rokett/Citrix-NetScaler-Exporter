@@ -2,7 +2,7 @@
 
 APP = Citrix-NetScaler-Exporter
 VERSION = 4.3.0
-BINARY-LINUX = ${APP}_${VERSION}_Linux_amd64
+BINARY-LINUX = citrix
 
 BUILD_VER = $(shell git rev-parse HEAD)
 
