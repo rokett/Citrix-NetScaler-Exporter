@@ -250,6 +250,7 @@ func NewExporter(url string, username string, password string, ignoreCert bool, 
 
 // Describe implements Collector
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
+	//level.Error(e.logger).Log("msg", "Exporter")
 	ch <- modelID
 	ch <- mgmtCPUUsage
 	ch <- memUsage

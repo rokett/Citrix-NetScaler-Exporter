@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/rokett/citrix-netscaler-exporter/netscaler"
+	"github.com/sonny-sevin-mk/citrix-netscaler-exporter/netscaler"
 )
 
 var (

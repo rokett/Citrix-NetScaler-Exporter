@@ -3,8 +3,9 @@ package collector
 import (
 	"strconv"
 
+	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/rokett/citrix-netscaler-exporter/netscaler"
+	"github.com/sonny-sevin-mk/citrix-netscaler-exporter/netscaler"
 )
 
 var (
@@ -121,7 +122,7 @@ var (
 
 func (e *Exporter) collectGSLBServicesState(ns netscaler.NSAPIResponse) {
 	e.gslbServicesState.Reset()
-
+	level.Error(e.logger).Log("msg", "GSLB")
 	for _, service := range ns.GSLBServiceStats {
 		state := 0.0
 

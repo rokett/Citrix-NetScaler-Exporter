@@ -3,8 +3,9 @@ package collector
 import (
 	"strconv"
 
+	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/rokett/citrix-netscaler-exporter/netscaler"
+	"github.com/sonny-sevin-mk/citrix-netscaler-exporter/netscaler"
 )
 
 var (
@@ -209,6 +210,7 @@ var (
 
 func (e *Exporter) collectCSVirtualServerState(ns netscaler.NSAPIResponse) {
 	e.csVirtualServersState.Reset()
+	level.Error(e.logger).Log("msg", "CSVirtual")
 
 	for _, vs := range ns.CSVirtualServerStats {
 		state := 0.0
