@@ -381,7 +381,7 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 		for _, s := range stats.ServiceGroups[0].ServiceGroupMembers {
 			servicegroupnameParts := strings.Split(s.ServiceGroupName, "?")
-			serverName := servicegroupnameParts[0] + ":" + servicegroupnameParts[3]
+			serverName := servicegroupnameParts[1] + ":" + servicegroupnameParts[3]
 
 			e.collectServiceGroupsState(s, sg.Name, serverName)
 			e.serviceGroupsState.Collect(ch)
