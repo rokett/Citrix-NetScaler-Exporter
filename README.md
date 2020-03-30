@@ -237,17 +237,10 @@ For each Content Switching virtual server, the following metrics are retrieved.
 | Current multipath sessions                   | Gauge       | None    |
 | Current multipath subflow connections        | Gauge       | None    |
 
-## Downloading a release
-<https://github.com/rokett/Citrix-NetScaler-Exporter/releases>
-
-You can also download a Docker image from https://hub.docker.com/r/rokett/citrix-netscaler-exporter.
 
 ## Building the executable
 All dependencies are version controlled, so building the project is really easy.
 
-1. `go get github.com/rokett/citrix-netscaler-exporter`.
+1. `git clone https://github.com/mckesson/mk-citrix-exporter.git`.
 2. From within the repository directory run `make`.
 3. Hey presto, you have an executable.
-
-## Dockerfile
-This Dockerfile will create a container that will set the entrypoint as `/Citrix-Netscaler-Exporter` so you can just pass in the command line options mentioned above to the container without needing to call the executable
