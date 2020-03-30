@@ -3,8 +3,8 @@ package collector
 import (
 	"strconv"
 
+	"github.com/mckesson/mk-citrix-exporter/netscaler"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/sonny-sevin-mk/citrix-netscaler-exporter/netscaler"
 )
 
 var (

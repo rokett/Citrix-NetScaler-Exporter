@@ -14,7 +14,7 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 
-	"github.com/sonny-sevin-mk/citrix-netscaler-exporter/collector"
+	"github.com/mckesson/mk-citrix-exporter/collector"
 )
 
 var (

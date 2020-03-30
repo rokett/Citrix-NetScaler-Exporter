@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/go-kit/kit/log/level"
+	"github.com/mckesson/mk-citrix-exporter/netscaler"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/sonny-sevin-mk/citrix-netscaler-exporter/netscaler"
 )
 
 // Collect is initiated by the Prometheus handler and gathers the metrics
