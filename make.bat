@@ -14,6 +14,11 @@ set LDFLAGS=-ldflags "-X main.version=%VERSION% -X main.build=%BUILD% -s -w -ext
 goto build
 
 :build
+    echo "=== Building docker image ==="
+    rem docker build -t rokett/citrix-netscaler-exporter:latest -t rokett/citrix-netscaler-exporter:v%VERSION% .
+    rem docker push rokett/citrix-netscaler-exporter:v%VERSION%
+    rem docker push rokett/citrix-netscaler-exporter:latest
+    
     echo "=== Building Windows x64 ==="
     set GOOS=windows
     set GOARCH=amd64
