@@ -8,7 +8,7 @@ RUN \
     git clone --branch $VERSION --depth 1 https://github.com/rokett/Citrix-NetScaler-Exporter.git citrix-netscaler-exporter && \
     cd citrix-netscaler-exporter && \
     BUILD=$(git rev-list -1 HEAD) && \
-    CGO_ENABLED=0 GOOS=linux go build -a -ldflags "-X main.version=$VERSION -X main.build=$BUILD -s -w -extldflags '-static'" -o citrix-netscaler-exporter
+    CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -ldflags "-X main.version=$VERSION -X main.build=$BUILD -s -w -extldflags '-static'" -o citrix-netscaler-exporter
 
 FROM scratch
 LABEL maintainer="rokett@rokett.me"
