@@ -8,6 +8,17 @@ import (
 )
 
 var (
+	virtualServersState = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "virtual_servers_state",
+			Help: "Current state of the server",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
 	virtualServersWaitingRequests = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "virtual_servers_waiting_requests",
@@ -128,6 +139,20 @@ var (
 		},
 	)
 )
+
+func (e *Exporter) collectVirtualServerState(ns netscaler.NSAPIResponse) {
+	e.virtualServersState.Reset()
+
+	for _, vs := range ns.VirtualServerStats {
+		state := 0.0
+
+		if vs.State == "UP" {
+			state = 1.0
+		}
+
+		e.virtualServersState.WithLabelValues(e.nsInstance, vs.Name).Set(state)
+	}
+}
 
 func (e *Exporter) collectVirtualServerWaitingRequests(ns netscaler.NSAPIResponse) {
 	e.virtualServersWaitingRequests.Reset()

@@ -107,6 +107,7 @@ For each virtual server, the following metrics are retrieved.
 | Metric                     | Metric Type | Unit    |
 | ---------------------------| ----------- | ------- |
 | Name                       | N/A         | None    |
+| State                      | Gauge       | None    |
 | Waiting requests           | Gauge       | None    |
 | Health                     | Gauge       | Percent |
 | Inactive services          | Gauge       | None    |
@@ -201,6 +202,7 @@ For each GSLB virtual server, the following metrics are retrieved.
 | Metric                     | Metric Type | Unit    |
 | ---------------------------| ----------- | ------- |
 | Name                       | N/A         | None    |
+| State                      | Gauge       | None    |
 | Health                     | Gauge       | Percent |
 | Inactive services          | Gauge       | None    |
 | Active services            | Gauge       | None    |

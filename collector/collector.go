@@ -158,6 +158,9 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	e.collectInterfacesErrorPacketsRx(interfaces)
 	e.interfacesErrorPacketsRx.Collect(ch)
 
+	e.collectVirtualServerState(virtualServers)
+	e.virtualServersState.Collect(ch)
+
 	e.collectVirtualServerWaitingRequests(virtualServers)
 	e.virtualServersWaitingRequests.Collect(ch)
 
@@ -268,6 +271,9 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectGSLBServicesVirtualServerServiceHits(gslbServices)
 	e.gslbServicesVirtualServerServiceHits.Collect(ch)
+
+	e.collectGSLBVirtualServerState(gslbVirtualServers)
+	e.gslbVirtualServersState.Collect(ch)
 
 	e.collectGSLBVirtualServerHealth(gslbVirtualServers)
 	e.gslbVirtualServersHealth.Collect(ch)

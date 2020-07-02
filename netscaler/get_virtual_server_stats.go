@@ -9,6 +9,7 @@ import (
 // VirtualServerStats represents the data returned from the /stat/lbvserver Nitro API endpoint
 type VirtualServerStats struct {
 	Name                     string `json:"name"`
+	State                    string `json:"state"`
 	WaitingRequests          string `json:"vsvrsurgecount"`
 	Health                   string `json:"vslbhealth"`
 	InactiveServices         string `json:"inactsvcs"`

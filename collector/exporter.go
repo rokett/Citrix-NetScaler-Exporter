@@ -31,6 +31,7 @@ type Exporter struct {
 	interfacesJumboPacketsRx                            *prometheus.GaugeVec
 	interfacesJumboPacketsTx                            *prometheus.GaugeVec
 	interfacesErrorPacketsRx                            *prometheus.GaugeVec
+	virtualServersState                                 *prometheus.GaugeVec
 	virtualServersWaitingRequests                       *prometheus.GaugeVec
 	virtualServersHealth                                *prometheus.GaugeVec
 	virtualServersInactiveServices                      *prometheus.GaugeVec
@@ -80,6 +81,7 @@ type Exporter struct {
 	gslbServicesCurrentLoad                             *prometheus.GaugeVec
 	gslbServicesVirtualServerServiceHits                *prometheus.CounterVec
 	gslbServicesEstablishedConnections                  *prometheus.GaugeVec
+	gslbVirtualServersState                             *prometheus.GaugeVec
 	gslbVirtualServersHealth                            *prometheus.GaugeVec
 	gslbVirtualServersInactiveServices                  *prometheus.GaugeVec
 	gslbVirtualServersActiveServices                    *prometheus.GaugeVec
@@ -157,6 +159,7 @@ func NewExporter(url string, username string, password string, ignoreCert bool, 
 		interfacesJumboPacketsRx:                            interfacesJumboPacketsRx,
 		interfacesJumboPacketsTx:                            interfacesJumboPacketsTx,
 		interfacesErrorPacketsRx:                            interfacesErrorPacketsRx,
+		virtualServersState:                                 virtualServersState,
 		virtualServersWaitingRequests:                       virtualServersWaitingRequests,
 		virtualServersHealth:                                virtualServersHealth,
 		virtualServersInactiveServices:                      virtualServersInactiveServices,
@@ -206,6 +209,7 @@ func NewExporter(url string, username string, password string, ignoreCert bool, 
 		gslbServicesCurrentLoad:                             gslbServicesCurrentLoad,
 		gslbServicesVirtualServerServiceHits:                gslbServicesVirtualServerServiceHits,
 		gslbServicesEstablishedConnections:                  gslbServicesEstablishedConnections,
+		gslbVirtualServersState:                             gslbVirtualServersState,
 		gslbVirtualServersHealth:                            gslbVirtualServersHealth,
 		gslbVirtualServersInactiveServices:                  gslbVirtualServersInactiveServices,
 		gslbVirtualServersActiveServices:                    gslbVirtualServersActiveServices,
@@ -273,6 +277,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.interfacesJumboPacketsTx.Describe(ch)
 	e.interfacesErrorPacketsRx.Describe(ch)
 
+	e.virtualServersState.Describe(ch)
 	e.virtualServersWaitingRequests.Describe(ch)
 	e.virtualServersHealth.Describe(ch)
 	e.virtualServersInactiveServices.Describe(ch)
@@ -326,6 +331,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.gslbServicesVirtualServerServiceHits.Describe(ch)
 	e.gslbServicesEstablishedConnections.Describe(ch)
 
+	e.gslbVirtualServersState.Describe(ch)
 	e.gslbVirtualServersHealth.Describe(ch)
 	e.gslbVirtualServersInactiveServices.Describe(ch)
 	e.gslbVirtualServersActiveServices.Describe(ch)
