@@ -4,9 +4,10 @@ import (
 	"strconv"
 	"strings"
 
+	"citrix-netscaler-exporter/netscaler"
+
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/rokett/citrix-netscaler-exporter/netscaler"
 )
 
 // Collect is initiated by the Prometheus handler and gathers the metrics
@@ -158,6 +159,9 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	e.collectInterfacesErrorPacketsRx(interfaces)
 	e.interfacesErrorPacketsRx.Collect(ch)
 
+	e.collectVirtualServerState(virtualServers)
+	e.virtualServersState.Collect(ch)
+
 	e.collectVirtualServerWaitingRequests(virtualServers)
 	e.virtualServersWaitingRequests.Collect(ch)
 
@@ -268,6 +272,9 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectGSLBServicesVirtualServerServiceHits(gslbServices)
 	e.gslbServicesVirtualServerServiceHits.Collect(ch)
+
+	e.collectGSLBVirtualServerState(gslbVirtualServers)
+	e.gslbVirtualServersState.Collect(ch)
 
 	e.collectGSLBVirtualServerHealth(gslbVirtualServers)
 	e.gslbVirtualServersHealth.Collect(ch)

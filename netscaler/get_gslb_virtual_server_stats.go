@@ -9,6 +9,7 @@ import (
 // GSLBVirtualServerStats represents the data returned from the /stat/gslbvserver Nitro API endpoint
 type GSLBVirtualServerStats struct {
 	Name                     string `json:"name"`
+	State                    string `json:"state"`
 	Health                   string `json:"vslbhealth"`
 	InactiveServices         string `json:"inactsvcs"`
 	ActiveServices           string `json:"actsvcs"`

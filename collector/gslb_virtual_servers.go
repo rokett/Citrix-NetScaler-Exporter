@@ -3,11 +3,23 @@ package collector
 import (
 	"strconv"
 
+	"citrix-netscaler-exporter/netscaler"
+
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/rokett/citrix-netscaler-exporter/netscaler"
 )
 
 var (
+	gslbVirtualServersState = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "gslb_virtual_servers_state",
+			Help: "Current state of the server",
+		},
+		[]string{
+			"ns_instance",
+			"virtual_server",
+		},
+	)
+
 	gslbVirtualServersHealth = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "gslb_virtual_servers_health",
@@ -118,6 +130,20 @@ var (
 		},
 	)
 )
+
+func (e *Exporter) collectGSLBVirtualServerState(ns netscaler.NSAPIResponse) {
+	e.gslbVirtualServersState.Reset()
+
+	for _, vs := range ns.GSLBVirtualServerStats {
+		state := 0.0
+
+		if vs.State == "UP" {
+			state = 1.0
+		}
+
+		e.gslbVirtualServersState.WithLabelValues(e.nsInstance, vs.Name).Set(state)
+	}
+}
 
 func (e *Exporter) collectGSLBVirtualServerHealth(ns netscaler.NSAPIResponse) {
 	e.gslbVirtualServersHealth.Reset()
