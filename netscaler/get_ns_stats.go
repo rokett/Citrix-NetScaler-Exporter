@@ -14,10 +14,10 @@ type NSStats struct {
 	PktCPUUsagePcnt                        float64 `json:"pktcpuusagepcnt"`
 	FlashPartitionUsage                    float64 `json:"disk0perusage"`
 	VarPartitionUsage                      float64 `json:"disk1perusage"`
-	TotalReceivedMB	string	`json:"totrxmbits"`
-	TotalTransmitMB string `json:"tottxmbits"`
-	HTTPRequests                       string `json:"httptotrequests"`
-	HTTPResponses                      string `json:"httptotresponses"`
+	TotalReceivedMB                        string  `json:"totrxmbits"`
+	TotalTransmitMB                        string  `json:"tottxmbits"`
+	HTTPRequests                           string  `json:"httptotrequests"`
+	HTTPResponses                          string  `json:"httptotresponses"`
 	TCPCurrentClientConnections            string  `json:"tcpcurclientconn"`
 	TCPCurrentClientConnectionsEstablished string  `json:"tcpcurclientconnestablished"`
 	TCPCurrentServerConnections            string  `json:"tcpcurserverconn"`

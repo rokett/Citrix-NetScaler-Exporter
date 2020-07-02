@@ -9,6 +9,7 @@ import (
 
 // ServiceGroupMemberStats represents the data returned from the /stat/servicegroupmember Nitro API endpoint
 type ServiceGroupMemberStats struct {
+	PrimaryPort                  int    `json:"primaryport"`
 	State                        string `json:"state"`
 	AvgTimeToFirstByte           string `json:"avgsvrttfb"`
 	TotalRequests                string `json:"totalrequests"`
