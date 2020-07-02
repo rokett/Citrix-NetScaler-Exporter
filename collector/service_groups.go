@@ -17,6 +17,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -29,6 +30,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -41,6 +43,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -53,6 +56,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -65,6 +69,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -77,6 +82,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -89,6 +95,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -101,6 +108,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -113,6 +121,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -125,6 +134,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -137,6 +147,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 
@@ -149,6 +160,7 @@ var (
 			"ns_instance",
 			"servicegroup",
 			"member",
+			"port",
 		},
 	)
 )
@@ -162,82 +174,106 @@ func (e *Exporter) collectServiceGroupsState(sg netscaler.ServiceGroupMemberStat
 		state = 1.0
 	}
 
-	e.serviceGroupsState.WithLabelValues(e.nsInstance, sgName, servername).Set(state)
+	port := strconv.Itoa(sg.PrimaryPort)
+
+	e.serviceGroupsState.WithLabelValues(e.nsInstance, sgName, servername, port).Set(state)
 }
 
 func (e *Exporter) collectServiceGroupsAvgTTFB(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsAvgTTFB.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.AvgTimeToFirstByte, 64)
-	e.serviceGroupsAvgTTFB.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsAvgTTFB.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsTotalRequests(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsTotalRequests.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.TotalRequests, 64)
-	e.serviceGroupsTotalRequests.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsTotalRequests.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsTotalResponses(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsTotalResponses.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.TotalResponses, 64)
-	e.serviceGroupsTotalResponses.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsTotalResponses.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsTotalRequestBytes(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsTotalRequestBytes.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.TotalRequestBytes, 64)
-	e.serviceGroupsTotalRequestBytes.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsTotalRequestBytes.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsTotalResponseBytes(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsTotalResponseBytes.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.TotalResponseBytes, 64)
-	e.serviceGroupsTotalResponseBytes.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsTotalResponseBytes.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsCurrentClientConnections(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsCurrentClientConnections.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.CurrentClientConnections, 64)
-	e.serviceGroupsCurrentClientConnections.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsCurrentClientConnections.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsSurgeCount(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsSurgeCount.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.SurgeCount, 64)
-	e.serviceGroupsSurgeCount.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsSurgeCount.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsCurrentServerConnections(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsCurrentServerConnections.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.CurrentServerConnections, 64)
-	e.serviceGroupsCurrentServerConnections.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsCurrentServerConnections.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsServerEstablishedConnections(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsServerEstablishedConnections.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.ServerEstablishedConnections, 64)
-	e.serviceGroupsServerEstablishedConnections.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsServerEstablishedConnections.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsCurrentReusePool(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsCurrentReusePool.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.CurrentReusePool, 64)
-	e.serviceGroupsCurrentReusePool.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsCurrentReusePool.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
 
 func (e *Exporter) collectServiceGroupsMaxClients(sg netscaler.ServiceGroupMemberStats, sgName string, servername string) {
 	e.serviceGroupsMaxClients.Reset()
 
+	port := strconv.Itoa(sg.PrimaryPort)
+
 	val, _ := strconv.ParseFloat(sg.MaxClients, 64)
-	e.serviceGroupsMaxClients.WithLabelValues(e.nsInstance, sgName, servername).Set(val)
+	e.serviceGroupsMaxClients.WithLabelValues(e.nsInstance, sgName, servername, port).Set(val)
 }
