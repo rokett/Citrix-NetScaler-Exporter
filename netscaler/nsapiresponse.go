@@ -16,4 +16,5 @@ type NSAPIResponse struct {
 	GSLBVirtualServerStats  []GSLBVirtualServerStats  `json:"gslbvserver"`
 	CSVirtualServerStats    []CSVirtualServerStats    `json:"csvserver"`
 	VPNVirtualServerStats   []VPNVirtualServerStats   `json:"vpnvserver"`
+	AAAStats                AAAStats                  `json:"aaa"`
 }

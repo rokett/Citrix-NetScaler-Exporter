@@ -22,7 +22,5 @@ github.com/prometheus/common v0.0.0-20171006141418-1bab55dd05db h1:PmL7nSW2mvuot
 github.com/prometheus/common v0.0.0-20171006141418-1bab55dd05db/go.mod h1:daVV7qP5qjZbuso7PdcryaAu0sAZbrN9i7WWcTMWvro=
 github.com/prometheus/procfs v0.0.0-20170703101242-e645f4e5aaa8 h1:Kh7M6mzRpQ2de1rixoSQZr4BTINXFm8WDbeN5ttnwyE=
 github.com/prometheus/procfs v0.0.0-20170703101242-e645f4e5aaa8/go.mod h1:c3At6R/oaqEKCNdg8wHV1ftS6bRYblBhIjjI8uT2IGk=
-github.com/rokett/citrix-netscaler-exporter v0.0.0-20200702205428-732ed26d0330 h1:15BVklRUaRQDK7Kx5SQwezMo704umalkhu1tcR3mMoM=
-github.com/rokett/citrix-netscaler-exporter v0.0.0-20200702205428-732ed26d0330/go.mod h1:Jg3dOB2VWYEnPyuIU6X+WAEz9hiXLt0hnr/efhcgJrU=
 golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208 h1:qwRHBd0NqMbJxfbotnDhm2ByMI1Shq4Y6oRJo21SGJA=
 golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=

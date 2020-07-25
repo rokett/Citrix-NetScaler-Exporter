@@ -239,6 +239,16 @@ For each Content Switching virtual server, the following metrics are retrieved.
 | Current multipath sessions                   | Gauge       | None    |
 | Current multipath subflow connections        | Gauge       | None    |
 
+## AAA
+| Metric                       | Metric Type | Unit |
+| -----------------------------| ----------- | ---- |
+| Auth Successes               | Counter     | None |
+| Auth Failures                | Counter     | None |
+| Auth Only HTTP Successes     | Counter     | None |
+| Auth Only HTTP Faliures      | Counter     | None |
+| Current ICA Sessions         | Counter     | None |
+| Current ICA Only Connections | Counter     | None |
+
 ## Downloading a release
 <https://github.com/rokett/Citrix-NetScaler-Exporter/releases>
 

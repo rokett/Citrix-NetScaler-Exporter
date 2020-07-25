@@ -15,6 +15,5 @@ require (
 	github.com/prometheus/client_model v0.0.0-20170216185247-6f3806018612 // indirect
 	github.com/prometheus/common v0.0.0-20171006141418-1bab55dd05db // indirect
 	github.com/prometheus/procfs v0.0.0-20170703101242-e645f4e5aaa8 // indirect
-	github.com/rokett/citrix-netscaler-exporter v0.0.0-20200702205428-732ed26d0330
 	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208 // indirect
 )
