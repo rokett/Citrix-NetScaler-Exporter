@@ -27,6 +27,3 @@ github.com/prometheus/common/model
 # github.com/prometheus/procfs v0.0.0-20170703101242-e645f4e5aaa8
 github.com/prometheus/procfs
 github.com/prometheus/procfs/xfs
-# github.com/rokett/citrix-netscaler-exporter v0.0.0-20200702205428-732ed26d0330
-github.com/rokett/citrix-netscaler-exporter/collector
-github.com/rokett/citrix-netscaler-exporter/netscaler

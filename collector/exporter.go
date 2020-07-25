@@ -115,6 +115,12 @@ type Exporter struct {
 	vpnVirtualServersTotalRequestBytes                  *prometheus.CounterVec
 	vpnVirtualServersTotalResponseBytes                 *prometheus.CounterVec
 	vpnVirtualServersState                              *prometheus.GaugeVec
+	aaaAuthSuccess                                      *prometheus.CounterVec
+	aaaAuthFail                                         *prometheus.CounterVec
+	aaaAuthOnlyHTTPSuccess                              *prometheus.CounterVec
+	aaaAuthOnlyHTTPFail                                 *prometheus.CounterVec
+	aaaCurIcaSessions                                   *prometheus.CounterVec
+	aaaCurIcaOnlyConn                                   *prometheus.CounterVec
 	username                                            string
 	password                                            string
 	url                                                 string
@@ -243,6 +249,12 @@ func NewExporter(url string, username string, password string, ignoreCert bool, 
 		vpnVirtualServersTotalRequestBytes:                  vpnVirtualServersTotalRequestBytes,
 		vpnVirtualServersTotalResponseBytes:                 vpnVirtualServersTotalResponseBytes,
 		vpnVirtualServersState:                              vpnVirtualServersState,
+		aaaAuthSuccess:                                      aaaAuthSuccess,
+		aaaAuthFail:                                         aaaAuthFail,
+		aaaAuthOnlyHTTPSuccess:                              aaaAuthOnlyHTTPSuccess,
+		aaaAuthOnlyHTTPFail:                                 aaaAuthOnlyHTTPFail,
+		aaaCurIcaSessions:                                   aaaCurIcaSessions,
+		aaaCurIcaOnlyConn:                                   aaaCurIcaOnlyConn,
 		username:                                            username,
 		password:                                            password,
 		url:                                                 url,
@@ -367,4 +379,11 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.vpnVirtualServersTotalRequestBytes.Describe(ch)
 	e.vpnVirtualServersTotalResponseBytes.Describe(ch)
 	e.vpnVirtualServersState.Describe(ch)
+
+	e.aaaAuthSuccess.Describe(ch)
+	e.aaaAuthFail.Describe(ch)
+	e.aaaAuthOnlyHTTPSuccess.Describe(ch)
+	e.aaaAuthOnlyHTTPFail.Describe(ch)
+	e.aaaCurIcaSessions.Describe(ch)
+	e.aaaCurIcaOnlyConn.Describe(ch)
 }

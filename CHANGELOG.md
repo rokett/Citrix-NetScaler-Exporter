@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.5.0] - 2020-07-25
+ - #41 Added the following AAA metrics.
+   - aaa_auth_success
+   - aaa_auth_fail
+   - aaa_auth_only_http_success
+   - aaa_auth_only_http_fail
+   - aaa_current_ica_sessions
+   - aaa_current_ica_only_connections
+
 ## [4.4.0] - 2020-07-02
 ### Added
  - #37 Added LBVS and GSLB VS state metric.

@@ -70,6 +70,11 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		level.Error(e.logger).Log("msg", err)
 	}
 
+	aaa, err := netscaler.GetAAAStats(nsClient, "")
+	if err != nil {
+		level.Error(e.logger).Log("msg", err)
+	}
+
 	fltModelID, _ := strconv.ParseFloat(nslicense.NSLicense.ModelID, 64)
 
 	fltTotRxMB, _ := strconv.ParseFloat(ns.NSStats.TotalReceivedMB, 64)
@@ -374,6 +379,24 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	e.collectVPNVirtualServerState(vpnVirtualServers)
 	e.vpnVirtualServersState.Collect(ch)
+
+	e.collectAaaAuthSuccess(aaa)
+	e.aaaAuthSuccess.Collect(ch)
+
+	e.collectAaaAuthFail(aaa)
+	e.aaaAuthFail.Collect(ch)
+
+	e.collectAaaAuthOnlyHTTPSuccess(aaa)
+	e.aaaAuthOnlyHTTPSuccess.Collect(ch)
+
+	e.collectAaaAuthOnlyHTTPFail(aaa)
+	e.aaaAuthOnlyHTTPFail.Collect(ch)
+
+	e.collectAaaCurIcaSessions(aaa)
+	e.aaaCurIcaSessions.Collect(ch)
+
+	e.collectAaaCurIcaOnlyConn(aaa)
+	e.aaaCurIcaOnlyConn.Collect(ch)
 
 	servicegroups, err := netscaler.GetServiceGroups(nsClient, "attrs=servicegroupname")
 	if err != nil {
