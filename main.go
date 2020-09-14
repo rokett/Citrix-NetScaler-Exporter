@@ -31,11 +31,6 @@ var (
 	nsInstance string
 )
 
-func init() {
-	logger = log.NewLogfmtLogger(os.Stdout)
-	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller, "app", app, "bind_port", *bindPort, "version", "v"+version, "build", build)
-}
-
 func main() {
 	flag.Parse()
 
@@ -48,6 +43,9 @@ func main() {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
+
+	logger = log.NewLogfmtLogger(os.Stdout)
+	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller, "app", app, "bind_port", *bindPort, "version", "v"+version, "build", build)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`<html>
