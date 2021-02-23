@@ -3,7 +3,7 @@ package netscaler
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -55,7 +55,7 @@ func Connect(c *NitroClient) error {
 	case 201:
 		var response = new(NSAPIResponse)
 
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 
 		err = json.Unmarshal(body, &response)
 		if err != nil {
@@ -64,7 +64,7 @@ func Connect(c *NitroClient) error {
 
 		return nil
 	default:
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 
 		return errors.New("read failed: " + resp.Status + " (" + string(body) + ")")
 	}

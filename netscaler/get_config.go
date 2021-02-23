@@ -1,7 +1,7 @@
 package netscaler
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -32,11 +32,11 @@ func (c *NitroClient) GetConfig(configType string, querystring string) ([]byte, 
 
 	switch resp.StatusCode {
 	case 200:
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 
 		return body, nil
 	default:
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 
 		return body, errors.New("read failed: " + resp.Status + " (" + string(body) + ")")
 	}
