@@ -3,7 +3,7 @@ package netscaler
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -48,7 +48,7 @@ func Disconnect(c *NitroClient) error {
 	case 201:
 		return nil
 	default:
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 
 		return errors.New("Logout failed: " + resp.Status + " (" + string(body) + ")")
 	}
