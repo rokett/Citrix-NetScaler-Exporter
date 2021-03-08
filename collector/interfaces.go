@@ -2,9 +2,7 @@ package collector
 
 import (
 	"strconv"
-
-	"citrix-netscaler-exporter/netscaler"
-
+	"github.com/encoretechnologies/citrix-netscaler-exporter/netscaler"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
