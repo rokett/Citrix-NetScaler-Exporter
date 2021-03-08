@@ -11,7 +11,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
-	"github.com/EncoreTechnologies/citrix-netscaler-exporter/collector"
+	"github.com/encoretechnologies/citrix-netscaler-exporter/collector"
 )
 
 var (
