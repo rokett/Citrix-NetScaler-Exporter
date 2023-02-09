@@ -1,11 +1,11 @@
 package netscaler
 
 import (
+	"crypto/tls"
 	"net/http"
 	"net/http/cookiejar"
 	"strings"
 	"time"
-	"crypto/tls"
 
 	"github.com/pkg/errors"
 )
@@ -50,4 +50,8 @@ func NewNitroClient(url string, username string, password string, ignoreCert boo
 	}
 
 	return c, nil
+}
+
+func (c *NitroClient) CloseIdleConnection() {
+	c.client.CloseIdleConnections()
 }

@@ -17,6 +17,7 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		level.Error(e.logger).Log("msg", err)
 		return
 	}
+	defer nsClient.CloseIdleConnection()
 
 	err = netscaler.Connect(nsClient)
 	if err != nil {
