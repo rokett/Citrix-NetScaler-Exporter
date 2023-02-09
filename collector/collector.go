@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"citrix-netscaler-exporter/netscaler"
+	"github.com/rokett/citrix-netscaler-exporter/netscaler"
 
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
