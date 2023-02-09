@@ -2,7 +2,7 @@
 SETLOCAL
 
 set APP=Citrix-NetScaler-Exporter
-set VERSION=4.5.2
+set VERSION=4.6.0
 set BINARY-WINDOWS-X64=%APP%_%VERSION%_Windows_amd64.exe
 set BINARY-LINUX=%APP%_%VERSION%_Linux_amd64
 
